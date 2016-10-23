@@ -1,0 +1,49 @@
+/*
+Class Names
+Navbar 
+Explored Cell 
+Unexplored Cell 
+Final Cell 
+Starting Cell 
+Wall Cell
+*/
+
+
+#board{
+  border-collapse:collapse
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    height:670px;
+    background-color: #f1f1f1;
+    float:left
+}
+li{
+    display: block;
+    /*width: 60px;*/
+    height:350px;
+    text-align: center
+}
+#board td{
+  border: 1px solid darkslategrey;
+  width: 20px;
+  height: 20px;
+}
+.explored{
+  background:blue
+}
+.unexplored{
+  background:white
+}
+.wall{
+  background:grey
+}
+.finalCell{
+  background:blue
+}
+.startingCell{
+  background:red
+}
