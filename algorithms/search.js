@@ -1,22 +1,26 @@
-function Search(board,startNode){
-  this.currentAlgorithm = 'BFS'
+function Search(board,startNode,currentAlgorithm){
+  this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 }
 
 Search.prototype.startSearch = function(){
   console.log('inside startSearch')
-  // var startNode = this.startNode 
+  var startNode = this.startNode 
+  console.log(startNode)
   // var endNode = this.endNode 
-  // var converted = this.modifiedBoard
-  // switch(this.currentAlgorithm){
-  //   case 'Dijkstra':
-  //   case 'AStar':
-  //   case 'BFS':
-  //     var exploredList = this.searchBFS()
-  //     this.showAnimation(exploredList)
-  //   case 'DFS':
-  // }
+  var converted = this.modifiedBoard
+  switch(this.currentAlgorithm){
+    case 'Dijkstra':
+    case 'AStar':
+    case 'BFS':
+      var exploredList = this.searchBFS()
+      this.showAnimation(exploredList)
+    case 'DFS':
+      console.log("case dfs")
+      // var exploredList = this.searchDFS()
+      // this.showAnimation(exploredList)
+  }
 }
 
 Search.prototype.getNeighbours = function(arr,node){
@@ -42,8 +46,32 @@ Search.prototype.getNeighbours = function(arr,node){
 }
 
 Search.prototype.searchDFS = function(){
-
-  //
+  console.log("DFS CALLED")
+  var exploredList = []
+	var listToExplore = [this.startNode]
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	}
+	while(listToExplore.length !==0){
+		var currentNode = listToExplore[0]
+		if(!isPresent(currentNode)){
+			var neighbours = this.getNeighbours(this.board,currentNode)
+			listToExplore = listToExplore.slice(1)
+			listToExplore = neighbours.concat(listToExplore)
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+	}
+	return exploredList
+	
 }
 
 Search.prototype.searchBFS = function(){
@@ -61,7 +89,7 @@ Search.prototype.searchBFS = function(){
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
 		if(!isPresent(currentNode)){
-			var neighbours = getNeighbours(this.board,currentNode)
+			var neighbours = this.getNeighbours(this.board,currentNode)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = listToExplore.concat(neighbours)
 			exploredList.push(currentNode)
@@ -73,6 +101,7 @@ Search.prototype.searchBFS = function(){
 	return exploredList
 	
 }
+
 Search.prototype.searchDijkstra = function(){
   //
 }
@@ -81,14 +110,26 @@ Search.prototype.searchAStar = function(){
 }
 
 Search.prototype.showAnimation = function(exploredList){
-  console.log(exploredList)
-  // for(var i=0;i<exploredList.length;i++){
-
-  // }
+  // console.log('exploredList')
+  // console.log(exploredList.length)
+  function timeout(index) {
+    setTimeout(function () {
+        if(index === exploredList.length){
+          return
+        }
+        change(exploredList[index])
+        timeout(index+1);
+    }, 100);
+  }
+  function change(node){
+    // console.log('before change',node)
+    var elem = document.getElementById(node.id)
+    node.status = 'explored'
+    elem.className = 'explored'
+    // console.log('after change',node)
+  }
+  timeout(0)
 }
 
 
-// function convert(arr)
-// function Node(x,y,value)
-// function bfs(arr,startNode)
-// function getNeighbours(arr,node)
+module.exports = Search

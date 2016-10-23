@@ -1,0 +1,23 @@
+{
+  "name": "maze-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Husseinfarah93/mazeGame.git"
+  },
+  "author": "hussein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Husseinfarah93/mazeGame/issues"
+  },
+  "homepage": "https://github.com/Husseinfarah93/mazeGame#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "path": "^0.12.7"
+  }
+}
