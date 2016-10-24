@@ -9,6 +9,7 @@ function Board(height,width){
   this.mouseDown = false
   this.startNode;
 }
+
 Board.prototype.initialise = function(){
   this.createGrid()
   this.addEventListeners()
@@ -35,7 +36,7 @@ Board.prototype.createGrid = function(){
   var board = document.getElementById('board')
   board.innerHTML = initialHTML
   //Set start Node 
-  this.startNode = this.boardArr[15][15]
+  this.startNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(this.boardArr.length/2)]
 }
 Board.prototype.addEventListeners = function(){
   var board = this
@@ -77,8 +78,8 @@ Board.prototype.addEventListeners = function(){
 }
 
 Board.prototype.getCell = function(x,y){
-  return this.boardArr[x][y]
-}
+  return this.boardArr[y][x]
+} 
 
 Board.prototype.changeCellClick = function(id){
   var newId = id.split(',')
@@ -132,20 +133,20 @@ Board.prototype.generateRandom = function(){
 
 var board = new Board(30,30)
 board.initialise()
-
+ 
 },{"./cell":2,"./search":3}],2:[function(require,module,exports){
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
-}
+} 
 
 Cell.prototype.getCellStatus = function(){
   return this.status
 }
 
-// Module.exports = Cell
+module.exports = Cell
 },{}],3:[function(require,module,exports){
 function Search(board,startNode,currentAlgorithm){
   this.currentAlgorithm = currentAlgorithm
@@ -154,11 +155,8 @@ function Search(board,startNode,currentAlgorithm){
 }
 
 Search.prototype.startSearch = function(){
-  console.log('inside startSearch')
+  // console.log('inside startSearch')
   var startNode = this.startNode 
-  console.log(startNode)
-  // var endNode = this.endNode 
-  var converted = this.modifiedBoard
   switch(this.currentAlgorithm){
     case 'Dijkstra':
     case 'AStar':
@@ -170,29 +168,28 @@ Search.prototype.startSearch = function(){
       // var exploredList = this.searchDFS()
       // this.showAnimation(exploredList)
   }
-}
+} 
 
 Search.prototype.getNeighbours = function(arr,node){
-  //NEED TO REFACTOR// 
-	var neighbourList = []
+  	var neighbourList = []
 	//Get Neighbour Up 
-	if(node.y>0){
+	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
 		neighbourList.push(arr[node.y-1][node.x])
 	}
 	//Get Neighbour Right 
-	if(node.x<arr[0].length-1){
+	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall'){
 		neighbourList.push(arr[node.y][node.x+1])
 	}
 	//Get Neighbour Down 
-	if(node.y<arr.length-1){
+	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall'){
 		neighbourList.push(arr[node.y+1][node.x])
 	}
 	//Get Neighbour Left
-	if(node.x>0){
+	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
 		neighbourList.push(arr[node.y][node.x-1])
 	}
 	return neighbourList
-}
+}  
 
 Search.prototype.searchDFS = function(){
   console.log("DFS CALLED")
@@ -224,6 +221,8 @@ Search.prototype.searchDFS = function(){
 }
 
 Search.prototype.searchBFS = function(){
+  
+  console.log(this.board)
   var exploredList = []
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
@@ -237,7 +236,10 @@ Search.prototype.searchBFS = function(){
 	}
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
-		if(!isPresent(currentNode)){
+		if(currentNode.status === 'wall'){
+      listToExplore = listToExplore.slice(1)
+    }
+    else if(!isPresent(currentNode)){
 			var neighbours = this.getNeighbours(this.board,currentNode)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = listToExplore.concat(neighbours)
@@ -254,13 +256,16 @@ Search.prototype.searchBFS = function(){
 Search.prototype.searchDijkstra = function(){
   //
 }
+
 Search.prototype.searchAStar = function(){
   //
 }
 
 Search.prototype.showAnimation = function(exploredList){
-  // console.log('exploredList')
-  // console.log(exploredList.length)
+  var startNode = exploredList[0]
+  exploredList = exploredList.slice(1)
+  startNode.status = 'startNode'
+  document.getElementById(startNode.id).className = 'startingCell'
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
@@ -271,15 +276,13 @@ Search.prototype.showAnimation = function(exploredList){
     }, 100);
   }
   function change(node){
-    // console.log('before change',node)
     var elem = document.getElementById(node.id)
     node.status = 'explored'
     elem.className = 'explored'
-    // console.log('after change',node)
   }
   timeout(0)
 }
 
 
-// Module.exports = Search
+module.exports = Search
 },{}]},{},[1]);
