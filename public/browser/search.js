@@ -27,23 +27,23 @@ Search.prototype.getNeighbours = function(arr,node){
   //NEED TO REFACTOR// 
 	var neighbourList = []
 	//Get Neighbour Up 
-	if(node.y>0){
+	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
 		neighbourList.push(arr[node.y-1][node.x])
 	}
 	//Get Neighbour Right 
-	if(node.x<arr[0].length-1){
+	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall'){
 		neighbourList.push(arr[node.y][node.x+1])
 	}
 	//Get Neighbour Down 
-	if(node.y<arr.length-1){
+	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall'){
 		neighbourList.push(arr[node.y+1][node.x])
 	}
 	//Get Neighbour Left
-	if(node.x>0){
+	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
 		neighbourList.push(arr[node.y][node.x-1])
 	}
 	return neighbourList
-}
+} 
 
 Search.prototype.searchDFS = function(){
   console.log("DFS CALLED")
