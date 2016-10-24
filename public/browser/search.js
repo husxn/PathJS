@@ -5,11 +5,8 @@ function Search(board,startNode,currentAlgorithm){
 }
 
 Search.prototype.startSearch = function(){
-  console.log('inside startSearch')
+  // console.log('inside startSearch')
   var startNode = this.startNode 
-  console.log(startNode)
-  // var endNode = this.endNode 
-  var converted = this.modifiedBoard
   switch(this.currentAlgorithm){
     case 'Dijkstra':
     case 'AStar':
@@ -21,11 +18,10 @@ Search.prototype.startSearch = function(){
       // var exploredList = this.searchDFS()
       // this.showAnimation(exploredList)
   }
-}
+} 
 
 Search.prototype.getNeighbours = function(arr,node){
-  //NEED TO REFACTOR// 
-	var neighbourList = []
+  	var neighbourList = []
 	//Get Neighbour Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
 		neighbourList.push(arr[node.y-1][node.x])
@@ -43,7 +39,7 @@ Search.prototype.getNeighbours = function(arr,node){
 		neighbourList.push(arr[node.y][node.x-1])
 	}
 	return neighbourList
-} 
+}  
 
 Search.prototype.searchDFS = function(){
   console.log("DFS CALLED")
@@ -75,6 +71,8 @@ Search.prototype.searchDFS = function(){
 }
 
 Search.prototype.searchBFS = function(){
+  
+  console.log(this.board)
   var exploredList = []
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
@@ -88,7 +86,10 @@ Search.prototype.searchBFS = function(){
 	}
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
-		if(!isPresent(currentNode)){
+		if(currentNode.status === 'wall'){
+      listToExplore = listToExplore.slice(1)
+    }
+    else if(!isPresent(currentNode)){
 			var neighbours = this.getNeighbours(this.board,currentNode)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = listToExplore.concat(neighbours)
@@ -105,13 +106,16 @@ Search.prototype.searchBFS = function(){
 Search.prototype.searchDijkstra = function(){
   //
 }
+
 Search.prototype.searchAStar = function(){
   //
 }
 
 Search.prototype.showAnimation = function(exploredList){
-  // console.log('exploredList')
-  // console.log(exploredList.length)
+  var startNode = exploredList[0]
+  exploredList = exploredList.slice(1)
+  startNode.status = 'startNode'
+  document.getElementById(startNode.id).className = 'startingCell'
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
@@ -122,14 +126,12 @@ Search.prototype.showAnimation = function(exploredList){
     }, 100);
   }
   function change(node){
-    // console.log('before change',node)
     var elem = document.getElementById(node.id)
     node.status = 'explored'
     elem.className = 'explored'
-    // console.log('after change',node)
   }
   timeout(0)
 }
 
 
-Module.exports = Search
+module.exports = Search

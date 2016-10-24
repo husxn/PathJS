@@ -3,10 +3,10 @@ function Cell(xPos,yPos){
   this.y = yPos
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
-}
+} 
 
 Cell.prototype.getCellStatus = function(){
   return this.status
 }
 
-Module.exports = Cell
+module.exports = Cell
