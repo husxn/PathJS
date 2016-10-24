@@ -116,6 +116,8 @@ Search.prototype.showAnimation = function(exploredList){
   exploredList = exploredList.slice(1)
   startNode.status = 'startNode'
   document.getElementById(startNode.id).className = 'startingCell'
+
+	
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){

@@ -41,8 +41,11 @@ li{
   background:grey
 }
 .finalCell{
-  background:blue
+  background:black
 }
 .startingCell{
-  background:red
+  background:green
+}
+.shortestPath{
+  background:yellow
 }

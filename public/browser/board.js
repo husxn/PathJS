@@ -7,6 +7,8 @@ function Board(height,width){
   this.boardArr = []
   this.mouseDown = false
   this.startNode;
+  this.finalNode;
+  this.currentCell;
 }
 
 Board.prototype.initialise = function(){
@@ -34,8 +36,12 @@ Board.prototype.createGrid = function(){
   }
   var board = document.getElementById('board')
   board.innerHTML = initialHTML
-  //Set start Node 
-  this.startNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(this.boardArr.length/2)]
+  //Set Initial start Node 
+  this.startNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(this.boardArr.length/4)]
+  document.getElementById(this.startNode.id).className = 'startingCell'
+  //Set Initial end Node 
+  this.finalNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(3*this.boardArr.length/4)]
+  document.getElementById(this.finalNode.id).className = 'finalCell'
 }
 Board.prototype.addEventListeners = function(){
   var board = this
@@ -44,23 +50,22 @@ Board.prototype.addEventListeners = function(){
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
-      // elem.addEventListener('click',function(){
-      //   board.changeCellClick(this.id)
-      // })
-      elem.addEventListener('mousedown',function(){
-        board.changeCellClick(this.id)
-        board.mouseDown = true
-      })
-      elem.addEventListener('mouseup',function(){
-        board.mouseDown = false
-      })
-      elem.addEventListener('mouseenter',function(){
-        if(board.mouseDown){
-          board.changeCellDrag(this.id)
-        }
-      })
+      if(elem.className !== 'startingCell' && elem.className !== 'finalCell'){
+        elem.addEventListener('mousedown',function(){
+            board.changeCellClick(this.id)
+            board.mouseDown = true
+        })
+        elem.addEventListener('mouseup',function(){
+          board.mouseDown = false
+        })
+        elem.addEventListener('mouseenter',function(){
+          if(board.mouseDown){
+            board.changeCellDrag(this.id)
+          }
+        })
+      }
     }
-  }
+  } 
   //Add listeners for Nav Bar
   document.getElementById('Algorithm').addEventListener('click',function(){
     console.log('Algorithm clicked')
@@ -74,7 +79,9 @@ Board.prototype.addEventListeners = function(){
       var search = new Search(board.boardArr,board.startNode,'BFS')
       search.startSearch()
   })
-}
+  //Add listeners for starting Node 
+  // document.getElementsByClassName('startingCell').addEventListener()
+} 
 
 Board.prototype.getCell = function(x,y){
   return this.boardArr[y][x]
