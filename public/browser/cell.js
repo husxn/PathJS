@@ -9,4 +9,4 @@ Cell.prototype.getCellStatus = function(){
   return this.status
 }
 
-module.exports = Cell
+Module.exports = Cell

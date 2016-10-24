@@ -1,5 +1,5 @@
 var Cell = require('./cell')
-var Search = require('../algorithms/search')
+var Search = require('./search')
 
 function Board(height,width){
   this.height = height 
@@ -127,7 +127,7 @@ Board.prototype.toggle = function(cell){
 }
 
 Board.prototype.generateRandom = function(){
-  console.log("Generating random Maze")
+   console.log("Generating random Maze")
 }
 
 var board = new Board(30,30)

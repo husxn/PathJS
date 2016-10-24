@@ -132,4 +132,4 @@ Search.prototype.showAnimation = function(exploredList){
 }
 
 
-module.exports = Search
+Module.exports = Search
