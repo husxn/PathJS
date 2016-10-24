@@ -19,30 +19,23 @@ function Search(board,startNode,currentAlgorithm){
 Search.prototype.startSearch = function(){
   // console.log('inside startSearch')
   var startNode = this.startNode 
-  // console.log(startNode)
-  // var endNode = this.endNode 
-  var converted = this.modifiedBoard
   switch(this.currentAlgorithm){
     case 'Dijkstra':
     case 'AStar':
     case 'BFS':
       var exploredList = this.searchBFS()
-      for(var i=0;i<exploredList.length;i++){
-        console.log(exploredList[i][status])
-      }
       this.showAnimation(exploredList)
     case 'DFS':
       console.log("case dfs")
       // var exploredList = this.searchDFS()
       // this.showAnimation(exploredList)
   }
-}
+} 
 
 Search.prototype.getNeighbours = function(arr,node){
   	var neighbourList = []
 	//Get Neighbour Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
-
 		neighbourList.push(arr[node.y-1][node.x])
 	}
 	//Get Neighbour Right 
@@ -57,11 +50,8 @@ Search.prototype.getNeighbours = function(arr,node){
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
 		neighbourList.push(arr[node.y][node.x-1])
 	}
-  for(var i=0;i<neighbourList.length;i++){
-    console.log(neighbourList[i].status)
-  }
 	return neighbourList
-} 
+}  
 
 Search.prototype.searchDFS = function(){
   console.log("DFS CALLED")
@@ -93,6 +83,8 @@ Search.prototype.searchDFS = function(){
 }
 
 Search.prototype.searchBFS = function(){
+  
+  console.log(this.board)
   var exploredList = []
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
@@ -106,7 +98,7 @@ Search.prototype.searchBFS = function(){
 	}
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
-		if(listToExplore[0].status === 'wall'){
+		if(currentNode.status === 'wall'){
       listToExplore = listToExplore.slice(1)
     }
     else if(!isPresent(currentNode)){
@@ -115,9 +107,6 @@ Search.prototype.searchBFS = function(){
 			listToExplore = listToExplore.concat(neighbours)
 			exploredList.push(currentNode)
 		}
-    else if(currentNode.status !== 'wall'){
-
-    }
 		else{
 			listToExplore = listToExplore.slice(1)
 		}
@@ -146,14 +135,12 @@ Search.prototype.showAnimation = function(exploredList){
         }
         change(exploredList[index])
         timeout(index+1);
-    }, 200);
+    }, 100);
   }
   function change(node){
-    console.log(node.status)
     var elem = document.getElementById(node.id)
     node.status = 'explored'
     elem.className = 'explored'
-    // console.log('after change',node)
   }
   timeout(0)
 } 
@@ -192,7 +179,7 @@ Board.prototype.createGrid = function(){
   var board = document.getElementById('board')
   board.innerHTML = initialHTML
   //Set start Node 
-  this.startNode = this.boardArr[15][15]
+  this.startNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(this.boardArr.length/2)]
 }
 Board.prototype.addEventListeners = function(){
   var board = this
@@ -234,8 +221,8 @@ Board.prototype.addEventListeners = function(){
 }
 
 Board.prototype.getCell = function(x,y){
-  return this.boardArr[x][y]
-}
+  return this.boardArr[y][x]
+} 
 
 Board.prototype.changeCellClick = function(id){
   var newId = id.split(',')
@@ -289,3 +276,4 @@ Board.prototype.generateRandom = function(){
 
 var board = new Board(30,30)
 board.initialise()
+ 
