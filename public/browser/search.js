@@ -21,7 +21,7 @@ Search.prototype.startSearch = function(){
 	else if(this.currentAlgorithm === 'AStar'){
 
 	}    
-} 
+}  
 
 Search.prototype.getNeighbours = function(arr,node){
   	var neighbourList = []
@@ -63,8 +63,7 @@ Search.prototype.getNeighbours = function(arr,node){
 }      
 
 Search.prototype.searchDFS = function(){
-  console.log("DFS CALLED")
-  var exploredList = []
+ var exploredList = [] 
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
 		var returnVal = false
@@ -74,10 +73,19 @@ Search.prototype.searchDFS = function(){
 			}
 		}
 		return returnVal
-	}
+	} 
+	whileLoop:
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
-		if(!isPresent(currentNode)){
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+      listToExplore = listToExplore.slice(1)
+    }
+    else if(!isPresent(currentNode)){
 			var neighbours = this.getNeighbours(this.board,currentNode)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = neighbours.concat(listToExplore)
@@ -87,8 +95,7 @@ Search.prototype.searchDFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
-	return exploredList
-	
+	return exploredList 
 } 
 
 Search.prototype.searchBFS = function(){
@@ -124,9 +131,8 @@ Search.prototype.searchBFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
-	return exploredList
-	 
-} 
+	return exploredList 
+}  
 
 Search.prototype.searchDijkstra = function(){
   //
