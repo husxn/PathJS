@@ -2,6 +2,19 @@
 var Cell = require('./cell')
 var Search = require('./search')
 
+function runFunction(board){
+  for(var i=0;i<board.boardArr.length;i++){
+    for(var j=0;j<board.boardArr[i].length;j++){
+      if(board.boardArr[i][j].status === 'startNode'){
+        console.log('start: ',j.toString()+','+i.toString())
+      }
+      else if(board.boardArr[i][j].status === 'finalNode'){
+        console.log('final: ',j.toString()+','+i.toString())
+      }
+    }
+  }
+}
+
 function Board(height,width){
   this.height = height 
   this.width = width 
@@ -37,13 +50,17 @@ Board.prototype.createGrid = function(){
   }
   var board = document.getElementById('board')
   board.innerHTML = initialHTML
-  //Set Initial start Node 
-  this.startNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(this.boardArr.length/4)]
+  //Set Initial start Node
+  var xStartNode =  Math.floor(this.boardArr.length/4)
+  var y =  Math.floor(this.boardArr.length/2)
+  this.boardArr[y][xStartNode].status = 'startNode'
+  this.startNode = this.boardArr[y][xStartNode]
   document.getElementById(this.startNode.id).className = 'startingCell'
-  //Set Initial end Node 
-  this.finalNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(3*this.boardArr.length/4)]
+  //Set Initial end Node
+  var xFinalNode = Math.floor(3*this.boardArr.length/4)
+  this.finalNode = this.boardArr[y][xFinalNode]
   document.getElementById(this.finalNode.id).className = 'finalCell'
-} 
+}  
 Board.prototype.addEventListeners = function(){
   var board = this
   //Add listeners for table elements
@@ -75,7 +92,7 @@ Board.prototype.addEventListeners = function(){
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){
-              cell.status = 'startingNode'
+              cell.status = 'startNode'
               board.startNode = cell
             }
             else if(this.className === 'finalCell'){
@@ -96,7 +113,7 @@ Board.prototype.addEventListeners = function(){
         }
       })
     }
-  }  
+  }    
   //Add listeners for Nav Bar
   document.getElementById('Algorithm').addEventListener('click',function(){
     console.log('Algorithm clicked')
@@ -117,11 +134,14 @@ Board.prototype.addEventListeners = function(){
   })
   //Dijkstra 
   //AStar 
+  document.getElementById('startButtonAStar').addEventListener('click',function(){
+    runFunction(board)
+  })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
   })
-} 
+}  
 
 Board.prototype.getCell = function(x,y){
   return this.boardArr[y][x]
@@ -176,7 +196,8 @@ Board.prototype.toggle = function(cell){
 Board.prototype.clearPath = function(){
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr.length;j++){
-      var cell = this.boardArr[i][j]
+      var cell = this.boardArr[i][j] 
+      cell.parent = null
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
@@ -361,26 +382,27 @@ Search.prototype.showAnimation = function(exploredList){
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          // showPath(endNode,self)
+          showPath(endNode,self)
 					return
         }
         change(exploredList[index])
         timeout(index+1);
-    }, 15);
+    }, 5);
   } 
   function change(node){
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(node.status === 'unexplored'){
 			node.status = 'explored'
-			// elem.className = 'explored'
+			elem.className = 'explored'
 		}
 		else if(node.status === 'finalCell'){
-			console.log("FINAL CELL DISPLAY")
+			// console.log("FINAL CELL DISPLAY")
 		}
   } 
 	function showPath(node,search){
 		while(node !== search.startNode){
+			// console.log(node)
 			if(node.status !== 'finalNode'){
 				node.status = 'shortestPath'
 				document.getElementById(node.id).className = 'shortestPath'
@@ -389,7 +411,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
 	}
   timeout(0)
-	showPath(endNode,this)
+	// showPath(endNode,this)
 }  
 
 

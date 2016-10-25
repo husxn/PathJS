@@ -152,26 +152,27 @@ Search.prototype.showAnimation = function(exploredList){
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          // showPath(endNode,self)
+          showPath(endNode,self)
 					return
         }
         change(exploredList[index])
         timeout(index+1);
-    }, 15);
+    }, 5);
   } 
   function change(node){
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(node.status === 'unexplored'){
 			node.status = 'explored'
-			// elem.className = 'explored'
+			elem.className = 'explored'
 		}
 		else if(node.status === 'finalCell'){
-			console.log("FINAL CELL DISPLAY")
+			// console.log("FINAL CELL DISPLAY")
 		}
   } 
 	function showPath(node,search){
 		while(node !== search.startNode){
+			// console.log(node)
 			if(node.status !== 'finalNode'){
 				node.status = 'shortestPath'
 				document.getElementById(node.id).className = 'shortestPath'
@@ -180,7 +181,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
 	}
   timeout(0)
-	showPath(endNode,this)
+	// showPath(endNode,this)
 }  
 
 
