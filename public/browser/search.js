@@ -6,19 +6,21 @@ function Search(board,startNode,finalNode,currentAlgorithm){
 }
 
 Search.prototype.startSearch = function(){
-  // console.log('inside startSearch')
-  var startNode = this.startNode 
-  switch(this.currentAlgorithm){
-    case 'Dijkstra':
-    case 'AStar':
-    case 'BFS':
-      var exploredList = this.searchBFS()
-      this.showAnimation(exploredList)
-    case 'DFS':
-      console.log("case dfs")
-      // var exploredList = this.searchDFS()
-      // this.showAnimation(exploredList)
-  }
+  var startNode = this.startNode
+	if(this.currentAlgorithm === 'BFS'){
+		var exploredList = this.searchBFS()
+    this.showAnimation(exploredList)
+	}
+	else if(this.currentAlgorithm === 'DFS'){
+		var exploredList = this.searchDFS()
+    this.showAnimation(exploredList)
+	}
+	else if(this.currentAlgorithm === 'Dijkstra'){
+
+	}
+	else if(this.currentAlgorithm === 'AStar'){
+
+	}    
 } 
 
 Search.prototype.getNeighbours = function(arr,node){
@@ -150,7 +152,7 @@ Search.prototype.showAnimation = function(exploredList){
         change(exploredList[index])
         timeout(index+1);
     }, 15);
-  }
+  } 
   function change(node){
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
@@ -163,8 +165,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
   } 
 	function showPath(node,search){
-		for(var i=0;i<300;i++){
-			if(node === search.startNode){break}
+		while(node !== search.startNode){
 			if(node.status !== 'finalNode'){
 				node.status = 'shortestPath'
 				document.getElementById(node.id).className = 'shortestPath'

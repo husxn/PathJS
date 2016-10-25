@@ -9,7 +9,7 @@ function Board(height,width){
   this.startNode;
   this.finalNode;
   this.currentCellStatus = null
-}
+} 
 
 Board.prototype.initialise = function(){
   this.createGrid()
@@ -107,6 +107,11 @@ Board.prototype.addEventListeners = function(){
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
+      search.startSearch()
+  })
+  //DFS
+  document.getElementById('startButtonDFS').addEventListener('click',function(){
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
       search.startSearch()
   })
 } 
