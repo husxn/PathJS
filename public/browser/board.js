@@ -50,23 +50,52 @@ Board.prototype.addEventListeners = function(){
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
-      if(elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-        elem.addEventListener('mousedown',function(){
+      elem.addEventListener('mousedown',function(){
+          if(this.className !== 'startingCell' && this.className !== 'finalCell'){
             board.changeCellClick(this.id)
             board.mouseDown = true
-        })
-        elem.addEventListener('mouseup',function(){
-          board.mouseDown = false
-          board.currentCellStatus = null
-        })
-        elem.addEventListener('mouseenter',function(){
+          }
+          else{
+            board.currentCellStatus = this.className
+            board.mouseDown = true
+          }
+      })
+      elem.addEventListener('mouseup',function(){
+        board.mouseDown = false
+        board.currentCellStatus = null
+      })
+      elem.addEventListener('mouseenter',function(){
+        if(this.className !== 'startingCell' && this.className !== 'finalCell'){
           if(board.mouseDown && board.currentCellStatus === null){
             board.changeCellDrag(this.id)
           }
-        })
-      }
+          else if(board.mouseDown && board.currentCellStatus !== null){
+            this.className = board.currentCellStatus
+            var idSplit = this.id.split(',')
+            var cell = board.getCell(idSplit[0],idSplit[1])
+            if(this.className === 'startingCell'){
+              cell.status = 'startingNode'
+              board.startNode = cell
+            }
+            else if(this.className === 'finalCell'){
+              cell.status = 'finalNode'
+              board.finalNode = cell
+            }
+          }
+        }
+      })
+      elem.addEventListener('mouseout',function(){
+        if(this.className === 'startingCell' || this.className === 'finalCell'){
+          if(board.mouseDown && board.currentCellStatus !== null){
+            this.className = 'unexplored'
+            var idSplit = this.id.split(',')
+            var cell = board.getCell(idSplit[0],idSplit[1])
+            cell.status = 'unexplored'
+          }
+        }
+      })
     }
-  } 
+  }  
   //Add listeners for Nav Bar
   document.getElementById('Algorithm').addEventListener('click',function(){
     console.log('Algorithm clicked')
@@ -138,19 +167,3 @@ Board.prototype.generateRandom = function(){
 
 var board = new Board(30,30)
 board.initialise()
- 
-/*
-  Set all elements with all listeners 
-  If click 
-    if status is start or end set current cell status to that 
-  If mouseenter 
-    if current cell status is active 
-      set cell status to that 
-    else 
-      do whatever i was doing before 
-  If mouseout 
-    if current cell status is active 
-      set this element to blank 
-    
-
- */
