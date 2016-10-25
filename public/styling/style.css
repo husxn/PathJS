@@ -1,14 +1,3 @@
-/*
-Class Names
-Navbar 
-Explored Cell 
-Unexplored Cell 
-Final Cell 
-Starting Cell 
-Wall Cell
-*/
-
-
 #board{
   border-collapse:collapse
 }
