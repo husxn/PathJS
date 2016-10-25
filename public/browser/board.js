@@ -42,7 +42,7 @@ Board.prototype.createGrid = function(){
   //Set Initial end Node 
   this.finalNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(3*this.boardArr.length/4)]
   document.getElementById(this.finalNode.id).className = 'finalCell'
-}
+} 
 Board.prototype.addEventListeners = function(){
   var board = this
   //Add listeners for table elements
@@ -76,7 +76,7 @@ Board.prototype.addEventListeners = function(){
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,'BFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
       search.startSearch()
   })
   //Add listeners for starting Node 

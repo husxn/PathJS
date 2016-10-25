@@ -43,7 +43,7 @@ Board.prototype.createGrid = function(){
   //Set Initial end Node 
   this.finalNode = this.boardArr[Math.floor(this.boardArr.length/2)][Math.floor(3*this.boardArr.length/4)]
   document.getElementById(this.finalNode.id).className = 'finalCell'
-}
+} 
 Board.prototype.addEventListeners = function(){
   var board = this
   //Add listeners for table elements
@@ -77,7 +77,7 @@ Board.prototype.addEventListeners = function(){
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,'BFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
       search.startSearch()
   })
   //Add listeners for starting Node 
@@ -148,6 +148,7 @@ function Cell(xPos,yPos){
   this.y = yPos
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
+  this.parent = null
 } 
 
 Cell.prototype.getCellStatus = function(){
@@ -156,10 +157,11 @@ Cell.prototype.getCellStatus = function(){
 
 module.exports = Cell
 },{}],3:[function(require,module,exports){
-function Search(board,startNode,currentAlgorithm){
+function Search(board,startNode,finalNode,currentAlgorithm){
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
+	this.finalNode = finalNode
 }
 
 Search.prototype.startSearch = function(){
@@ -182,22 +184,40 @@ Search.prototype.getNeighbours = function(arr,node){
   	var neighbourList = []
 	//Get Neighbour Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
-		neighbourList.push(arr[node.y-1][node.x])
+		var neighbour = arr[node.y-1][node.x]
+		
+		if(neighbour.parent === null){
+			neighbour.parent = node
+		}
+		neighbourList.push(neighbour)
 	}
 	//Get Neighbour Right 
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall'){
-		neighbourList.push(arr[node.y][node.x+1])
+		var neighbour = arr[node.y][node.x+1]
+		// console.log(neighbour.id,arr.finalNode)
+			if(neighbour.parent === null){
+			neighbour.parent = node
+		}
+		neighbourList.push(neighbour)
 	}
 	//Get Neighbour Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall'){
-		neighbourList.push(arr[node.y+1][node.x])
+		var neighbour = arr[node.y+1][node.x]
+	if(neighbour.parent === null){
+			neighbour.parent = node
+		}
+		neighbourList.push(neighbour)
 	}
 	//Get Neighbour Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
-		neighbourList.push(arr[node.y][node.x-1])
+		var neighbour = arr[node.y][node.x-1]
+	if(neighbour.parent === null){
+			neighbour.parent = node
+		}
+		neighbourList.push(neighbour)
 	}
 	return neighbourList
-}  
+}      
 
 Search.prototype.searchDFS = function(){
   console.log("DFS CALLED")
@@ -226,11 +246,9 @@ Search.prototype.searchDFS = function(){
 	}
 	return exploredList
 	
-}
+} 
 
 Search.prototype.searchBFS = function(){
-  
-  console.log(this.board)
   var exploredList = []
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
@@ -241,9 +259,15 @@ Search.prototype.searchBFS = function(){
 			}
 		}
 		return returnVal
-	}
+	} 
+	whileLoop:
 	while(listToExplore.length !==0){
 		var currentNode = listToExplore[0]
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
 		if(currentNode.status === 'wall'){
       listToExplore = listToExplore.slice(1)
     }
@@ -259,39 +283,57 @@ Search.prototype.searchBFS = function(){
 	}
 	return exploredList
 	
-}
+} 
 
 Search.prototype.searchDijkstra = function(){
   //
-}
+} 
 
 Search.prototype.searchAStar = function(){
   //
 }
 
 Search.prototype.showAnimation = function(exploredList){
-  var startNode = exploredList[0]
+  var self = this
+	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   startNode.status = 'startNode'
+	var endNode = exploredList[exploredList.length-1]
   document.getElementById(startNode.id).className = 'startingCell'
-
-	
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          return
+          showPath(endNode,self)
+					return
         }
         change(exploredList[index])
         timeout(index+1);
-    }, 100);
+    }, 15);
   }
   function change(node){
     var elem = document.getElementById(node.id)
-    node.status = 'explored'
-    elem.className = 'explored'
-  }
+		// console.log(node.status)
+		if(node.status === 'unexplored'){
+			node.status = 'explored'
+			elem.className = 'explored'
+		}
+		else if(node.status === 'finalCell'){
+			console.log("FINAL CELL DISPLAY")
+		}
+  } 
+	function showPath(node,search){
+		for(var i=0;i<300;i++){
+			if(node === search.startNode){break}
+			if(node.status !== 'finalNode'){
+				node.status = 'shortestPath'
+				document.getElementById(node.id).className = 'shortestPath'
+			}
+			node = node.parent
+		}
+	}
   timeout(0)
-}
+	// showPath(endNode,this)
+}  
 
 
 module.exports = Search
