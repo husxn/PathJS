@@ -8,7 +8,7 @@ function Board(height,width){
   this.mouseDown = false
   this.startNode;
   this.finalNode;
-  this.currentCell;
+  this.currentCellStatus = null
 }
 
 Board.prototype.initialise = function(){
@@ -57,9 +57,10 @@ Board.prototype.addEventListeners = function(){
         })
         elem.addEventListener('mouseup',function(){
           board.mouseDown = false
+          board.currentCellStatus = null
         })
         elem.addEventListener('mouseenter',function(){
-          if(board.mouseDown){
+          if(board.mouseDown && board.currentCellStatus === null){
             board.changeCellDrag(this.id)
           }
         })
@@ -79,8 +80,6 @@ Board.prototype.addEventListeners = function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
       search.startSearch()
   })
-  //Add listeners for starting Node 
-  // document.getElementsByClassName('startingCell').addEventListener()
 } 
 
 Board.prototype.getCell = function(x,y){
@@ -140,3 +139,18 @@ Board.prototype.generateRandom = function(){
 var board = new Board(30,30)
 board.initialise()
  
+/*
+  Set all elements with all listeners 
+  If click 
+    if status is start or end set current cell status to that 
+  If mouseenter 
+    if current cell status is active 
+      set cell status to that 
+    else 
+      do whatever i was doing before 
+  If mouseout 
+    if current cell status is active 
+      set this element to blank 
+    
+
+ */

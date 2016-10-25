@@ -123,7 +123,7 @@ Search.prototype.searchBFS = function(){
 		}
 	}
 	return exploredList
-	
+	 
 } 
 
 Search.prototype.searchDijkstra = function(){
@@ -144,7 +144,7 @@ Search.prototype.showAnimation = function(exploredList){
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          showPath(endNode,self)
+          // showPath(endNode,self)
 					return
         }
         change(exploredList[index])
@@ -156,7 +156,7 @@ Search.prototype.showAnimation = function(exploredList){
 		// console.log(node.status)
 		if(node.status === 'unexplored'){
 			node.status = 'explored'
-			elem.className = 'explored'
+			// elem.className = 'explored'
 		}
 		else if(node.status === 'finalCell'){
 			console.log("FINAL CELL DISPLAY")
@@ -173,7 +173,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
 	}
   timeout(0)
-	// showPath(endNode,this)
+	showPath(endNode,this)
 }  
 
 
