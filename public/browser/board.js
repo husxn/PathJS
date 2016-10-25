@@ -114,6 +114,12 @@ Board.prototype.addEventListeners = function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
       search.startSearch()
   })
+  //Dijkstra 
+  //AStar 
+  //Clear Path
+  document.getElementById('startButtonClearPath').addEventListener('click',function(){
+    board.clearPath()
+  })
 } 
 
 Board.prototype.getCell = function(x,y){
@@ -165,6 +171,18 @@ Board.prototype.toggle = function(cell){
   }
   
 }
+
+Board.prototype.clearPath = function(){
+  for(var i=0;i<this.boardArr.length;i++){
+    for(var j=0;j<this.boardArr.length;j++){
+      var cell = this.boardArr[i][j]
+      if(cell.status === 'explored' || cell.status === 'shortestPath'){
+        cell.status = 'unexplored'
+        document.getElementById(cell.id).className = 'unexplored'
+      }
+    }
+  }
+} 
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
