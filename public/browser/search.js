@@ -20,7 +20,8 @@ Search.prototype.startSearch = function(){
     this.showAnimation(exploredList)
 	}
 	else if(this.currentAlgorithm === 'AStar'){
-
+		var exploredList = this.searchAStar()
+    this.showAnimation(exploredList)
 	}    
 }  
 
@@ -136,7 +137,50 @@ Search.prototype.searchBFS = function(){
 }  
 
 Search.prototype.searchAStar = function(){
-  //
+		this.startNode.distance = 0
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	} 
+	whileLoop:
+	while(listToExplore.length !== 0){
+		//Sort listToExplore by distance 
+		listToExplore = listToExplore.sort(function(nodeA,nodeB){return nodeA.distance - nodeB.distance})
+		//Get currentNode 
+		var currentNode = listToExplore[0];
+
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+			listToExplore = listToExplore.slice(1)
+		}
+		else if(!isPresent(currentNode)){
+			//If currentNode is finalNode break 
+			if(currentNode === this.finalNode){break whileLoop}
+			//Get currentNode's neighbours 
+			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList)
+			//Add neighbours to listToExplore
+			listToExplore = listToExplore.concat(neighbours)
+			//Remove currentNode from listToExplore
+			listToExplore = listToExplore.slice(1)
+			//Add currentNode to exploredList 
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+	}
+	return exploredList
 }
 
 Search.prototype.showAnimation = function(exploredList){ 
@@ -269,6 +313,94 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	}
 	return neigbourList
 } 
+Search.prototype.getNeighboursAStar = function(arr,node,exploredList){   
+	var neigbourList = []
+	//Up 
+	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
+		//Get Up neighbour 
+		var neighbour = arr[node.y-1][node.x] 
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'UP'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
+	//Right 
+	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
+		//Get Up neighbour 
+		var neighbour = arr[node.y][node.x+1]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'RIGHT'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
+	//Down 
+	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
+		//Get Up neighbour 
+		var neighbour = arr[node.y+1][node.x]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'DOWN'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
+	//Left
+	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
+		//Get Up neighbour 
+		var neighbour = arr[node.y][node.x-1]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'LEFT'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		}  
+	}
+	return neigbourList
+} 
 
 Search.prototype.searchDijkstra = function(){
 	this.startNode.distance = 0
@@ -344,5 +476,14 @@ Search.prototype.checkNumberOfMoves = function(currentDirection,direction){
 		return 2
 	}
 }
+
+Search.prototype.manhattanDistance = function(node1,node2){
+	console.log("AFOINAOIFSNOIANSFOINA")
+	var xDiff = node1.x - node2.x
+	var yDiff = node1.y - node2.y
+	var distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
+	return distance
+}
+
 
 module.exports = Search

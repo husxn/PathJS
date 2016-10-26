@@ -145,7 +145,8 @@ Board.prototype.addEventListeners = function(){
   })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
-    runFunction(board)
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
+    search.startSearch()
   })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
@@ -223,6 +224,8 @@ Board.prototype.clearPath = function(){
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
-
-var board = new Board(30,30)
+var bar = document.getElementById('Algorithm').clientWidth
+var height = Math.floor(document.documentElement.clientHeight)
+var width = Math.floor(document.documentElement.clientWidth) - bar
+var board = new Board(35,35)
 board.initialise()
