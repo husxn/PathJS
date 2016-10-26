@@ -148,9 +148,18 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
     search.startSearch()
   })
+  //AStar 
+  document.getElementById('startButtonGreedy').addEventListener('click',function(){
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
+    search.startSearch()
+  })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
+  })
+  //Clear Walls
+   document.getElementById('startButtonClearWalls').addEventListener('click',function(){
+    board.clearWalls()
   })
 }   
 
@@ -220,6 +229,18 @@ Board.prototype.clearPath = function(){
     }
   }
 } 
+Board.prototype.clearWalls = function(){
+  for(var i=0;i<this.boardArr.length;i++){
+    for(var j=0;j<this.boardArr.length;j++){
+      var cell = this.boardArr[i][j] 
+      cell.parent = null
+      if(cell.status === 'wall'){
+        cell.status = 'unexplored'
+        document.getElementById(cell.id).className = 'unexplored'
+      }
+    }
+  }
+}
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
