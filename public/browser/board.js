@@ -56,6 +56,7 @@ Board.prototype.createGrid = function(){
   this.finalNode = this.boardArr[y][xFinalNode]
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
+
 Board.prototype.addEventListeners = function(){
   var board = this
   //Add listeners for table elements
@@ -90,7 +91,6 @@ Board.prototype.addEventListeners = function(){
             console.log(this.className)
           }
           else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){
-            console.log(this.className)
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
@@ -139,6 +139,10 @@ Board.prototype.addEventListeners = function(){
       search.startSearch()
   })
   //Dijkstra 
+  document.getElementById('startButtonDijkstra').addEventListener('click',function(){
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra')
+    search.startSearch()
+  })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
     runFunction(board)
@@ -199,7 +203,7 @@ Board.prototype.toggle = function(cell){
   
 }
 
-Board.prototype.clearPath = function(){
+Board.prototype.clearPath = function(){ 
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr.length;j++){
       var cell = this.boardArr[i][j] 
@@ -207,6 +211,10 @@ Board.prototype.clearPath = function(){
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
+      }
+      if(cell.status !== 'startNode'){
+        cell.direction = 'UP'
+        cell.distance = Infinity
       }
     }
   }

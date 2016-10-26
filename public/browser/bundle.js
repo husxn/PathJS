@@ -57,6 +57,7 @@ Board.prototype.createGrid = function(){
   this.finalNode = this.boardArr[y][xFinalNode]
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
+
 Board.prototype.addEventListeners = function(){
   var board = this
   //Add listeners for table elements
@@ -91,7 +92,6 @@ Board.prototype.addEventListeners = function(){
             console.log(this.className)
           }
           else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){
-            console.log(this.className)
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
@@ -140,6 +140,10 @@ Board.prototype.addEventListeners = function(){
       search.startSearch()
   })
   //Dijkstra 
+  document.getElementById('startButtonDijkstra').addEventListener('click',function(){
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra')
+    search.startSearch()
+  })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
     runFunction(board)
@@ -200,7 +204,7 @@ Board.prototype.toggle = function(cell){
   
 }
 
-Board.prototype.clearPath = function(){
+Board.prototype.clearPath = function(){ 
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr.length;j++){
       var cell = this.boardArr[i][j] 
@@ -208,6 +212,10 @@ Board.prototype.clearPath = function(){
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
+      }
+      if(cell.status !== 'startNode'){
+        cell.direction = 'UP'
+        cell.distance = Infinity
       }
     }
   }
@@ -227,7 +235,7 @@ function Cell(xPos,yPos){
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
   this.parent = null
-  this.currentDirection = 'UP'
+  this.direction = 'UP'
   this.distance = Infinity
 } 
 
@@ -236,6 +244,7 @@ Cell.prototype.getCellStatus = function(){
 }
 
 module.exports = Cell
+
 },{}],3:[function(require,module,exports){
 function Search(board,startNode,finalNode,currentAlgorithm){
   this.currentAlgorithm = currentAlgorithm
@@ -255,7 +264,8 @@ Search.prototype.startSearch = function(){
     this.showAnimation(exploredList)
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
-
+		var exploredList = this.searchDijkstra()
+    this.showAnimation(exploredList)
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 
@@ -299,7 +309,7 @@ Search.prototype.getNeighbours = function(arr,node){
 		neighbourList.push(neighbour)
 	}
 	return neighbourList
-}      
+}       
 
 Search.prototype.searchDFS = function(){
  var exploredList = [] 
@@ -377,7 +387,7 @@ Search.prototype.searchAStar = function(){
   //
 }
 
-Search.prototype.showAnimation = function(exploredList){
+Search.prototype.showAnimation = function(exploredList){ 
   var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
@@ -419,56 +429,143 @@ Search.prototype.showAnimation = function(exploredList){
 	// showPath(endNode,this)
 }  
 
-Search.prototype.getNeighboursDijkstra = function(){
+Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){   
+	var neigbourList = []
 	//Up 
-	if(/*up is not wall && up is valid && node is not visited*/ true){
+	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		var neighbour;
-		//Update function 
-		function updateNeighbour(neighbour){
-			//Get current distance 
-			var currentDistance = this.currentNode.distance 
-			//Get My Direction 
-			var myDirection = this.currentNode.myDirection
-			//Calculate number of moves to get to Get to Up Direction 
-			var numberOfMoves = checkNumberofMoves()
-			//Calculate new neighbour distance	
-			var newNeighbourDistance = currentDistance + numberOfMoves + 1 
-			//If this is lower than the currentDistance on the neighbour change
-			if(newNeighbourDistance < neighbour.distance){
-				neighbour.distance = newNeighbourDistance
-			}
-			
-		}
-		//Add neighbour to neigbourList
-		neigbourList.push(neighbour)
-	}
+		var neighbour = arr[node.y-1][node.x] 
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'UP'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
 	//Right 
-		
+	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
+		//Get Up neighbour 
+		var neighbour = arr[node.y][node.x+1]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'RIGHT'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
 	//Down 
-		
+	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
+		//Get Up neighbour 
+		var neighbour = arr[node.y+1][node.x]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'DOWN'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		} 
+	} 
 	//Left
+	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
+		//Get Up neighbour 
+		var neighbour = arr[node.y][node.x-1]
+		//Get current distance 
+		var currentDistance = node.distance 
+		//Get My Direction 
+		var myDirection = node.direction
+		//Calculate number of moves to get to Get to Up Direction 
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+		//Calculate new neighbour distance	
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		//If this is lower than the currentDistance on the neighbour change
+		if(newNeighbourDistance < neighbour.distance){
+			neighbour.distance = newNeighbourDistance
+			neighbour.direction = 'LEFT'
+			//Add neighbour to neigbourList
+			neigbourList.push(neighbour)
+			neighbour.parent = node
+		}  
+	}
 	return neigbourList
-}
+} 
 
 Search.prototype.searchDijkstra = function(){
+	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
-	while(/*listToExplore is not empty*/true){
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	} 
+	whileLoop:
+	while(listToExplore.length !== 0){
+		//Sort listToExplore by distance 
+		listToExplore = listToExplore.sort(function(nodeA,nodeB){return nodeA.distance - nodeB.distance})
 		//Get currentNode 
-		var currentNode = listToExplore.sortByLowestDistance;
-		//Get currentNode's neighbours 
-		var neighbours = currentNode.neighbours
-		//Add neighbours to listToExplore
-		listToExplore.push(neighbours)
-		//Remove currentNode from listToExplore
-		listToExplore.remove(currentNode)
-		//Add currentNode to exploredList 
-		exploredList.push(currentNode)
-	}
-}
+		var currentNode = listToExplore[0];
 
-Search.prototype.hasBeenExplored = function(node){
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+			listToExplore = listToExplore.slice(1)
+		}
+		else if(!isPresent(currentNode)){
+			//If currentNode is finalNode break 
+			if(currentNode === this.finalNode){break whileLoop}
+			//Get currentNode's neighbours 
+			var neighbours = this.getNeighboursDijkstra(this.board,currentNode,exploredList)
+			//Add neighbours to listToExplore
+			listToExplore = listToExplore.concat(neighbours)
+			//Remove currentNode from listToExplore
+			listToExplore = listToExplore.slice(1)
+			//Add currentNode to exploredList 
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+	}
+	return exploredList
+}   
+
+Search.prototype.hasBeenExplored = function(node,exploredList){
 	var returnVal = false
 	for(var i in exploredList.length){
 		if(exploredList[i].id === node.id){
@@ -476,6 +573,24 @@ Search.prototype.hasBeenExplored = function(node){
 		}
 	}
 	return returnVal
+} 
+
+Search.prototype.checkNumberOfMoves = function(currentDirection,direction){
+	if(currentDirection === direction){
+		return 0
+	}
+	else if((currentDirection === 'UP' || currentDirection === 'DOWN') && (direction === 'LEFT' || direction === 'RIGHT')){
+		return 1
+	}
+	else if((currentDirection === 'LEFT' || currentDirection === 'RIGHT') && (direction === 'UP' || direction === 'DOWN')){
+		return 1
+	}
+	else if((currentDirection === 'LEFT' || currentDirection === 'RIGHT') && (direction === 'LEFT' || direction === 'RIGHT')){
+		return 2
+	}
+	else if((currentDirection === 'UP' || currentDirection === 'DOWN') && (direction === 'UP' || direction === 'DOWN')){
+		return 2
+	}
 }
 
 module.exports = Search
