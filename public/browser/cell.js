@@ -6,7 +6,6 @@ function Cell(xPos,yPos){
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
-  this.fakeMaze = false
 } 
 
 Cell.prototype.getCellStatus = function(){

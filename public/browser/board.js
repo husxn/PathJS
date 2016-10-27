@@ -43,7 +43,7 @@ Board.prototype.createGrid = function(){
     }
     //Finish row element HTML
     initialHTML += "</tr>"
-  }
+  } 
   var board = document.getElementById('board')
   board.innerHTML = initialHTML
   //Set Initial start Node
@@ -220,7 +220,7 @@ Board.prototype.toggle = function(cell){
 
 Board.prototype.clearPath = function(){ 
   for(var i=0;i<this.boardArr.length;i++){
-    for(var j=0;j<this.boardArr.length;j++){
+    for(var j=0;j<this.boardArr[i].length;j++){
       var cell = this.boardArr[i][j] 
       cell.parent = null
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
@@ -236,7 +236,7 @@ Board.prototype.clearPath = function(){
 } 
 Board.prototype.clearWalls = function(){
   for(var i=0;i<this.boardArr.length;i++){
-    for(var j=0;j<this.boardArr.length;j++){
+    for(var j=0;j<this.boardArr[i].length;j++){
       var cell = this.boardArr[i][j] 
       cell.parent = null
       if(cell.status === 'wall'){
@@ -245,7 +245,7 @@ Board.prototype.clearWalls = function(){
       }
     }
   }
-}
+} 
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")

@@ -6,6 +6,7 @@ function Maze(board,startNode,finalNode){
 }
 
 Maze.prototype.startMaze = function(){
+	this.board.clearWalls()
 	for(var i=0;i<this.boardArr.length;i++){
 		for(var j=0;j<this.boardArr[0].length;j++){
 			var elem = document.getElementById(j.toString()+','+i.toString())
