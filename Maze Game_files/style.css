@@ -16,26 +16,27 @@ li{
     text-align: center;
 }
 #board td{
+  border: 1px solid darkslategrey;
   width: 25px;
   height: 25px;
 }
 .explored{
-  background-image:url('path.png')
+  background:blue
 }
 .unexplored{
-  background-image:url('lightGrass.png')
+  background:white
 }
 .wall{
-  background-image:url('grassImage.png')
+  background:darkslategrey;
 }
 .finalCell{
-  background-image:url('character.png')
+  background:black
 }
 .startingCell{
-  background-image:url('character.png')
+  background:green
 }
 .shortestPath{
-  background-image:url('character.png')
+  background:yellow
 }
 button{
   display:block;

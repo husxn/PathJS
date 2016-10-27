@@ -261,14 +261,26 @@ Search.prototype.showAnimation = function(exploredList){
 		}
   } 
 	function showPath(node,search){
+		var listPath = []
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
 				node.status = 'shortestPath'
 				document.getElementById(node.id).className = 'shortestPath'
+				listPath.push(node)
 			}
 			node = node.parent
 		}
+		// listPath = listPath.reverse()
+		// for(var i=0;i<listPath.length;i++){
+		// 	if(i!==0){
+		// 		document.getElementById(listPath[i-1].id).className = 'explored'
+				
+		// 	}
+		// 	console.log(listPath[i])
+		// 	listPath[i].status = 'shortestPath'
+		// 	document.getElementById(listPath[i].id).className = 'shortestPath'
+		// }
 	}
   timeout(0)
 	// showPath(endNode,this)

@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Cell = require('./cell')
 var Search = require('./search')
+var Maze = require('./maze')
 
 function runFunction(board){
   for(var i=0;i<board.boardArr.length;i++){
@@ -154,6 +155,10 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
     search.startSearch()
   })
+  document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
+    var maze = new Maze(board,board.startNode,board.finalNode)
+    maze.startMaze()
+  })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
@@ -249,10 +254,10 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(35,35)
+var board = new Board(height/30,width/30)
 board.initialise()
 
-},{"./cell":2,"./search":3}],2:[function(require,module,exports){
+},{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
@@ -261,6 +266,7 @@ function Cell(xPos,yPos){
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
+  this.fakeMaze = false
 } 
 
 Cell.prototype.getCellStatus = function(){
@@ -270,6 +276,29 @@ Cell.prototype.getCellStatus = function(){
 module.exports = Cell
 
 },{}],3:[function(require,module,exports){
+function Maze(board,startNode,finalNode){
+  this.board = board
+	this.boardArr = board.boardArr
+  this.startNode = startNode
+	this.finalNode = finalNode
+}
+
+Maze.prototype.startMaze = function(){
+	for(var i=0;i<this.boardArr.length;i++){
+		for(var j=0;j<this.boardArr[0].length;j++){
+			var elem = document.getElementById(j.toString()+','+i.toString())
+			if(Math.random() > 0.65 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
+				elem.className = 'wall'
+				this.board.getCell(j,i).status = 'wall'
+			}
+		}
+	}
+
+} 
+
+
+module.exports = Maze
+},{}],4:[function(require,module,exports){
 function Search(board,startNode,finalNode,currentAlgorithm){
   this.currentAlgorithm = currentAlgorithm
   this.board = board
@@ -533,14 +562,26 @@ Search.prototype.showAnimation = function(exploredList){
 		}
   } 
 	function showPath(node,search){
+		var listPath = []
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
 				node.status = 'shortestPath'
 				document.getElementById(node.id).className = 'shortestPath'
+				listPath.push(node)
 			}
 			node = node.parent
 		}
+		// listPath = listPath.reverse()
+		// for(var i=0;i<listPath.length;i++){
+		// 	if(i!==0){
+		// 		document.getElementById(listPath[i-1].id).className = 'explored'
+				
+		// 	}
+		// 	console.log(listPath[i])
+		// 	listPath[i].status = 'shortestPath'
+		// 	document.getElementById(listPath[i].id).className = 'shortestPath'
+		// }
 	}
   timeout(0)
 	// showPath(endNode,this)

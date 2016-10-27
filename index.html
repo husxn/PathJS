@@ -5,24 +5,31 @@
     <link rel="shortcut icon" type="image/png" href="/public/styling/favicon_h.png"/>
   </head>
   <body>
-    <h1>Maze Game</h1>
     <div id='Navbar'>
       <ul>
-        <li id='Algorithm'>Algorithm</li>
-        <li id='AlgorithmSettings'>Algorithm Settings</li>
+        <li id='Algorithm'>Algorithms 
+          <div class = 'buttonGroup'>
+            <button id='startButtonDFS'>DFS</button>
+            <button id='startButtonBFS'>BFS</button>
+            <button id='startButtonDijkstra'>Dijkstra</button>
+            <button id='startButtonAStar'>A*</button>
+            <button id='startButtonGreedy'>Greedy Best First Search</button>
+            <button id='startButtonIterativeDeepening'>Iterative Deepening</button>
+            <button id='startButtonJumpPoint'>Jump Point Search</button>
+            <button id='startButtonMazeRecursiveBacktracking'>Maze Recursive Backtracking</button>
+            <button id='startButtonMazeKruskal'>Maze Kruskal</button>
+            <button id='startButtonMazePrims'>Maze Prims</button>
+          </div>
+        </li>
+        <li id='AlgorithmSettings'></li>
+        <div class = 'settingsGroup'>
+          <button id='startButtonClearPath'>Clear Path</button>
+          <button id='startButtonClearWalls'>Clear Walls</button>
+        </div>
       </ul>
     </div>
     <div id='Maze'>
       <table id='board'/>
-    </div>
-    <div id='buttonPanel'>
-      <button id='startButtonDFS'>DFS</button>
-      <button id='startButtonBFS'>BFS</button>
-      <button id='startButtonDijkstra'>Dijkstra</button>
-      <button id='startButtonAStar'>A*</button>
-      <button id='startButtonGreedy'>Greedy Best First Search</button>
-      <button id='startButtonClearPath'>Clear Path</button>
-      <button id='startButtonClearWalls'>Clear Walls</button>
     </div>
   </body>
     <script src="/public/browser/bundle.js"></script>

@@ -1,5 +1,6 @@
 var Cell = require('./cell')
 var Search = require('./search')
+var Maze = require('./maze')
 
 function runFunction(board){
   for(var i=0;i<board.boardArr.length;i++){
@@ -153,6 +154,10 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
     search.startSearch()
   })
+  document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
+    var maze = new Maze(board,board.startNode,board.finalNode)
+    maze.startMaze()
+  })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
@@ -248,5 +253,5 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(35,35)
+var board = new Board(height/30,width/30)
 board.initialise()
