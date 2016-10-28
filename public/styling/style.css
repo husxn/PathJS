@@ -20,7 +20,7 @@ li{
   height: 25px;
 }
 .explored{
-  background-image:url('path.png')
+  background-image:url('sand.png')
 }
 .unexplored{
   background-image:url('lightGrass.png')
@@ -35,13 +35,15 @@ li{
   background-image:url('grassImage.png')
 }
 .finalCell{
-  background-image:url('character.png')
+  /*background-image:url('character.png')*/
+  background: black
 }
 .startingCell{
   background-image:url('character.png')
+
 }
 .shortestPath{
-  background-image:url('character.png')
+  background:white
 }
 button{
   display:block;

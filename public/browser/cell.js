@@ -7,6 +7,7 @@ function Cell(xPos,yPos){
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
+  this.previousStatus = 'unexplored'
 } 
 
 Cell.prototype.getCellStatus = function(){

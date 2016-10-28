@@ -154,6 +154,7 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 		}
 	}
 }
+
 Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){ 
 	if(orientation === 'vertical'){
 		for(var i=startY-1;i<endY+2;i++){
@@ -172,10 +173,15 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 		}
 	}
 }
+
 Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 	var returnVal = (endX-startX) - (endY-startY) > 0
 	console.log(endX,startX)
 	return returnVal
+}
+
+Maze.prototype.animate = function(listToExplore){
+	
 }
 
 module.exports = Maze
