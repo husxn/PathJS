@@ -1,6 +1,7 @@
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
+  this.weight = 0
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
   this.parent = null

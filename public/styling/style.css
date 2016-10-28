@@ -25,6 +25,12 @@ li{
 .unexplored{
   background-image:url('lightGrass.png')
 }
+.unexplored.mud{
+  background-image:url('mud.png')
+}
+.unexplored.water{
+  background-image:url('water.png')
+}
 .wall{
   background-image:url('grassImage.png')
 }

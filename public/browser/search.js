@@ -299,7 +299,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -320,7 +320,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -341,7 +341,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -362,7 +362,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -373,7 +373,8 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		}  
 	}
 	return neigbourList
-} 
+}  
+
 Search.prototype.getNeighboursAStar = function(arr,node,exploredList){   
 	var neigbourList = []
 	//Up 
@@ -387,7 +388,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -408,7 +409,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -429,7 +430,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -450,7 +451,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -462,6 +463,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 	}
 	return neigbourList
 } 
+
 Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){   
 	var neigbourList = []
 	//Up 

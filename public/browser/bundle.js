@@ -17,10 +17,12 @@ function Board(height,width){
   this.width = width 
   this.boardArr = []
   this.mouseDown = false
+  this.keyDown = false 
   this.startNode;
   this.finalNode;
   this.currentCellStatus = null
-} 
+  this.mode = 0
+}  
 
 Board.prototype.initialise = function(){
   this.createGrid()
@@ -59,10 +61,19 @@ Board.prototype.createGrid = function(){
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
 
-Board.prototype.addEventListeners = function(){
+Board.prototype.addEventListeners = function(){ 
   var board = this
+  //Add window keyDown event 
+  window.addEventListener('keydown',function(e){
+    e.keyCode === 16 || e.keyCode === 49 ? board.keyDown = e.keyCode : board.keyDown;
+  })
+  //Add window keyUp event 
+  window.addEventListener('keyup',function(){
+    board.keyDown = false
+  }) 
+
   //Add listeners for table elements
-  for(var i=0;i<this.height;i++){
+  for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
@@ -81,18 +92,12 @@ Board.prototype.addEventListeners = function(){
         board.currentCellStatus = null
       })
       elem.addEventListener('mouseenter',function(){
-        // console.log(board.mouseDown,board.currentCellStatus,this.className)
-        // if(this.className !== 'startingCell' && this.className !== 'finalCell'){
           //Normal Wall Creation Drag Event
           if(board.mouseDown && board.currentCellStatus === null){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
-            this.className = this.className 
-            console.log(this.className)
-          }
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){ 
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
@@ -105,10 +110,6 @@ Board.prototype.addEventListeners = function(){
               board.finalNode = cell
             }
           }
-        // }
-        // else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
-        //     console.log("IN ELSE")
-        // }
       })
       elem.addEventListener('mouseout',function(){
         if(this.className === 'startingCell' || this.className === 'finalCell'){
@@ -122,19 +123,12 @@ Board.prototype.addEventListeners = function(){
       })
     }
   }    
-  //Add listeners for Nav Bar
-  document.getElementById('Algorithm').addEventListener('click',function(){
-    console.log('Algorithm clicked')
-  })
-  document.getElementById('AlgorithmSettings').addEventListener('click',function(){
-    console.log('AlgorithmSettings clicked')
-  })
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
       search.startSearch()
-  })
+  }) 
   //DFS
   document.getElementById('startButtonDFS').addEventListener('click',function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
@@ -150,11 +144,12 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
     search.startSearch()
   })
-  //AStar 
+  //Greedy
   document.getElementById('startButtonGreedy').addEventListener('click',function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
     search.startSearch()
   })
+  //Random Maze Generation
   document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
     maze.startMaze()
@@ -162,11 +157,11 @@ Board.prototype.addEventListeners = function(){
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
-  })
+  }) 
   //Clear Walls
    document.getElementById('startButtonClearWalls').addEventListener('click',function(){
     board.clearWalls()
-  })
+  }) 
 }   
 
 Board.prototype.getCell = function(x,y){
@@ -195,17 +190,28 @@ Board.prototype.changeCellDrag = function(id){
     var toggledCell = this.toggle(cell)
     var elem = document.getElementById(id)
     if(toggledCell){
+      console.log(toggledCell)
       elem.className = toggledCell
-    }
-    else{
-      //LOGIC FOR DRAG START AND END
     }
   }
   
 }
 
 Board.prototype.toggle = function(cell){
-  if(cell.status === 'unexplored' || cell.status === 'explored'){
+  if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
+      cell.status = 'unexplored'
+      if(this.keyDown === 16){  
+        cell.weight = 2
+        return cell.status +' mud'
+      }
+      else{
+        cell.weight = 5
+        return cell.status +' water'
+      }
+      
+
+  }
+  else if(cell.status === 'unexplored' || cell.status === 'explored'){
       cell.status = 'wall'
       return cell.status
   }
@@ -254,13 +260,14 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(height/30,width/30)
+var board = new Board(21,21)
 board.initialise()
 
 },{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
+  this.weight = 0
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
   this.parent = null
@@ -280,22 +287,180 @@ function Maze(board,startNode,finalNode){
 	this.boardArr = board.boardArr
   this.startNode = startNode
 	this.finalNode = finalNode
-}
+} 
 
 Maze.prototype.startMaze = function(){
 	this.board.clearWalls()
-	for(var i=0;i<this.boardArr.length;i++){
-		for(var j=0;j<this.boardArr[0].length;j++){
-			var elem = document.getElementById(j.toString()+','+i.toString())
-			if(Math.random() > 0.65 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-				elem.className = 'wall'
-				this.board.getCell(j,i).status = 'wall'
-			}
-		}
-	}
+	this.maxX = this.boardArr[0].length 
+	this.maxY = this.boardArr.length
+	this.mazeGenerator()
 
 } 
 
+Maze.prototype.basicMaze = function(){
+	for(var i=0;i<this.boardArr.length;i++){
+		for(var j=0;j<this.boardArr[0].length;j++){
+			var elem = document.getElementById(j.toString()+','+i.toString())
+			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
+				elem.className = 'wall'
+				this.board.getCell(j,i).status = 'wall'
+			}
+			if(Math.random() > 0.85 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
+					if(Math.random() > 0.5){
+						elem.className = 'unexplored mud'
+						this.board.getCell(j,i).weight = 2
+					}
+					else{
+						elem.className = 'unexplored water'
+						this.board.getCell(j,i).weight = 5
+					}
+			}
+
+		}
+	}
+}
+
+Maze.prototype.mazeGenerator = function(){
+	for(var i=0;i<this.maxY;i++){
+		for(var j=0;j<this.maxX;j++){
+			if(i === 0 || i === this.maxY-1 || j === 0 || j === this.maxX - 1){
+				var cell = this.board.getCell(j,i)
+				cell.status = 'wall'
+				document.getElementById(cell.id).className = 'wall'
+			}
+		}
+	}
+	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'vertical')
+} 
+
+Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){ 
+	if(orientation === 'vertical'){  
+		//Get Wall
+		if(startX % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
+			//Get Valid Walls 
+			var validWall = []
+			for(var i=startX;i<endX+1;i+=2){
+				validWall.push(i)
+			}
+			var randomX = validWall[Math.floor(Math.random()*validWall.length)]
+			//Draw Wall 
+			this.drawWall(randomX,randomX,startY,endY,'vertical')
+			//Get possible split points  
+			var splitArr = []
+			for(var i=startY-1;i<endY+2;i+=2){
+				splitArr.push(randomX.toString()+','+i.toString())
+			}
+			//Choose where to split by 
+			var randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
+			//Make hole 
+			var elem = document.getElementById(randomPlaceToSplitID)
+			var idArr = randomPlaceToSplitID.split(',')
+			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
+			elem.className = 'unexplored'
+			cell.status = 'unexplored'
+			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
+			var lengthLargerThanHeightRight = this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+			//Left One 
+				//Left Orientation should be vertical 
+				if(lengthLargerThanHeightLeft){
+					console.log("ASFOINOAINS")
+					this.bossMaze(startX,randomX - 2,startY,endY,'horizontal')
+				}
+				//Left Orientation should be horizontal 
+				else{
+					console.log("VERT")
+					this.bossMaze(startX,randomX - 2,startY,endY,'vertical')
+				}
+			//Right One 
+				//Right Orientation should be vertical 
+				if(lengthLargerThanHeightRight){
+					this.bossMaze(randomX+2,endX,startY,endY,'horizontal')
+				}
+				//Right Orientation should be horizontal 
+				else{	
+					console.log("VERT")
+					this.bossMaze(randomX+2,endX,startY,endY,'vertical')
+				}
+		}
+		else{
+				return;
+		}
+	}
+ 
+	else if(orientation === 'horizontal'){  
+		//Get Wall
+		if(startY % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
+			//Get Valid Walls 
+			var validWall = []
+			for(var i=startY;i<endY+1;i+=2){
+					validWall.push(i)
+			}
+			var randomY = validWall[Math.floor(Math.random()*validWall.length)]
+			//Draw Wall 
+			this.drawWall(startX,endX,randomY,randomY,'horizontal')
+			//Get possible split points 
+			var splitArr = []
+			for(var i=startX-1;i<endX+2;i+=2){
+				 splitArr.push(i.toString()+','+randomY.toString())
+			}
+			//Choose where to split by 
+			var randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
+			//Make hole 
+			var elem = document.getElementById(randomPlaceToSplitID)
+			var idArr = randomPlaceToSplitID.split(',')
+			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
+			elem.className = 'unexplored'
+			cell.status = 'unexplored'
+			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
+			var lengthLargerThanHeightBottom = this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			//Top One 
+				//Top Orientation should be horizontal 
+				if(lengthLargerThanHeightTop){
+					this.bossMaze(startX,endX,startY,randomY - 2,'horizontal')
+				}
+				//Bottom Orientation should be vertical
+				else{
+					this.bossMaze(startX,endX,startY,randomY - 2,'vertical')
+				}
+			//Bottom One 
+				//Bottom Orientation should be horizontal
+				if(lengthLargerThanHeightBottom){
+					this.bossMaze(startX,endX,randomY + 2,endY,'horizontal')
+				}
+				//Right Orientation should be vertical 
+				else{	
+					this.bossMaze(startX,endX,randomY+2,endY,'vertical')
+				}
+		}
+		else{
+				console.log("AIOSFNOIAN")
+				return;
+		}
+	}
+}
+Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){ 
+	if(orientation === 'vertical'){
+		for(var i=startY-1;i<endY+2;i++){
+			var elem = document.getElementById(startX.toString()+','+i.toString())
+			elem.className = 'wall'
+			var cell = this.board.getCell(startX,i)
+			cell.status = 'wall'
+		}
+	}
+	else if(orientation === 'horizontal'){
+		for(var j=startX-1;j<endX+2;j++){
+			var elem = document.getElementById(j.toString()+','+startY.toString())
+			elem.className = 'wall'
+			var cell = this.board.getCell(j,startY)
+			cell.status = 'wall'
+		}
+	}
+}
+Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
+	var returnVal = (endX-startX) - (endY-startY) > 0
+	console.log(endX,startX)
+	return returnVal
+}
 
 module.exports = Maze
 },{}],4:[function(require,module,exports){
@@ -600,7 +765,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -621,7 +786,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -642,7 +807,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -663,7 +828,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -674,7 +839,8 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 		}  
 	}
 	return neigbourList
-} 
+}  
+
 Search.prototype.getNeighboursAStar = function(arr,node,exploredList){   
 	var neigbourList = []
 	//Up 
@@ -688,7 +854,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -709,7 +875,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -730,7 +896,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -751,7 +917,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		//Calculate number of moves to get to Get to Up Direction 
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -763,6 +929,7 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 	}
 	return neigbourList
 } 
+
 Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){   
 	var neigbourList = []
 	//Up 

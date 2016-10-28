@@ -16,10 +16,12 @@ function Board(height,width){
   this.width = width 
   this.boardArr = []
   this.mouseDown = false
+  this.keyDown = false 
   this.startNode;
   this.finalNode;
   this.currentCellStatus = null
-} 
+  this.mode = 0
+}  
 
 Board.prototype.initialise = function(){
   this.createGrid()
@@ -58,10 +60,19 @@ Board.prototype.createGrid = function(){
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
 
-Board.prototype.addEventListeners = function(){
+Board.prototype.addEventListeners = function(){ 
   var board = this
+  //Add window keyDown event 
+  window.addEventListener('keydown',function(e){
+    e.keyCode === 16 || e.keyCode === 49 ? board.keyDown = e.keyCode : board.keyDown;
+  })
+  //Add window keyUp event 
+  window.addEventListener('keyup',function(){
+    board.keyDown = false
+  }) 
+
   //Add listeners for table elements
-  for(var i=0;i<this.height;i++){
+  for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
@@ -80,18 +91,12 @@ Board.prototype.addEventListeners = function(){
         board.currentCellStatus = null
       })
       elem.addEventListener('mouseenter',function(){
-        // console.log(board.mouseDown,board.currentCellStatus,this.className)
-        // if(this.className !== 'startingCell' && this.className !== 'finalCell'){
           //Normal Wall Creation Drag Event
           if(board.mouseDown && board.currentCellStatus === null){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
-            this.className = this.className 
-            console.log(this.className)
-          }
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){ 
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
@@ -104,10 +109,6 @@ Board.prototype.addEventListeners = function(){
               board.finalNode = cell
             }
           }
-        // }
-        // else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
-        //     console.log("IN ELSE")
-        // }
       })
       elem.addEventListener('mouseout',function(){
         if(this.className === 'startingCell' || this.className === 'finalCell'){
@@ -121,19 +122,12 @@ Board.prototype.addEventListeners = function(){
       })
     }
   }    
-  //Add listeners for Nav Bar
-  document.getElementById('Algorithm').addEventListener('click',function(){
-    console.log('Algorithm clicked')
-  })
-  document.getElementById('AlgorithmSettings').addEventListener('click',function(){
-    console.log('AlgorithmSettings clicked')
-  })
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
       search.startSearch()
-  })
+  }) 
   //DFS
   document.getElementById('startButtonDFS').addEventListener('click',function(){
       var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
@@ -149,11 +143,12 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
     search.startSearch()
   })
-  //AStar 
+  //Greedy
   document.getElementById('startButtonGreedy').addEventListener('click',function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
     search.startSearch()
   })
+  //Random Maze Generation
   document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
     maze.startMaze()
@@ -161,11 +156,11 @@ Board.prototype.addEventListeners = function(){
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
     board.clearPath()
-  })
+  }) 
   //Clear Walls
    document.getElementById('startButtonClearWalls').addEventListener('click',function(){
     board.clearWalls()
-  })
+  }) 
 }   
 
 Board.prototype.getCell = function(x,y){
@@ -194,17 +189,28 @@ Board.prototype.changeCellDrag = function(id){
     var toggledCell = this.toggle(cell)
     var elem = document.getElementById(id)
     if(toggledCell){
+      console.log(toggledCell)
       elem.className = toggledCell
-    }
-    else{
-      //LOGIC FOR DRAG START AND END
     }
   }
   
 }
 
 Board.prototype.toggle = function(cell){
-  if(cell.status === 'unexplored' || cell.status === 'explored'){
+  if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
+      cell.status = 'unexplored'
+      if(this.keyDown === 16){  
+        cell.weight = 2
+        return cell.status +' mud'
+      }
+      else{
+        cell.weight = 5
+        return cell.status +' water'
+      }
+      
+
+  }
+  else if(cell.status === 'unexplored' || cell.status === 'explored'){
       cell.status = 'wall'
       return cell.status
   }
@@ -253,5 +259,5 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(height/30,width/30)
+var board = new Board(21,21)
 board.initialise()
