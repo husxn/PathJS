@@ -12,7 +12,7 @@ Maze.prototype.startMaze = function(){
 	this.maxY = this.boardArr.length
 	this.mazeGenerator()
 	this.animate()
-} 
+}  
 
 Maze.prototype.basicMaze = function(){
 	for(var i=0;i<this.boardArr.length;i++){

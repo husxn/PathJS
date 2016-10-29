@@ -26,6 +26,7 @@ function Board(height,width){
   this.shouldBe = null
   this.algoDone = false
   this.currentAlgo = null
+  this.lastWall = false
 }  
 
 Board.prototype.initialise = function(){
@@ -109,7 +110,7 @@ Board.prototype.addEventListeners = function(){
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){ 
-              if(cell.status !== 'wall'){
+              if(cell.status === 'wall'){board.lastWall = true}
                 cell.status = 'startNode'
                 board.startNode = cell
                 if(board.algoDone){
@@ -117,14 +118,10 @@ Board.prototype.addEventListeners = function(){
                 var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
                 search.startSearch()
                 }
-              }
-              else{
-                document.getElementById(cell.id).className = 'wall'
-              }
 
             }
             else if(this.className === 'finalCell'){
-              if(cell.status !== 'wall'){
+              if(cell.status === 'wall'){board.lastWall = true}
                 cell.status = 'finalNode'
                 board.finalNode = cell
                 if(board.algoDone){
@@ -132,11 +129,6 @@ Board.prototype.addEventListeners = function(){
                 var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
                 search.startSearch()
                 }
-              }
-              else{
-                document.getElementById(cell.id).className = 'wall'
-              }
-              
             }
           }
           else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
@@ -156,12 +148,22 @@ Board.prototype.addEventListeners = function(){
                 this.className = board.shouldBe
                 board.shouldBe = null
               }
-              else if(this.className !== ('wall')){
-                board.clearPath()
-                var idSplit = this.id.split(',')
-                var cell = board.getCell(idSplit[0],idSplit[1])
-                this.className = 'unexplored'
-                cell.status = 'unexplored'
+              else{
+                if(board.lastWall){
+                  board.clearPath()
+                  var idSplit = this.id.split(',')
+                  var cell = board.getCell(idSplit[0],idSplit[1])
+                  this.className = 'wall'
+                  cell.status = 'wall'
+                  board.lastWall = false
+                }
+                else{
+                  board.clearPath()
+                  var idSplit = this.id.split(',')
+                  var cell = board.getCell(idSplit[0],idSplit[1])
+                  this.className = 'unexplored'
+                  cell.status = 'unexplored'
+                }
               }
           }
         }
@@ -343,7 +345,7 @@ Maze.prototype.startMaze = function(){
 	this.maxY = this.boardArr.length
 	this.mazeGenerator()
 	this.animate()
-} 
+}  
 
 Maze.prototype.basicMaze = function(){
 	for(var i=0;i<this.boardArr.length;i++){
