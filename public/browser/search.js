@@ -1,31 +1,37 @@
-function Search(board,startNode,finalNode,currentAlgorithm){
+function Search(board,startNode,finalNode,currentAlgorithm,boardA){
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 	this.finalNode = finalNode
+	this.boardA = boardA
 }
 
 Search.prototype.startSearch = function(){
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
 		var exploredList = this.searchBFS()
-    this.showAnimation(exploredList)
+    this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		var exploredList = this.searchDFS()
-    this.showAnimation(exploredList)
+    this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
 		var exploredList = this.searchDijkstra()
-    this.showAnimation(exploredList)
+		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 		var exploredList = this.searchAStar()
-    this.showAnimation(exploredList)
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		var exploredList = this.searchGreedy()
-    this.showAnimation(exploredList)
+   this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}    
 }  
 
@@ -114,6 +120,7 @@ Search.prototype.searchBFS = function(){
 				returnVal = true
 			}
 		}
+		this.boardA.currentAlgo = 'DFS'
 		return returnVal
 	} 
 	whileLoop:
@@ -137,6 +144,7 @@ Search.prototype.searchBFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'BFS'
 	return exploredList 
 }  
 
@@ -184,10 +192,11 @@ Search.prototype.searchAStar = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'AStar'
 	return exploredList
 }
 Search.prototype.searchGreedy = function(){
-		this.startNode.distance = 0
+	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
 	var isPresent = function(node){
@@ -230,15 +239,15 @@ Search.prototype.searchGreedy = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
-Search.prototype.showAnimation = function(exploredList){ 
+Search.prototype.showAnimation = function(exploredList){  
   var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
-  document.getElementById(startNode.id).className = 'startingCell'
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
@@ -248,7 +257,7 @@ Search.prototype.showAnimation = function(exploredList){
         change(exploredList[index])
         timeout(index+1);
     }, 0.0001);
-  } 
+  }  
   function change(node){
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
@@ -271,19 +280,34 @@ Search.prototype.showAnimation = function(exploredList){
 			}
 			node = node.parent
 		}
-		// listPath = listPath.reverse()
-		// for(var i=0;i<listPath.length;i++){
-		// 	if(i!==0){
-		// 		document.getElementById(listPath[i-1].id).className = 'explored'
-				
-		// 	}
-		// 	console.log(listPath[i])
-		// 	listPath[i].status = 'shortestPath'
-		// 	document.getElementById(listPath[i].id).className = 'shortestPath'
-		// }
 	}
   timeout(0)
 	// showPath(endNode,this)
+}
+Search.prototype.showAnimationDrag = function(exploredList){
+	for(var i in exploredList){
+		var cell = exploredList[i]
+		if(cell.status === 'unexplored'){
+			cell.status = 'explored'
+			document.getElementById(cell.id).className = 'explored'
+		}
+	}
+	var endNode = exploredList[exploredList.length-1]
+	var shortestPathList = []
+	while(endNode !== this.startNode){
+		shortestPathList.push(endNode)
+		endNode = endNode.parent
+	}
+	shortestPathList = shortestPathList.reverse()
+	for(var i in shortestPathList){
+		var cell = shortestPathList[i]
+		if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+			cell.status = 'explored'
+			document.getElementById(cell.id).className = 'shortestPath'
+		}
+	}
+	this.boardA.algoDone = true
+	 
 }  
 
 Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){   
@@ -597,6 +621,7 @@ Search.prototype.searchDijkstra = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'Dijkstra'
 	return exploredList
 }   
 

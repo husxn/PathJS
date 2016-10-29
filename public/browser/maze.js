@@ -3,6 +3,7 @@ function Maze(board,startNode,finalNode){
 	this.boardArr = board.boardArr
   this.startNode = startNode
 	this.finalNode = finalNode
+	this.listToAnimate = []
 } 
 
 Maze.prototype.startMaze = function(){
@@ -10,7 +11,7 @@ Maze.prototype.startMaze = function(){
 	this.maxX = this.boardArr[0].length 
 	this.maxY = this.boardArr.length
 	this.mazeGenerator()
-
+	this.animate()
 } 
 
 Maze.prototype.basicMaze = function(){
@@ -42,11 +43,13 @@ Maze.prototype.mazeGenerator = function(){
 			if(i === 0 || i === this.maxY-1 || j === 0 || j === this.maxX - 1){
 				var cell = this.board.getCell(j,i)
 				cell.status = 'wall'
-				document.getElementById(cell.id).className = 'wall'
+				this.listToAnimate.push(cell)
+
+				// document.getElementById(cell.id).className = 'wall'
 			}
 		}
 	}
-	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'vertical')
+	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'horizontal')
 } 
 
 Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){ 
@@ -72,19 +75,19 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(randomPlaceToSplitID)
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
-			elem.className = 'unexplored'
+			// elem.className = 'unexplored'
 			cell.status = 'unexplored'
+			this.listToAnimate.push(cell)
+
 			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
-			var lengthLargerThanHeightRight = this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+			var lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
 			//Left One 
 				//Left Orientation should be vertical 
 				if(lengthLargerThanHeightLeft){
-					console.log("ASFOINOAINS")
 					this.bossMaze(startX,randomX - 2,startY,endY,'horizontal')
 				}
 				//Left Orientation should be horizontal 
 				else{
-					console.log("VERT")
 					this.bossMaze(startX,randomX - 2,startY,endY,'vertical')
 				}
 			//Right One 
@@ -94,7 +97,6 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 				}
 				//Right Orientation should be horizontal 
 				else{	
-					console.log("VERT")
 					this.bossMaze(randomX+2,endX,startY,endY,'vertical')
 				}
 		}
@@ -125,10 +127,12 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(randomPlaceToSplitID)
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
-			elem.className = 'unexplored'
+			// elem.className = 'unexplored'
 			cell.status = 'unexplored'
+			this.listToAnimate.push(cell)
+
 			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
-			var lengthLargerThanHeightBottom = this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			var lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
 			//Top One 
 				//Top Orientation should be horizontal 
 				if(lengthLargerThanHeightTop){
@@ -149,7 +153,6 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 				}
 		}
 		else{
-				console.log("AIOSFNOIAN")
 				return;
 		}
 	}
@@ -159,29 +162,44 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 	if(orientation === 'vertical'){
 		for(var i=startY-1;i<endY+2;i++){
 			var elem = document.getElementById(startX.toString()+','+i.toString())
-			elem.className = 'wall'
+			// elem.className = 'wall'
 			var cell = this.board.getCell(startX,i)
 			cell.status = 'wall'
+			this.listToAnimate.push(cell)
+
 		}
 	}
 	else if(orientation === 'horizontal'){
 		for(var j=startX-1;j<endX+2;j++){
 			var elem = document.getElementById(j.toString()+','+startY.toString())
-			elem.className = 'wall'
+			// elem.className = 'wall'
 			var cell = this.board.getCell(j,startY)
 			cell.status = 'wall'
+			this.listToAnimate.push(cell)
+
 		}
 	}
 }
 
 Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 	var returnVal = (endX-startX) - (endY-startY) > 0
-	console.log(endX,startX)
 	return returnVal
 }
 
-Maze.prototype.animate = function(listToExplore){
-	
+
+Maze.prototype.animate = function(){
+  var list = this.listToAnimate
+	function timeout(index) {
+    setTimeout(function () {
+        if(index === list.length){
+					return
+        }
+        var cell = list[index]
+				document.getElementById(cell.id).className = cell.status
+        timeout(index+1);
+    }, 0.0001);
+  }   
+  timeout(0)
 }
 
 module.exports = Maze

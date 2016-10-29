@@ -21,6 +21,10 @@ function Board(height,width){
   this.finalNode;
   this.currentCellStatus = null
   this.mode = 0
+  this.currentPlace = null
+  this.shouldBe = null
+  this.algoDone = false
+  this.currentAlgo = null
 }  
 
 Board.prototype.initialise = function(){
@@ -69,9 +73,9 @@ Board.prototype.addEventListeners = function(){
   //Add window keyUp event 
   window.addEventListener('keyup',function(){
     board.keyDown = false
-  }) 
+  })  
 
-  //Add listeners for table elements
+  //Add listeners for table elements 
   for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
@@ -96,27 +100,62 @@ Board.prototype.addEventListeners = function(){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){ 
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){  
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){
               cell.status = 'startNode'
               board.startNode = cell
+              if(board.algoDone){
+                board.clearPath()
+              var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+              search.startSearch()
+              }
+
             }
             else if(this.className === 'finalCell'){
               cell.status = 'finalNode'
               board.finalNode = cell
+              if(board.algoDone){
+                board.clearPath()
+              var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+              search.startSearch()
+              }
+            }
+          }
+          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
+            if(this.className === 'startingCell'){
+              // var idArr = board.currentPlace.split(',')
+              // board.boardArr[idArr[1]][idArr[0]] = board.finalNode 
+              // var elem = document.getElementById(board.finalNode.id)
+              // elem.className = 'finalCell'
+              // board.currentPlace = document.getElementsByClassName('startingCell')[0].id
+              board.shouldBe = 'startingCell'
+            }
+            else if(this.className === 'finalCell'){
+              // var idArr = board.currentPlace.split(',')
+              // board.boardArr[idArr[1]][idArr[0]] = board.startNode 
+              // var elem = document.getElementById(board.startNode.id)
+              // elem.className = 'startingCell'
+              // board.currentPlace = document.getElementsByClassName('finalCell')[0].id
+              board.shouldBe = 'finalCell'
             }
           }
       })
       elem.addEventListener('mouseout',function(){
         if(this.className === 'startingCell' || this.className === 'finalCell'){
           if(board.mouseDown && board.currentCellStatus !== null){
-            this.className = 'unexplored'
-            var idSplit = this.id.split(',')
-            var cell = board.getCell(idSplit[0],idSplit[1])
-            cell.status = 'unexplored'
+              if(board.shouldBe){
+                this.className = board.shouldBe
+                board.shouldBe = null
+              }
+              else{
+                var idSplit = this.id.split(',')
+                var cell = board.getCell(idSplit[0],idSplit[1])
+                this.className = 'unexplored'
+                cell.status = 'unexplored'
+              }
           }
         }
       })
@@ -125,27 +164,27 @@ Board.prototype.addEventListeners = function(){
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS',board)
       search.startSearch()
-  }) 
+  })  
   //DFS
   document.getElementById('startButtonDFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS',board)
       search.startSearch()
   })
   //Dijkstra 
   document.getElementById('startButtonDijkstra').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra',board)
     search.startSearch()
   })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar',board)
     search.startSearch()
   })
   //Greedy
   document.getElementById('startButtonGreedy').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy',board)
     search.startSearch()
   })
   //Random Maze Generation
@@ -155,6 +194,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
+    board.algoDone = false
     board.clearPath()
   }) 
   //Clear Walls
@@ -259,5 +299,5 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(21,21)
+var board = new Board(51,51)
 board.initialise()

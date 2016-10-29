@@ -22,6 +22,10 @@ function Board(height,width){
   this.finalNode;
   this.currentCellStatus = null
   this.mode = 0
+  this.currentPlace = null
+  this.shouldBe = null
+  this.algoDone = false
+  this.currentAlgo = null
 }  
 
 Board.prototype.initialise = function(){
@@ -70,9 +74,9 @@ Board.prototype.addEventListeners = function(){
   //Add window keyUp event 
   window.addEventListener('keyup',function(){
     board.keyDown = false
-  }) 
+  })  
 
-  //Add listeners for table elements
+  //Add listeners for table elements 
   for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
@@ -97,27 +101,62 @@ Board.prototype.addEventListeners = function(){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){ 
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){  
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){
               cell.status = 'startNode'
               board.startNode = cell
+              if(board.algoDone){
+                board.clearPath()
+              var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+              search.startSearch()
+              }
+
             }
             else if(this.className === 'finalCell'){
               cell.status = 'finalNode'
               board.finalNode = cell
+              if(board.algoDone){
+                board.clearPath()
+              var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+              search.startSearch()
+              }
+            }
+          }
+          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
+            if(this.className === 'startingCell'){
+              // var idArr = board.currentPlace.split(',')
+              // board.boardArr[idArr[1]][idArr[0]] = board.finalNode 
+              // var elem = document.getElementById(board.finalNode.id)
+              // elem.className = 'finalCell'
+              // board.currentPlace = document.getElementsByClassName('startingCell')[0].id
+              board.shouldBe = 'startingCell'
+            }
+            else if(this.className === 'finalCell'){
+              // var idArr = board.currentPlace.split(',')
+              // board.boardArr[idArr[1]][idArr[0]] = board.startNode 
+              // var elem = document.getElementById(board.startNode.id)
+              // elem.className = 'startingCell'
+              // board.currentPlace = document.getElementsByClassName('finalCell')[0].id
+              board.shouldBe = 'finalCell'
             }
           }
       })
       elem.addEventListener('mouseout',function(){
         if(this.className === 'startingCell' || this.className === 'finalCell'){
           if(board.mouseDown && board.currentCellStatus !== null){
-            this.className = 'unexplored'
-            var idSplit = this.id.split(',')
-            var cell = board.getCell(idSplit[0],idSplit[1])
-            cell.status = 'unexplored'
+              if(board.shouldBe){
+                this.className = board.shouldBe
+                board.shouldBe = null
+              }
+              else{
+                var idSplit = this.id.split(',')
+                var cell = board.getCell(idSplit[0],idSplit[1])
+                this.className = 'unexplored'
+                cell.status = 'unexplored'
+              }
           }
         }
       })
@@ -126,27 +165,27 @@ Board.prototype.addEventListeners = function(){
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'BFS',board)
       search.startSearch()
-  }) 
+  })  
   //DFS
   document.getElementById('startButtonDFS').addEventListener('click',function(){
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS')
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,'DFS',board)
       search.startSearch()
   })
   //Dijkstra 
   document.getElementById('startButtonDijkstra').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Dijkstra',board)
     search.startSearch()
   })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar',board)
     search.startSearch()
   })
   //Greedy
   document.getElementById('startButtonGreedy').addEventListener('click',function(){
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy')
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy',board)
     search.startSearch()
   })
   //Random Maze Generation
@@ -156,6 +195,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){
+    board.algoDone = false
     board.clearPath()
   }) 
   //Clear Walls
@@ -260,7 +300,7 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(21,21)
+var board = new Board(51,51)
 board.initialise()
 
 },{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
@@ -288,6 +328,7 @@ function Maze(board,startNode,finalNode){
 	this.boardArr = board.boardArr
   this.startNode = startNode
 	this.finalNode = finalNode
+	this.listToAnimate = []
 } 
 
 Maze.prototype.startMaze = function(){
@@ -295,7 +336,7 @@ Maze.prototype.startMaze = function(){
 	this.maxX = this.boardArr[0].length 
 	this.maxY = this.boardArr.length
 	this.mazeGenerator()
-
+	this.animate()
 } 
 
 Maze.prototype.basicMaze = function(){
@@ -327,11 +368,13 @@ Maze.prototype.mazeGenerator = function(){
 			if(i === 0 || i === this.maxY-1 || j === 0 || j === this.maxX - 1){
 				var cell = this.board.getCell(j,i)
 				cell.status = 'wall'
-				document.getElementById(cell.id).className = 'wall'
+				this.listToAnimate.push(cell)
+
+				// document.getElementById(cell.id).className = 'wall'
 			}
 		}
 	}
-	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'vertical')
+	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'horizontal')
 } 
 
 Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){ 
@@ -357,19 +400,19 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(randomPlaceToSplitID)
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
-			elem.className = 'unexplored'
+			// elem.className = 'unexplored'
 			cell.status = 'unexplored'
+			this.listToAnimate.push(cell)
+
 			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
-			var lengthLargerThanHeightRight = this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+			var lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
 			//Left One 
 				//Left Orientation should be vertical 
 				if(lengthLargerThanHeightLeft){
-					console.log("ASFOINOAINS")
 					this.bossMaze(startX,randomX - 2,startY,endY,'horizontal')
 				}
 				//Left Orientation should be horizontal 
 				else{
-					console.log("VERT")
 					this.bossMaze(startX,randomX - 2,startY,endY,'vertical')
 				}
 			//Right One 
@@ -379,7 +422,6 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 				}
 				//Right Orientation should be horizontal 
 				else{	
-					console.log("VERT")
 					this.bossMaze(randomX+2,endX,startY,endY,'vertical')
 				}
 		}
@@ -410,10 +452,12 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(randomPlaceToSplitID)
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
-			elem.className = 'unexplored'
+			// elem.className = 'unexplored'
 			cell.status = 'unexplored'
+			this.listToAnimate.push(cell)
+
 			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
-			var lengthLargerThanHeightBottom = this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			var lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
 			//Top One 
 				//Top Orientation should be horizontal 
 				if(lengthLargerThanHeightTop){
@@ -434,7 +478,6 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 				}
 		}
 		else{
-				console.log("AIOSFNOIAN")
 				return;
 		}
 	}
@@ -444,61 +487,82 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 	if(orientation === 'vertical'){
 		for(var i=startY-1;i<endY+2;i++){
 			var elem = document.getElementById(startX.toString()+','+i.toString())
-			elem.className = 'wall'
+			// elem.className = 'wall'
 			var cell = this.board.getCell(startX,i)
 			cell.status = 'wall'
+			this.listToAnimate.push(cell)
+
 		}
 	}
 	else if(orientation === 'horizontal'){
 		for(var j=startX-1;j<endX+2;j++){
 			var elem = document.getElementById(j.toString()+','+startY.toString())
-			elem.className = 'wall'
+			// elem.className = 'wall'
 			var cell = this.board.getCell(j,startY)
 			cell.status = 'wall'
+			this.listToAnimate.push(cell)
+
 		}
 	}
 }
 
 Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 	var returnVal = (endX-startX) - (endY-startY) > 0
-	console.log(endX,startX)
 	return returnVal
 }
 
-Maze.prototype.animate = function(listToExplore){
-	
+
+Maze.prototype.animate = function(){
+  var list = this.listToAnimate
+	function timeout(index) {
+    setTimeout(function () {
+        if(index === list.length){
+					return
+        }
+        var cell = list[index]
+				document.getElementById(cell.id).className = cell.status
+        timeout(index+1);
+    }, 0.0001);
+  }   
+  timeout(0)
 }
 
 module.exports = Maze
 },{}],4:[function(require,module,exports){
-function Search(board,startNode,finalNode,currentAlgorithm){
+function Search(board,startNode,finalNode,currentAlgorithm,boardA){
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 	this.finalNode = finalNode
+	this.boardA = boardA
 }
 
 Search.prototype.startSearch = function(){
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
 		var exploredList = this.searchBFS()
-    this.showAnimation(exploredList)
+    this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		var exploredList = this.searchDFS()
-    this.showAnimation(exploredList)
+    this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
 		var exploredList = this.searchDijkstra()
-    this.showAnimation(exploredList)
+		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 		var exploredList = this.searchAStar()
-    this.showAnimation(exploredList)
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		var exploredList = this.searchGreedy()
-    this.showAnimation(exploredList)
+   this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
 	}    
 }  
 
@@ -587,6 +651,7 @@ Search.prototype.searchBFS = function(){
 				returnVal = true
 			}
 		}
+		this.boardA.currentAlgo = 'DFS'
 		return returnVal
 	} 
 	whileLoop:
@@ -610,6 +675,7 @@ Search.prototype.searchBFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'BFS'
 	return exploredList 
 }  
 
@@ -657,10 +723,11 @@ Search.prototype.searchAStar = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'AStar'
 	return exploredList
 }
 Search.prototype.searchGreedy = function(){
-		this.startNode.distance = 0
+	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
 	var isPresent = function(node){
@@ -703,15 +770,15 @@ Search.prototype.searchGreedy = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
-Search.prototype.showAnimation = function(exploredList){ 
+Search.prototype.showAnimation = function(exploredList){  
   var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
-  document.getElementById(startNode.id).className = 'startingCell'
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
@@ -721,7 +788,7 @@ Search.prototype.showAnimation = function(exploredList){
         change(exploredList[index])
         timeout(index+1);
     }, 0.0001);
-  } 
+  }  
   function change(node){
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
@@ -744,19 +811,34 @@ Search.prototype.showAnimation = function(exploredList){
 			}
 			node = node.parent
 		}
-		// listPath = listPath.reverse()
-		// for(var i=0;i<listPath.length;i++){
-		// 	if(i!==0){
-		// 		document.getElementById(listPath[i-1].id).className = 'explored'
-				
-		// 	}
-		// 	console.log(listPath[i])
-		// 	listPath[i].status = 'shortestPath'
-		// 	document.getElementById(listPath[i].id).className = 'shortestPath'
-		// }
 	}
   timeout(0)
 	// showPath(endNode,this)
+}
+Search.prototype.showAnimationDrag = function(exploredList){
+	for(var i in exploredList){
+		var cell = exploredList[i]
+		if(cell.status === 'unexplored'){
+			cell.status = 'explored'
+			document.getElementById(cell.id).className = 'explored'
+		}
+	}
+	var endNode = exploredList[exploredList.length-1]
+	var shortestPathList = []
+	while(endNode !== this.startNode){
+		shortestPathList.push(endNode)
+		endNode = endNode.parent
+	}
+	shortestPathList = shortestPathList.reverse()
+	for(var i in shortestPathList){
+		var cell = shortestPathList[i]
+		if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+			cell.status = 'explored'
+			document.getElementById(cell.id).className = 'shortestPath'
+		}
+	}
+	this.boardA.algoDone = true
+	 
 }  
 
 Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){   
@@ -1070,6 +1152,7 @@ Search.prototype.searchDijkstra = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'Dijkstra'
 	return exploredList
 }   
 

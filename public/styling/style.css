@@ -16,14 +16,21 @@ li{
     text-align: center;
 }
 #board td{
-  width: 25px;
-  height: 25px;
+  width: 12px;
+  height: 12px;
 }
 .explored{
-  background-image:url('sand.png')
+    border:1px;
+  border-style: solid;
+  border-color: darkslategray;
+  background:darkmagenta
 }
 .unexplored{
-  background-image:url('lightGrass.png')
+  border:1px;
+  border-style: solid;
+  border-color: darkslategray;
+  background: white
+
 }
 .unexplored.mud{
   background-image:url('mud.png')
@@ -32,18 +39,18 @@ li{
   background-image:url('water.png')
 }
 .wall{
-  background-image:url('grassImage.png')
+  background:darkslategray
 }
 .finalCell{
   /*background-image:url('character.png')*/
   background: black
 }
 .startingCell{
-  background-image:url('character.png')
+  background:yellow
 
 }
 .shortestPath{
-  background:white
+  background:orangered
 }
 button{
   display:block;
