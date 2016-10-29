@@ -1,6 +1,9 @@
 /*
 Bugs to fix: 
   - start end node shit
-  - start end node rubbing out walls
-  - maze deleting start end nodes 
+  - maze deleting start end nodes
+  - wall start end node stuff
+Things to implement: 
+  - Bi-directional Search 
+  - Middle Node
 */
