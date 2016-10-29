@@ -34,7 +34,7 @@ Board.prototype.initialise = function(){
   this.addEventListeners()
 }
 
-Board.prototype.createGrid = function(){
+Board.prototype.createGrid = function(){ 
   let initialHTML = ''
   for(var i=0;i<this.height;i++){
     //Add row HTML
@@ -63,6 +63,7 @@ Board.prototype.createGrid = function(){
   //Set Initial end Node
   var xFinalNode = Math.floor(3*this.boardArr.length/4)
   this.finalNode = this.boardArr[y][xFinalNode]
+  this.boardArr[y][xFinalNode].status = 'finalNode'
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
 
@@ -77,7 +78,7 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
-  //Add listeners for table elements 
+  //Add listeners for table elements  
   for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
@@ -196,6 +197,11 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy',board)
     search.startSearch()
   })
+  //Bi Directional
+  document.getElementById('startButtonBidirectional').addEventListener('click',function(){
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Bidirectional',board)
+    search.startSearch()
+  })
   //Random Maze Generation
   document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
@@ -308,16 +314,17 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(51,51)
-board.initialise()
+var board = new Board(11,11)
+board.initialise() 
 
 },{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
-  this.weight = 0
+  this.exploredBy = null
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
+  this.weight = 0
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
@@ -385,7 +392,7 @@ Maze.prototype.mazeGenerator = function(){
 	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'horizontal')
 } 
 
-Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){  
+Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){   
 	if(orientation === 'vertical'){  
 		//Get Wall
 		if(startX % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
@@ -409,8 +416,10 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
-			cell.status = 'unexplored'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'unexplored'
+				this.listToAnimate.push(cell)
+			}
 
 			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
 			var lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
@@ -461,8 +470,10 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
-			cell.status = 'unexplored'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'unexplored'
+				this.listToAnimate.push(cell)
+			}
 
 			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
 			var lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
@@ -497,11 +508,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(startX.toString()+','+i.toString())
 			// elem.className = 'wall'
 			var cell = this.board.getCell(startX,i)
-			if(cell !== this.startNode && cell!== this.finalNode){
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
 			}
-
 		}
 	}
 	else if(orientation === 'horizontal'){
@@ -509,8 +519,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(j.toString()+','+startY.toString())
 			// elem.className = 'wall'
 			var cell = this.board.getCell(j,startY)
-			cell.status = 'wall'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'wall'
+				this.listToAnimate.push(cell)
+			}
 
 		}
 	}
@@ -571,7 +583,12 @@ Search.prototype.startSearch = function(){
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		var exploredList = this.searchGreedy()
-   this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
+	}    
+	else if(this.currentAlgorithm === 'Bidirectional'){
+		var exploredList = this.searchBidirectional()
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
 	}    
 }  
@@ -661,7 +678,6 @@ Search.prototype.searchBFS = function(){
 				returnVal = true
 			}
 		}
-		this.boardA.currentAlgo = 'DFS'
 		return returnVal
 	} 
 	whileLoop:
@@ -689,7 +705,93 @@ Search.prototype.searchBFS = function(){
 	return exploredList 
 }  
 
-Search.prototype.searchAStar = function(){
+Search.prototype.searchBidirectional = function(){ 
+	var exploredList = []
+	var listToExploreStart = [this.startNode]
+	var listToExploreFinal = [this.finalNode]
+	var count = 2
+	var currentNode;
+	var status;
+	var shouldBreak = function(node,status){ 
+		var returnVal = false;
+		for(var i in exploredList){
+			if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy !== status){
+				// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
+				returnVal = true
+			}
+		}
+		// console.log(returnVal)
+		return returnVal
+	}
+	var isPresent = function(node,status){ 
+		var returnVal = false;
+		for(var i in exploredList){
+			if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy === status){
+				// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
+				returnVal = true
+			}
+		}
+		
+		return returnVal
+	} 
+
+	whileLoop:
+	while(listToExploreStart.length !== 0 && listToExploreFinal.length !== 0){
+		//Check which list to use currentNode from 
+		currentNode = count % 2 === 0 ? listToExploreStart[0] : listToExploreFinal[0]
+		count % 2 === 0 ? status = 'start' : status = 'final'
+		// console.log(count)
+		//Base Case to return from 
+		// console.log(count,status,currentNode)
+		if(shouldBreak(currentNode,status)){
+			console.log("breaking whileLoop")
+			break whileLoop
+		}
+		//Wall 
+		if(currentNode.status === 'wall'){
+				count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
+		}
+		else if(!isPresent(currentNode,status)){
+			//Get neighbours 
+			var neighbours = this.getNeighbours(this.board,currentNode)
+			//Remove node from listToExplore 
+			count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
+			if(count % 2 === 0){
+				var newNeighboursList = []
+				for(var i in neighbours){
+					neighbours[i].exploredBy = 'start'
+					// console.log(neighbours[i])
+					newNeighboursList.push(neighbours[i])
+				}
+				listToExploreStart = listToExploreStart.concat(newNeighboursList) 
+			}
+			else{
+				var newNeighboursList = []
+				for(var i in neighbours){
+					neighbours[i].exploredBy = 'final'
+					// console.log(neighbours[i])
+					newNeighboursList.push(neighbours[i])
+				}
+					listToExploreFinal = listToExploreFinal.concat(newNeighboursList)
+			}
+			exploredList.push(currentNode)
+		}
+		else{
+			count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
+		}
+		count++
+		
+		
+	}
+
+	this.boardA.currentAlgo = 'Bidirectional'
+	// for(var i in exploredList){
+	// 	console.log(exploredList[i])
+	// }
+	return exploredList
+}
+
+Search.prototype.searchAStar = function(){ 
 		this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -783,7 +885,7 @@ Search.prototype.searchGreedy = function(){
 	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
-Search.prototype.showAnimation = function(exploredList){  
+Search.prototype.showAnimation = function(exploredList){   
   var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
@@ -792,7 +894,7 @@ Search.prototype.showAnimation = function(exploredList){
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          showPath(endNode,self)
+          // showPath(endNode,self)
 					return
         }
         change(exploredList[index])

@@ -33,7 +33,7 @@ Board.prototype.initialise = function(){
   this.addEventListeners()
 }
 
-Board.prototype.createGrid = function(){
+Board.prototype.createGrid = function(){ 
   let initialHTML = ''
   for(var i=0;i<this.height;i++){
     //Add row HTML
@@ -62,6 +62,7 @@ Board.prototype.createGrid = function(){
   //Set Initial end Node
   var xFinalNode = Math.floor(3*this.boardArr.length/4)
   this.finalNode = this.boardArr[y][xFinalNode]
+  this.boardArr[y][xFinalNode].status = 'finalNode'
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
 
@@ -76,7 +77,7 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
-  //Add listeners for table elements 
+  //Add listeners for table elements  
   for(var i=0;i<this.height;i++){ 
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
@@ -195,6 +196,11 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Greedy',board)
     search.startSearch()
   })
+  //Bi Directional
+  document.getElementById('startButtonBidirectional').addEventListener('click',function(){
+    var search = new Search(board.boardArr,board.startNode,board.finalNode,'Bidirectional',board)
+    search.startSearch()
+  })
   //Random Maze Generation
   document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
@@ -307,5 +313,5 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('Algorithm').clientWidth
 var height = Math.floor(document.documentElement.clientHeight)
 var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(51,51)
-board.initialise()
+var board = new Board(11,11)
+board.initialise() 

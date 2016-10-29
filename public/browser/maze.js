@@ -52,7 +52,7 @@ Maze.prototype.mazeGenerator = function(){
 	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'horizontal')
 } 
 
-Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){  
+Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){   
 	if(orientation === 'vertical'){  
 		//Get Wall
 		if(startX % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
@@ -76,8 +76,10 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
-			cell.status = 'unexplored'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'unexplored'
+				this.listToAnimate.push(cell)
+			}
 
 			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
 			var lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
@@ -128,8 +130,10 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			var idArr = randomPlaceToSplitID.split(',')
 			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
-			cell.status = 'unexplored'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'unexplored'
+				this.listToAnimate.push(cell)
+			}
 
 			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
 			var lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
@@ -164,11 +168,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(startX.toString()+','+i.toString())
 			// elem.className = 'wall'
 			var cell = this.board.getCell(startX,i)
-			if(cell !== this.startNode && cell!== this.finalNode){
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
 			}
-
 		}
 	}
 	else if(orientation === 'horizontal'){
@@ -176,8 +179,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(j.toString()+','+startY.toString())
 			// elem.className = 'wall'
 			var cell = this.board.getCell(j,startY)
-			cell.status = 'wall'
-			this.listToAnimate.push(cell)
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'wall'
+				this.listToAnimate.push(cell)
+			}
 
 		}
 	}

@@ -1,9 +1,10 @@
 function Cell(xPos,yPos){
   this.x = xPos
   this.y = yPos
-  this.weight = 0
+  this.exploredBy = null
   this.status = 'unexplored' 
   this.id = this.x.toString()+','+this.y.toString()
+  this.weight = 0
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
