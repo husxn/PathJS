@@ -383,7 +383,7 @@ Maze.prototype.mazeGenerator = function(){
 	this.bossMaze(2,this.boardArr[0].length-3,2,this.boardArr.length-3,'horizontal')
 } 
 
-Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){ 
+Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){  
 	if(orientation === 'vertical'){  
 		//Get Wall
 		if(startX % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
@@ -495,8 +495,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 			var elem = document.getElementById(startX.toString()+','+i.toString())
 			// elem.className = 'wall'
 			var cell = this.board.getCell(startX,i)
-			cell.status = 'wall'
-			this.listToAnimate.push(cell)
+			if(cell !== this.startNode && cell!== this.finalNode){
+				cell.status = 'wall'
+				this.listToAnimate.push(cell)
+			}
 
 		}
 	}
