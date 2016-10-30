@@ -1,34 +1,61 @@
 <html>
   <head>
     <title>Maze Game</title>
-    <link rel="stylesheet" href="/public/styling/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel='stylesheet' href='/public/styling/flat-ui.css'/>
     <link rel="shortcut icon" type="image/png" href="/public/styling/favicon_h.png"/>
   </head>
   <body>
-    <div id='Navbar'>
-      <ul>
-        <li id='Algorithm'>Algorithms 
-          <div class = 'buttonGroup'>
-            <button id='startButtonDFS'>DFS</button>
-            <button id='startButtonBFS'>BFS</button>
-            <button id='startButtonDijkstra'>Dijkstra</button>
-            <button id='startButtonAStar'>A*</button>
-            <button id='startButtonGreedy'>Greedy Best First Search</button>
-            <button id='startButtonBidirectional'>Bi Directional Search</button>
-            <button id='startButtonMazeRecursiveBacktracking'>Random Walls</button>
-            <button id='startButtonClearPath'>Clear Path</button>
-            <button id='startButtonClearWalls'>Clear Walls</button>
+    <div id='navbarDiv'> 
+      <nav class="navbar navbar-inverse"> 
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">path.js</a>
           </div>
-        </li>
-        <li id='AlgorithmSettings'></li>
-        <div class = 'settingsGroup'>
-
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Algorithms
+              <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li id='startButtonDFS'><a href="#">Depth First Search</a></li>
+                <li id='startButtonBFS'><a href="#">Breadth First Search</a></li>
+                <li id='startButtonDijkstra'><a href="#">Dijkstra</a></li> 
+                <li id='startButtonAStar'><a href="#">A* Search</a></li>
+                <li id='startButtonGreedy'><a href="#">Best First Search</a></li>
+                <li id='startButtonBidirectional'><a href="#">Bi-Directional Search</a></li> 
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Maze Generation
+              <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li id='startButtonBasicMaze'><a href="#">Basic Random Maze</a></li>
+                <li id='startButtonBossMaze1'><a href="#">Recursive Descent 1</a></li>
+                <li id='startButtonBossMaze2'><a href="#">Recursive Descent 2</a></li> 
+                <li id='startButtonBossMaze3'><a href="#">Recursive Descent 3</a></li> 
+              </ul>
+            </li>
+            <li class="dropdown"> 
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">Themes
+              <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li id='startButtonBasicTheme'><a href="#">Basic Theme</a></li>
+                <li id='startButtonUberTheme'><a href="#">Uber Theme</a></li>
+                <li id='startButtonPokemonTheme'><a href="#">Pokemon Theme</a></li> 
+              </ul>
+            </li>
+            <li id='startButtonClearWalls'><a href="#">Clear Walls</a></li> 
+            <li id='startButtonClearPath'><a href="#">Clear Path</a></li> 
+          </ul>
+          
         </div>
-      </ul>
+      </nav>
     </div>
     <div id='Maze'>
       <table id='board'/>
     </div>
   </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/public/browser/bundle.js"></script>
 </html>

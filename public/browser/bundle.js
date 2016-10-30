@@ -78,8 +78,19 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
+  window.addEventListener('keydown',function(e){
+    if(e.keyCode === 79){
+      var height = board.boardArr.length 
+      var width =  board.boardArr[0].length 
+      var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
+      cell.status = 'middleObj'
+      document.getElementById(cell.id).className = 'middleObj'
+      console.log(cell)
+    }
+  })
+
   //Add listeners for table elements  
-  for(var i=0;i<this.height;i++){ 
+  for(var i=0;i<this.height;i++){  
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
@@ -189,6 +200,7 @@ Board.prototype.addEventListeners = function(){
   })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
+
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar',board)
     search.startSearch()
   })
@@ -203,7 +215,7 @@ Board.prototype.addEventListeners = function(){
     search.startSearch()
   })
   //Random Maze Generation
-  document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
+  document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
     maze.startMaze()
   })
@@ -311,10 +323,11 @@ Board.prototype.clearWalls = function(){
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
-var bar = document.getElementById('Algorithm').clientWidth
-var height = Math.floor(document.documentElement.clientHeight)
-var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(11,11)
+var bar = document.getElementById('navbarDiv').clientHeight
+var height = Math.floor(document.documentElement.clientHeight) - bar
+var width = Math.floor(document.documentElement.clientWidth)
+var board = new Board(height/28,width/25)
+console.log(height,width)
 board.initialise() 
 
 },{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
@@ -551,20 +564,23 @@ Maze.prototype.animate = function(){
 
 module.exports = Maze
 },{}],4:[function(require,module,exports){
-function Search(board,startNode,finalNode,currentAlgorithm,boardA){
+function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePresent){
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 	this.finalNode = finalNode
 	this.boardA = boardA
-}
+	this.middleNodePresent = middleNodePresent
+} 
 
-Search.prototype.startSearch = function(){
+Search.prototype.startSearch = function(){ 
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
+		var date = new Date()
 		var exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		console.log('TIME TAKEN BFS: ',new Date() - date+' ms')
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		var exploredList = this.searchDFS()
@@ -587,9 +603,11 @@ Search.prototype.startSearch = function(){
 		this.boardA.algoDone = true
 	}    
 	else if(this.currentAlgorithm === 'Bidirectional'){
+		var date = new Date()
 		var exploredList = this.searchBidirectional()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		console.log('TIME TAKEN BDS: ',new Date() - date+' ms')
 	}    
 }  
 
@@ -668,8 +686,10 @@ Search.prototype.searchDFS = function(){
 	return exploredList 
 } 
 
-Search.prototype.searchBFS = function(){
+Search.prototype.searchBFS = function(){   
   var exploredList = []
+	var count = 0
+	var numOnes = 0
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
 		var returnVal = false
@@ -680,9 +700,11 @@ Search.prototype.searchBFS = function(){
 		}
 		return returnVal
 	} 
+	var date = new Date()
 	whileLoop:
-	while(listToExplore.length !==0){
+	while(listToExplore.length !==0){ 
 		var currentNode = listToExplore[0]
+		var inWhileLoop = new Date()
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
 			exploredList.push(currentNode)
@@ -700,8 +722,15 @@ Search.prototype.searchBFS = function(){
 		else{
 			listToExplore = listToExplore.slice(1)
 		}
+	
+	
+		count++
+		var endWhileLoop = new Date()
+		if(endWhileLoop - inWhileLoop){numOnes++}
+		// console.log('iteration bds ',endWhileLoop - inWhileLoop)	
 	}
 	this.boardA.currentAlgo = 'BFS'
+	console.log('while loop bfs ',new Date()- date,count,numOnes)
 	return exploredList 
 }  
 
@@ -709,41 +738,36 @@ Search.prototype.searchBidirectional = function(){
 	var exploredList = []
 	var listToExploreStart = [this.startNode]
 	var listToExploreFinal = [this.finalNode]
+	var numOnes = 0
 	var count = 2
 	var currentNode;
 	var status;
-	var shouldBreak = function(node,status){ 
-		var returnVal = false;
+	var pleaseWork = function(node,status){
+		var returnVal = false
 		for(var i in exploredList){
 			if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy !== status){
-				// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
-				returnVal = true
+					// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
+					returnVal = 'break'
+					break
+			}
+			else if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy === status){
+					// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
+					returnVal = true
 			}
 		}
-		// console.log(returnVal)
 		return returnVal
-	}
-	var isPresent = function(node,status){ 
-		var returnVal = false;
-		for(var i in exploredList){
-			if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy === status){
-				// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
-				returnVal = true
-			}
-		}
-		
-		return returnVal
-	} 
 
+	}
+	var date = new Date()
 	whileLoop:
-	while(listToExploreStart.length !== 0 && listToExploreFinal.length !== 0){
+	while(listToExploreStart.length !== 0 && listToExploreFinal.length !== 0){ 
+		var inWhileLoop = new Date()
 		//Check which list to use currentNode from 
+		// console.log(listToExploreStart.length+listToExploreFinal.length)
 		currentNode = count % 2 === 0 ? listToExploreStart[0] : listToExploreFinal[0]
 		count % 2 === 0 ? status = 'start' : status = 'final'
-		// console.log(count)
-		//Base Case to return from 
-		// console.log(count,status,currentNode)
-		if(shouldBreak(currentNode,status)){
+		var value = pleaseWork(currentNode,status)
+		if(value === 'break'){
 			console.log("breaking whileLoop")
 			break whileLoop
 		}
@@ -751,11 +775,17 @@ Search.prototype.searchBidirectional = function(){
 		if(currentNode.status === 'wall'){
 				count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
 		}
-		else if(!isPresent(currentNode,status)){
+		else if(value === false){
 			//Get neighbours 
 			var neighbours = this.getNeighbours(this.board,currentNode)
 			//Remove node from listToExplore 
-			count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
+			if(count % 2 === 0){
+					listToExploreStart = listToExploreStart.slice(1)
+			}
+			else{
+				listToExploreFinal = listToExploreFinal.slice(1)
+			}
+
 			if(count % 2 === 0){
 				var newNeighboursList = []
 				for(var i in neighbours){
@@ -779,20 +809,16 @@ Search.prototype.searchBidirectional = function(){
 		else{
 			count % 2 === 0 ? listToExploreStart = listToExploreStart.slice(1) : listToExploreFinal = listToExploreFinal.slice(1)
 		}
-		count++
-		
-		
+		++count
+		var endWhileLoop = new Date()
+		if(endWhileLoop - inWhileLoop){numOnes++}
 	}
-
-	this.boardA.currentAlgo = 'Bidirectional'
-	// for(var i in exploredList){
-	// 	console.log(exploredList[i])
-	// }
+	console.log('while loop bds', new Date() - date,count-2,numOnes)
 	return exploredList
 }
 
 Search.prototype.searchAStar = function(){ 
-		this.startNode.distance = 0
+	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
 	var isPresent = function(node){
@@ -838,6 +864,7 @@ Search.prototype.searchAStar = function(){
 	this.boardA.currentAlgo = 'AStar'
 	return exploredList
 }
+
 Search.prototype.searchGreedy = function(){
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
@@ -885,16 +912,18 @@ Search.prototype.searchGreedy = function(){
 	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
+
 Search.prototype.showAnimation = function(exploredList){   
-  var self = this
+
+	var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
-  startNode.status = 'startNode'
+  this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
   function timeout(index) {
     setTimeout(function () {
         if(index === exploredList.length){
-          // showPath(endNode,self)
+          showPath(endNode,self)
 					return
         }
         change(exploredList[index])
@@ -927,6 +956,7 @@ Search.prototype.showAnimation = function(exploredList){
   timeout(0)
 	// showPath(endNode,this)
 }
+
 Search.prototype.showAnimationDrag = function(exploredList){
 	for(var i in exploredList){
 		var cell = exploredList[i]
@@ -1221,6 +1251,7 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 } 
 
 Search.prototype.searchDijkstra = function(){
+	var count = 0
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -1263,8 +1294,10 @@ Search.prototype.searchDijkstra = function(){
 		else{
 			listToExplore = listToExplore.slice(1)
 		}
+		count++
 	}
 	this.boardA.currentAlgo = 'Dijkstra'
+	console.log(count)
 	return exploredList
 }   
 

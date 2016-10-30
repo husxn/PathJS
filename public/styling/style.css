@@ -30,7 +30,6 @@ li{
   border-style: solid;
   border-color: darkslategray;
   background: white
-
 }
 .unexplored.mud{
   background-image:url('mud.png')
@@ -40,6 +39,9 @@ li{
 }
 .wall{
   background:darkslategray
+}
+.middleObj{
+  background:lightcoral
 }
 .finalCell{
   /*background-image:url('character.png')*/

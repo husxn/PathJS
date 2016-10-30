@@ -77,8 +77,19 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
+  window.addEventListener('keydown',function(e){
+    if(e.keyCode === 79){
+      var height = board.boardArr.length 
+      var width =  board.boardArr[0].length 
+      var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
+      cell.status = 'middleObj'
+      document.getElementById(cell.id).className = 'middleObj'
+      console.log(cell)
+    }
+  })
+
   //Add listeners for table elements  
-  for(var i=0;i<this.height;i++){ 
+  for(var i=0;i<this.height;i++){  
     for(var j=0;j<this.width;j++){
       var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
@@ -188,6 +199,7 @@ Board.prototype.addEventListeners = function(){
   })
   //AStar 
   document.getElementById('startButtonAStar').addEventListener('click',function(){
+
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'AStar',board)
     search.startSearch()
   })
@@ -202,7 +214,7 @@ Board.prototype.addEventListeners = function(){
     search.startSearch()
   })
   //Random Maze Generation
-  document.getElementById('startButtonMazeRecursiveBacktracking').addEventListener('click',function(){
+  document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
     var maze = new Maze(board,board.startNode,board.finalNode)
     maze.startMaze()
   })
@@ -310,8 +322,9 @@ Board.prototype.clearWalls = function(){
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
-var bar = document.getElementById('Algorithm').clientWidth
-var height = Math.floor(document.documentElement.clientHeight)
-var width = Math.floor(document.documentElement.clientWidth) - bar
-var board = new Board(11,11)
+var bar = document.getElementById('navbarDiv').clientHeight
+var height = Math.floor(document.documentElement.clientHeight) - bar
+var width = Math.floor(document.documentElement.clientWidth)
+var board = new Board(height/28,width/25)
+console.log(height,width)
 board.initialise() 
