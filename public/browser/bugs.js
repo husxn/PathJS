@@ -10,10 +10,7 @@ Things to implement:
 */
 /*
 Priorities
-  - Design(everything)
-    - Sidebar
-    - Themes
-    - Colours
+
     - Animations
 
   - Direction 

@@ -1,17 +1,34 @@
-function Maze(board,startNode,finalNode){
+function Maze(board,startNode,finalNode,mazeToDo,animate){
   this.board = board
 	this.boardArr = board.boardArr
   this.startNode = startNode
 	this.finalNode = finalNode
 	this.listToAnimate = []
+	this.mazeToDo = mazeToDo
+	this.toAnimate = true
 } 
 
 Maze.prototype.startMaze = function(){
 	this.board.clearWalls()
 	this.maxX = this.boardArr[0].length 
 	this.maxY = this.boardArr.length
-	this.mazeGenerator()
-	this.animate()
+	if(this.mazeToDo === 'basicMaze'){
+		this.basicMaze()
+		this.toAnimate === true ? this.animate() : this.instant()
+	}
+	else if(this.mazeToDo === 'bossMaze1'){
+		this.mazeGenerator()
+		this.toAnimate === true ? this.animate() : this.instant()
+	}
+	else if(this.mazeToDo === 'bossMaze2'){
+		this.mazeGenerator()
+		this.toAnimate === true ? this.animate() : this.instant()
+	}
+	else if(this.mazeToDo === 'bossMaze3'){
+		this.mazeGenerator()
+		this.toAnimate === true ? this.animate() : this.instant()
+	}
+
 }  
 
 Maze.prototype.basicMaze = function(){
@@ -19,17 +36,19 @@ Maze.prototype.basicMaze = function(){
 		for(var j=0;j<this.boardArr[0].length;j++){
 			var elem = document.getElementById(j.toString()+','+i.toString())
 			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-				elem.className = 'wall'
-				this.board.getCell(j,i).status = 'wall'
+				// elem.className = 'wall'
+				var cell = this.board.getCell(j,i)
+				cell.status = 'wall'
+				this.listToAnimate.push(cell)
 			}
 			if(Math.random() > 0.85 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
 					if(Math.random() > 0.5){
-						elem.className = 'unexplored mud'
-						this.board.getCell(j,i).weight = 2
+						// elem.className = 'unexplored mud'
+						// this.board.getCell(j,i).weight = 2
 					}
 					else{
-						elem.className = 'unexplored water'
-						this.board.getCell(j,i).weight = 5
+						// elem.className = 'unexplored water'
+						// this.board.getCell(j,i).weight = 5
 					}
 			}
 
@@ -82,7 +101,14 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			}
 
 			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
-			var lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+			var lengthLargerThanHeightRight; 
+			if(this.mazeToDo === 'bossMaze 1' || this.mazeToDo === 'bossMaze2'){
+ 				lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+				 
+			}
+			else if(this.mazeToDo === 'bossMaze3'){
+				lengthLargerThanHeightRight = this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
+			}
 			//Left One 
 				//Left Orientation should be vertical 
 				if(lengthLargerThanHeightLeft){
@@ -136,7 +162,13 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 			}
 
 			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
-			var lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			var lengthLargerThanHeightBottom; 
+			if(this.mazeToDo === 'bossMaze1' || this.mazeToDo === 'bossMaze3'){
+				lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			}
+			else if(this.mazeToDo === 'bossMaze2'){
+				lengthLargerThanHeightBottom = this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
+			}
 			//Top One 
 				//Top Orientation should be horizontal 
 				if(lengthLargerThanHeightTop){
@@ -194,7 +226,7 @@ Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 }
 
 
-Maze.prototype.animate = function(){
+Maze.prototype.animate = function(){ 
   var list = this.listToAnimate
 	function timeout(index) {
     setTimeout(function () {
@@ -207,6 +239,13 @@ Maze.prototype.animate = function(){
     }, 0.0001);
   }   
   timeout(0)
+}
+Maze.prototype.instant = function(){
+	console.log("ASFION")
+	for(var i in this.listToAnimate){
+		var cell = this.list[i]
+		document.getElementById(cell.id).className = cell.status
+	}
 }
 
 module.exports = Maze

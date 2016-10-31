@@ -213,9 +213,24 @@ Board.prototype.addEventListeners = function(){
     var search = new Search(board.boardArr,board.startNode,board.finalNode,'Bidirectional',board)
     search.startSearch()
   })
-  //Random Maze Generation
+  //Basic Maze 1
+  document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
+    var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
+    maze.startMaze()
+  })
+  //Recursive Division 1
   document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode)
+    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
+    maze.startMaze()
+  })
+  //Recursive Division 2
+  document.getElementById('startButtonBossMaze2').addEventListener('click',function(){
+    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
+    maze.startMaze()
+  })
+  //Recursive Division 3
+  document.getElementById('startButtonBossMaze3').addEventListener('click',function(){
+    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
     maze.startMaze()
   })
   //Clear Path
