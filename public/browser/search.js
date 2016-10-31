@@ -377,14 +377,21 @@ Search.prototype.showAnimation = function(exploredList){
   } 
 	function showPath(node,search){
 		var listPath = []
+		var endNode = Object.assign({},node)
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
-				node.status = 'shortestPath'
-				document.getElementById(node.id).className = 'shortestPath'
+				// node.status = 'shortestPath'
+				// document.getElementById(node.id).className = 'shortestPath'
 				listPath.push(node)
 			}
 			node = node.parent
+		}
+		if(endNode.status === 'finalNode'){
+			listPath.forEach(function(e){
+				e.status ='shortestPath'
+				document.getElementById(e.id).className = 'shortestPath'
+			})
 		}
 	}
   timeout(0)
@@ -400,17 +407,20 @@ Search.prototype.showAnimationDrag = function(exploredList){
 		}
 	}
 	var endNode = exploredList[exploredList.length-1]
+	var newEndNode = Object.assign({},endNode)
 	var shortestPathList = []
 	while(endNode !== this.startNode){
 		shortestPathList.push(endNode)
 		endNode = endNode.parent
 	}
 	shortestPathList = shortestPathList.reverse()
-	for(var i in shortestPathList){
-		var cell = shortestPathList[i]
-		if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
-			cell.status = 'explored'
-			document.getElementById(cell.id).className = 'shortestPath'
+	if(newEndNode.status === 'finalNode'){
+		for(var i in shortestPathList){
+			var cell = shortestPathList[i]
+			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+				cell.status = 'explored'
+				document.getElementById(cell.id).className = 'shortestPath'
+			}
 		}
 	}
 	this.boardA.algoDone = true

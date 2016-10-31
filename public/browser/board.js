@@ -66,7 +66,7 @@ Board.prototype.createGrid = function(){
   document.getElementById(this.finalNode.id).className = 'finalCell'
 }  
 
-Board.prototype.addEventListeners = function(){ 
+Board.prototype.addEventListeners = function(){  
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -325,6 +325,6 @@ Board.prototype.generateRandom = function(){
 var bar = document.getElementById('navbarDiv').clientHeight
 var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
-var board = new Board(height/28,width/25)
+var board = new Board(height/22,width/20)
 console.log(height,width)
 board.initialise() 
