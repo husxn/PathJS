@@ -61,9 +61,10 @@ Maze.prototype.mazeGenerator = function(){
 		for(var j=0;j<this.maxX;j++){
 			if(i === 0 || i === this.maxY-1 || j === 0 || j === this.maxX - 1){
 				var cell = this.board.getCell(j,i)
-				cell.status = 'wall'
-				this.listToAnimate.push(cell)
-
+				if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+					cell.status = 'wall'
+					this.listToAnimate.push(cell)
+				}
 				// document.getElementById(cell.id).className = 'wall'
 			}
 		}

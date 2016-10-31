@@ -39,9 +39,8 @@ Search.prototype.startSearch = function(){
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		var date = new Date()
 		var exploredList = this.searchBidirectional()
-   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		// this.showAnimationDrag(exploredList)
 		this.boardA.algoDone = true
-		console.log('TIME TAKEN BDS: ',new Date() - date+' ms')
 	}    
 }  
 
@@ -774,10 +773,10 @@ Search.prototype.checkNumberOfMoves = function(currentDirection,direction){
 }
 
 Search.prototype.manhattanDistance = function(node1,node2){
-	var xDiff = node1.x - node2.x
-	var yDiff = node1.y - node2.y
+	var xDiff = Math.abs(node1.x - node2.x)
+	var yDiff = Math.abs(node1.y - node2.y)
 	var distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
-	return distance
+	return (xDiff + yDiff)
 }
 
 

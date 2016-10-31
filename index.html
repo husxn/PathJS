@@ -2,7 +2,7 @@
   <head>
     <title>Maze Game</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel='stylesheet' href='/public/styling/flat-ui.css'/>
+    <link rel='stylesheet' href='/public/styling/flat-ui-basic.css' id='cssLink'/>
     <link rel="shortcut icon" type="image/png" href="/public/styling/favicon_h.png"/>
   </head>
   <body>
@@ -10,11 +10,11 @@
         <nav class="navbar navbar-inverse"> 
           <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="#">path.js</a>
+              <a class="navbar-brand" href="#" id='path'>path.js</a>
             </div>
             <ul class="nav navbar-nav">
               <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Algorithms
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Choose an Algorithm
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li id='startButtonDFS'><a href="#">Depth First Search</a></li>
@@ -26,17 +26,17 @@
                 </ul>
               </li>
               <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Maze Generation
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Generate a Maze
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li id='startButtonBasicMaze'><a href="#">Basic Random Maze</a></li>
-                  <li id='startButtonBossMaze1'><a href="#">Recursive Division 1</a></li>
-                  <li id='startButtonBossMaze2'><a href="#">Recursive Division 2</a></li> 
-                  <li id='startButtonBossMaze3'><a href="#">Recursive Division 3</a></li> 
+                  <li id='startButtonBossMaze1'><a href="#">Recursive Division Default</a></li>
+                  <li id='startButtonBossMaze2'><a href="#">Recursive Division Horizontal Skew</a></li> 
+                  <li id='startButtonBossMaze3'><a href="#">Recursive Division Vertical Skew</a></li> 
                 </ul>
               </li>
               <li class="dropdown"> 
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Themes
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Choose a Theme
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li id='startButtonBasicTheme'><a href="#">Basic Theme</a></li>
@@ -44,6 +44,7 @@
                   <li id='startButtonPokemonTheme'><a href="#">Pokemon Theme</a></li> 
                 </ul>
               </li>
+              <li id='startButtonVisualise'><button class="btn btn-default navbar-btn" type="button" id='visualise'/>Visualise Algorithm</li> 
               <li id='startButtonClearWalls'><a href="#">Clear Walls</a></li> 
               <li id='startButtonClearPath'><a href="#">Clear Path</a></li> 
             </ul>
