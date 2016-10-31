@@ -60,22 +60,22 @@
 #board{
   border-collapse:collapse
 }
+.finalCell{
+  background:#27AE60
+}
 #board td{
-  border: 1px solid darkslategrey;
   width: 25px;
   height: 25px;
 }
 .explored{
-  background:blue
+  background:#7F8C8D
 }
 .unexplored{
-  background:white
+ background-color: #34495E;
+  border: 1px solid #2C3E50;
 }
 .wall{
-  background:darkslategrey;
-}
-.finalCell{
-  background:black
+  background:#2C3E50
 }
 .startingCell{
   background:green
