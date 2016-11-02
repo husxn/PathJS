@@ -16,3 +16,4 @@ Cell.prototype.getCellStatus = function(){
 }
 
 module.exports = Cell
+// watchify /Users/Hussein/Desktop/testProjects/mazeProject/public/browser/board.js -o /Users/Hussein/Desktop/testProjects/mazeProject/public/browser/bundle.js 

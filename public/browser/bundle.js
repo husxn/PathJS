@@ -66,9 +66,10 @@ Board.prototype.createGrid = function(){
   this.finalNode = this.boardArr[y][xFinalNode]
   this.boardArr[y][xFinalNode].status = 'finalNode'
   document.getElementById(this.finalNode.id).className = 'finalCell'
+
 }  
 
-Board.prototype.addEventListeners = function(){   
+Board.prototype.addEventListeners = function(){     
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -79,16 +80,16 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
-  window.addEventListener('keydown',function(e){
-    if(e.keyCode === 79){
-      var height = board.boardArr.length 
-      var width =  board.boardArr[0].length 
-      var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
-      cell.status = 'middleObj'
-      document.getElementById(cell.id).className = 'middleObj'
-      console.log(cell)
-    }
-  })
+  // window.addEventListener('keydown',function(e){
+  //   if(e.keyCode === 79){
+  //     var height = board.boardArr.length 
+  //     var width =  board.boardArr[0].length 
+  //     var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
+  //     cell.status = 'middleObj'
+  //     document.getElementById(cell.id).className = 'middleObj'
+  //     console.log(cell)
+  //   }
+  // })
 
   //Add listeners for table elements  
   for(var i=0;i<this.height;i++){  
@@ -246,6 +247,8 @@ Board.prototype.addEventListeners = function(){
   })
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
+    // board.algoDone = false
+    board.clearPath()
     var algoName = board.algoToRun
     var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
     search.startSearch()
@@ -277,7 +280,6 @@ Board.prototype.changeCellClick = function(id){
   var cell = this.getCell(x,y)
   var toggledCell = this.toggle(cell)
   var elem = document.getElementById(id)
-  console.log(this.currentAlgo)
   if(toggledCell){
     elem.className = toggledCell
   }
@@ -301,14 +303,14 @@ Board.prototype.changeCellDrag = function(id){
 
 Board.prototype.toggle = function(cell){
   if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
-      cell.status = 'unexplored'
+      cell.status = 'unexplored water'
       if(this.keyDown === 16){  
         cell.weight = 2
         return cell.status +' mud'
       }
       else{
-        cell.weight = 5
-        return cell.status +' water'
+        cell.weight = 15
+        return cell.status
       }
       
 
@@ -327,7 +329,7 @@ Board.prototype.toggle = function(cell){
   
 }
 
-Board.prototype.clearPath = function(){  
+Board.prototype.clearPath = function(){   
   console.log('clear Path called')
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr[i].length;j++){
@@ -366,9 +368,11 @@ var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
 var finalWidth = width/20
-var board = new Board(finalHeight,finalWidth)
-console.log(height,width)
+// var board = new Board(finalHeight,finalWidth-1)
+var board = new Board(10,10)
 board.initialise() 
+
+
 
 },{"./cell":2,"./maze":3,"./search":4}],2:[function(require,module,exports){
 function Cell(xPos,yPos){
@@ -389,7 +393,7 @@ Cell.prototype.getCellStatus = function(){
 }
 
 module.exports = Cell
-
+// watchify /Users/Hussein/Desktop/testProjects/mazeProject/public/browser/board.js -o /Users/Hussein/Desktop/testProjects/mazeProject/public/browser/bundle.js 
 },{}],3:[function(require,module,exports){
 function Maze(board,startNode,finalNode,mazeToDo,animate){
   this.board = board
@@ -644,7 +648,7 @@ Maze.prototype.instant = function(){
 
 module.exports = Maze
 },{}],4:[function(require,module,exports){
-function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePresent){
+function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePresent){ 
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
@@ -653,7 +657,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePres
 	this.middleNodePresent = middleNodePresent
 } 
 
-Search.prototype.startSearch = function(){ 
+Search.prototype.startSearch = function(){  
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
 		var date = new Date()
@@ -690,13 +694,13 @@ Search.prototype.startSearch = function(){
 	}    
 }  
 
-Search.prototype.getNeighbours = function(arr,node){
+Search.prototype.getNeighbours = function(arr,node,algo,exploredList){   
   var neighbourList = []
 	//Get Neighbour Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
 		var neighbour = arr[node.y-1][node.x]
 		
-		if(neighbour.parent === null){
+		if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode' && exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
 		neighbourList.push(neighbour)
@@ -705,7 +709,7 @@ Search.prototype.getNeighbours = function(arr,node){
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall'){
 		var neighbour = arr[node.y][node.x+1]
 		// console.log(neighbour.id,arr.finalNode)
-			if(neighbour.parent === null){
+			if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
 		neighbourList.push(neighbour)
@@ -713,7 +717,7 @@ Search.prototype.getNeighbours = function(arr,node){
 	//Get Neighbour Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall'){
 		var neighbour = arr[node.y+1][node.x]
-	if(neighbour.parent === null){
+	if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
 		neighbourList.push(neighbour)
@@ -721,7 +725,7 @@ Search.prototype.getNeighbours = function(arr,node){
 	//Get Neighbour Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
 		var neighbour = arr[node.y][node.x-1]
-	if(neighbour.parent === null){
+	if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
 		neighbourList.push(neighbour)
@@ -729,7 +733,7 @@ Search.prototype.getNeighbours = function(arr,node){
 	return neighbourList
 }       
 
-Search.prototype.searchDFS = function(){
+Search.prototype.searchDFS = function(){  
  var exploredList = [] 
 	var listToExplore = [this.startNode]
 	var isPresent = function(node){
@@ -753,7 +757,7 @@ Search.prototype.searchDFS = function(){
       listToExplore = listToExplore.slice(1)
     }
     else if(!isPresent(currentNode)){
-			var neighbours = this.getNeighbours(this.board,currentNode)
+			var neighbours = this.getNeighbours(this.board,currentNode,'DFS',exploredList)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = neighbours.concat(listToExplore)
 			exploredList.push(currentNode)
@@ -896,7 +900,7 @@ Search.prototype.searchBidirectional = function(){
 	return exploredList
 }
 
-Search.prototype.searchAStar = function(){ 
+Search.prototype.searchAStar = function(){  
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -992,14 +996,17 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){   
-
+Search.prototype.showAnimation = function(exploredList){     
+	for(var i in exploredList){
+		console.log(exploredList[i].id,exploredList[i].parent.id)
+	} 
 	var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
-  function timeout(index) {
+	console.log(startNode,endNode)
+  function timeout(index) { 
     setTimeout(function () {
         if(index === exploredList.length){
           showPath(endNode,self)
@@ -1009,7 +1016,7 @@ Search.prototype.showAnimation = function(exploredList){
         timeout(index+1);
     }, 0.0001);
   }  
-  function change(node){
+  function change(node){ 
     var elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(node.status === 'unexplored'){
@@ -1023,6 +1030,7 @@ Search.prototype.showAnimation = function(exploredList){
 	function showPath(node,search){
 		var listPath = []
 		var endNode = Object.assign({},node)
+		console.log(endNode)
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
@@ -1030,12 +1038,15 @@ Search.prototype.showAnimation = function(exploredList){
 				// document.getElementById(node.id).className = 'shortestPath'
 				listPath.push(node)
 			}
+			console.log(node)
 			node = node.parent
 		}
+		console.log("AFTER WHILE")
 		if(endNode.status === 'finalNode'){
 			listPath.forEach(function(e){
-				e.status ='shortestPath'
-				document.getElementById(e.id).className = 'shortestPath'
+				e.status ='shortestPath' 
+				console.log(e.status + e.direction)
+				document.getElementById(e.id).className = 'shortestPath' + e.direction
 			})
 		}
 	}
@@ -1161,7 +1172,7 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	return neigbourList
 }  
 
-Search.prototype.getNeighboursAStar = function(arr,node,exploredList){   
+Search.prototype.getNeighboursAStar = function(arr,node,exploredList){    
 	var neigbourList = []
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){

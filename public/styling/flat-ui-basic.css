@@ -42,8 +42,8 @@
 }
 @font-face {
   font-family: 'Flat-UI-Icons';
-  src: url('../fonts/glyphicons/flat-ui-icons-regular.eot');
-  src: url('../fonts/glyphicons/flat-ui-icons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons/flat-ui-icons-regular.woff') format('woff'), url('../fonts/glyphicons/flat-ui-icons-regular.ttf') format('truetype'), url('../fonts/glyphicons/flat-ui-icons-regular.svg#flat-ui-icons-regular') format('svg');
+  src: url('/fonts/glyphicons/flat-ui-icons-regular.eot');
+  src: url('/fonts/glyphicons/flat-ui-icons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons/flat-ui-icons-regular.woff') format('woff'), url('../fonts/glyphicons/flat-ui-icons-regular.ttf') format('truetype'), url('../fonts/glyphicons/flat-ui-icons-regular.svg#flat-ui-icons-regular') format('svg');
 }
 [class^="fui-"],
 [class*="fui-"] {
@@ -70,22 +70,43 @@
 }
 .explored{
   background:#2980B9;
-  /*border: 1px solid #3498DB*/
+  border: 1px solid #3498DB
 }
 .unexplored{
  border: 1px solid #ECF0F1;
 }
+.unexplored.water{
+  background: yellow
+}
 .wall{
   background:#2C3E50;
-  /*border: 1px solid #2C3E50;*/
+  border: 1px solid #2C3E50;
 }
+
+
 .startingCell{
   background:#3498DB;
-  /*border: 1px solid #3498DB*/
+  border: 1px solid #3498DB
 }
 .shortestPath{
   background:#E74C3C;
-  /*border: 1px solid #C0392B*/
+  /*border: 1px solid #E74C3C*/
+}
+.shortestPathUP{
+  background:#E74C3C;
+  /*border: 1px solid #E74C3C*/
+}
+.shortestPathRIGHT{
+  background:#E74C3C;
+  /*border: 1px solid #E74C3C*/
+}
+.shortestPathDOWN{
+  background:#E74C3C;
+  /*border: 1px solid #E74C3C*/
+}
+.shortestPathLEFT{
+  background:#E74C3C;
+  /*border: 1px solid #E74C3C*/
 }
 /*NEW CSS*/
 .fui-triangle-up:before {

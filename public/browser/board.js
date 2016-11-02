@@ -65,9 +65,10 @@ Board.prototype.createGrid = function(){
   this.finalNode = this.boardArr[y][xFinalNode]
   this.boardArr[y][xFinalNode].status = 'finalNode'
   document.getElementById(this.finalNode.id).className = 'finalCell'
+
 }  
 
-Board.prototype.addEventListeners = function(){   
+Board.prototype.addEventListeners = function(){     
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -78,16 +79,16 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
 
-  window.addEventListener('keydown',function(e){
-    if(e.keyCode === 79){
-      var height = board.boardArr.length 
-      var width =  board.boardArr[0].length 
-      var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
-      cell.status = 'middleObj'
-      document.getElementById(cell.id).className = 'middleObj'
-      console.log(cell)
-    }
-  })
+  // window.addEventListener('keydown',function(e){
+  //   if(e.keyCode === 79){
+  //     var height = board.boardArr.length 
+  //     var width =  board.boardArr[0].length 
+  //     var cell = board.getCell(Math.floor(height/2),Math.floor(width/2))
+  //     cell.status = 'middleObj'
+  //     document.getElementById(cell.id).className = 'middleObj'
+  //     console.log(cell)
+  //   }
+  // })
 
   //Add listeners for table elements  
   for(var i=0;i<this.height;i++){  
@@ -245,6 +246,8 @@ Board.prototype.addEventListeners = function(){
   })
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
+    // board.algoDone = false
+    board.clearPath()
     var algoName = board.algoToRun
     var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
     search.startSearch()
@@ -276,7 +279,6 @@ Board.prototype.changeCellClick = function(id){
   var cell = this.getCell(x,y)
   var toggledCell = this.toggle(cell)
   var elem = document.getElementById(id)
-  console.log(this.currentAlgo)
   if(toggledCell){
     elem.className = toggledCell
   }
@@ -300,14 +302,14 @@ Board.prototype.changeCellDrag = function(id){
 
 Board.prototype.toggle = function(cell){
   if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
-      cell.status = 'unexplored'
+      cell.status = 'unexplored water'
       if(this.keyDown === 16){  
         cell.weight = 2
         return cell.status +' mud'
       }
       else{
-        cell.weight = 5
-        return cell.status +' water'
+        cell.weight = 15
+        return cell.status
       }
       
 
@@ -326,7 +328,7 @@ Board.prototype.toggle = function(cell){
   
 }
 
-Board.prototype.clearPath = function(){  
+Board.prototype.clearPath = function(){   
   console.log('clear Path called')
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr[i].length;j++){
@@ -365,6 +367,8 @@ var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
 var finalWidth = width/20
-var board = new Board(finalHeight,finalWidth)
-console.log(height,width)
+// var board = new Board(finalHeight,finalWidth-1)
+var board = new Board(10,10)
 board.initialise() 
+
+
