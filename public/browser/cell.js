@@ -8,6 +8,8 @@ function Cell(xPos,yPos){
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
+  this.heuristicDistance = 0
+  this.totalDistance = this.distance + this.heuristicDistance
   this.previousStatus = 'unexplored'
 } 
 

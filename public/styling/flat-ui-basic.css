@@ -62,7 +62,7 @@
 }
 .finalCell{
   background:#C0392B;
-  /*border: 1px solid #C0392B*/
+  border: 1px solid #C0392B
 }
 #board td{
   width: 20px;
@@ -76,7 +76,11 @@
  border: 1px solid #ECF0F1;
 }
 .unexplored.water{
-  background: yellow
+  background: yellow;
+  border: 1px solid yellow
+}
+.explored.water{
+  background: green
 }
 .wall{
   background:#2C3E50;
@@ -94,19 +98,19 @@
 }
 .shortestPathUP{
   background:#E74C3C;
-  /*border: 1px solid #E74C3C*/
+  border: 1px solid #E74C3C
 }
 .shortestPathRIGHT{
   background:#E74C3C;
-  /*border: 1px solid #E74C3C*/
+  border: 1px solid #E74C3C
 }
 .shortestPathDOWN{
   background:#E74C3C;
-  /*border: 1px solid #E74C3C*/
+  border: 1px solid #E74C3C
 }
 .shortestPathLEFT{
   background:#E74C3C;
-  /*border: 1px solid #E74C3C*/
+  border: 1px solid #E74C3C
 }
 /*NEW CSS*/
 .fui-triangle-up:before {

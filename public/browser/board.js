@@ -11,7 +11,7 @@ function runFunction(board){
   }
 }
 
-function Board(height,width){
+function Board(height,width){ 
   this.height = height
   this.width = width 
   this.boardArr = []
@@ -27,6 +27,7 @@ function Board(height,width){
   this.currentAlgo = null
   this.lastWall = false
   this.algoToRun = null
+  this.canPress = true
 }  
 
 Board.prototype.initialise = function(){
@@ -68,7 +69,7 @@ Board.prototype.createGrid = function(){
 
 }  
 
-Board.prototype.addEventListeners = function(){     
+Board.prototype.addEventListeners = function(){      
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -185,60 +186,92 @@ Board.prototype.addEventListeners = function(){
   }    
   //Add Listeners for Button Panel
   //BFS
-  document.getElementById('startButtonBFS').addEventListener('click',function(){
-      document.getElementById('visualise').innerHTML = 'Visualise BFS'
-      board.algoToRun = 'BFS'
-      // search.startSearch()
+  document.getElementById('startButtonBFS').addEventListener('click',function(){ 
+      if(board.canPress){
+        document.getElementById('visualise').innerHTML = 'Visualise BFS'
+        board.algoToRun = 'BFS'
+        // search.startSearch()
+      }
   })  
   //DFS
-  document.getElementById('startButtonDFS').addEventListener('click',function(){
-      document.getElementById('visualise').innerHTML = 'Visualise DFS'
-      board.algoToRun = 'DFS'
-      // search.startSearch()
+  document.getElementById('startButtonDFS').addEventListener('click',function(){ 
+      if(board.canPress){
+        document.getElementById('visualise').innerHTML = 'Visualise DFS'
+        board.algoToRun = 'DFS'
+        // search.startSearch()
+      }
   })
   //Dijkstra 
-  document.getElementById('startButtonDijkstra').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Dijkstra'
-    board.algoToRun = 'Dijkstra'
-    // search.startSearch()
+  document.getElementById('startButtonDijkstra').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Dijkstra'
+      board.algoToRun = 'Dijkstra'
+      // search.startSearch()
+    }
   })
-  //AStar 
-  document.getElementById('startButtonAStar').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise A*'
-    board.algoToRun = 'AStar'
-    // search.startSearch()
+  //Fake AStar 1
+  document.getElementById('startButtonAStar').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Test A*'
+      board.algoToRun = 'AStar'
+      // search.startSearch()
+    }
+  })
+  //Fake AStar 2
+  document.getElementById('startButtonAStar2').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
+      board.algoToRun = 'AStar2'
+      // search.startSearch()
+    }
   })
   //Greedy
-  document.getElementById('startButtonGreedy').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Best First Search'
-    board.algoToRun = 'Greedy'
-    // search.startSearch()
+  document.getElementById('startButtonGreedy').addEventListener('click',function(){ 
+     if(board.canPress){ 
+      document.getElementById('visualise').innerHTML = 'Visualise Best First Search'
+      board.algoToRun = 'Greedy'
+      // search.startSearch()
+     }
+  })
+  document.getElementById('startButtonRealAStar').addEventListener('click',function(){
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = "Visualise Real A*"
+      board.algoToRun = 'RealAStar'
+    }
   })
   //Bi Directional
-  document.getElementById('startButtonBidirectional').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
-    board.algoToRun = 'Bidirectional'
-    // search.startSearch()
-  })
+  // document.getElementById('startButtonBidirectional').addEventListener('click',function(){
+  //   document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
+  //   board.algoToRun = 'Bidirectional'
+  //   // search.startSearch()
+  // })
   //Basic Maze 1
   document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
+      maze.startMaze()
+    }
   })
   //Recursive Division 1
   document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
+      maze.startMaze()
+    }
   })
   //Recursive Division 2
   document.getElementById('startButtonBossMaze2').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
+      maze.startMaze()
+    }
   })
   //Recursive Division 3
   document.getElementById('startButtonBossMaze3').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
+      maze.startMaze()
+    }
   })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
@@ -247,10 +280,13 @@ Board.prototype.addEventListeners = function(){
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     // board.algoDone = false
-    board.clearPath()
-    var algoName = board.algoToRun
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
-    search.startSearch()
+    if(board.canPress){
+      board.clearPath()
+      var algoName = board.algoToRun
+      board.canPress = false
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      search.startSearch()
+    }
 
   })
   //Path
@@ -258,13 +294,17 @@ Board.prototype.addEventListeners = function(){
     location.reload()
   })
   //Clear Path
-  document.getElementById('startButtonClearPath').addEventListener('click',function(){
-    board.algoDone = false
-    board.clearPath()
+  document.getElementById('startButtonClearPath').addEventListener('click',function(){ 
+     if(board.canPress){ 
+      board.algoDone = false
+      board.clearPath()
+     }
   }) 
   //Clear Walls
    document.getElementById('startButtonClearWalls').addEventListener('click',function(){
-    board.clearWalls()
+    if(board.canPress){
+      board.clearWalls()
+    }
   }) 
 }   
 
@@ -300,16 +340,16 @@ Board.prototype.changeCellDrag = function(id){
   
 }
 
-Board.prototype.toggle = function(cell){
-  if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
-      cell.status = 'unexplored water'
+Board.prototype.toggle = function(cell){ 
+  if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown){
+      // cell.status = 'unexplored water'
       if(this.keyDown === 16){  
         cell.weight = 2
         return cell.status +' mud'
       }
       else{
         cell.weight = 15
-        return cell.status
+        return cell.status + ' water'
       }
       
 
@@ -326,6 +366,9 @@ Board.prototype.toggle = function(cell){
     return false;
   }
   
+}
+
+Board.prototype.clearBoard = function(){
 }
 
 Board.prototype.clearPath = function(){   
@@ -367,8 +410,8 @@ var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
 var finalWidth = width/20
-// var board = new Board(finalHeight,finalWidth-1)
-var board = new Board(10,10)
+var board = new Board(finalHeight,finalWidth-1)
+// var board = new Board(5,5)
 board.initialise() 
 
 

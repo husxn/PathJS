@@ -14,32 +14,50 @@ Search.prototype.startSearch = function(){
 		var exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
-		console.log('TIME TAKEN BFS: ',new Date() - date+' ms')
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		var exploredList = this.searchDFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
 		var exploredList = this.searchDijkstra()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 		var exploredList = this.searchAStar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
+	} 
+	else if(this.currentAlgorithm === 'AStar2'){
+		var exploredList = this.searchAStar('2')
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		var exploredList = this.searchGreedy()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.canPress = true
 		this.boardA.algoDone = true
-	}    
+
+	}   
+	else if(this.currentAlgorithm === 'RealAStar'){
+		var exploredList = this.realAStar()
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.canPress = true
+		this.boardA.algoDone = true
+
+	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		var date = new Date()
 		var exploredList = this.searchBidirectional()
-		// this.showAnimationDrag(exploredList)
+		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
 	}    
 }  
@@ -116,10 +134,11 @@ Search.prototype.searchDFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'DFS'
 	return exploredList 
 } 
 
-Search.prototype.searchBFS = function(){   
+Search.prototype.searchBFS = function(){    
   var exploredList = []
 	var count = 0
 	var numOnes = 0
@@ -250,7 +269,7 @@ Search.prototype.searchBidirectional = function(){
 	return exploredList
 }
 
-Search.prototype.searchAStar = function(){  
+Search.prototype.searchAStar = function(algo){  
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -282,7 +301,7 @@ Search.prototype.searchAStar = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -346,16 +365,15 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){     
+Search.prototype.showAnimation = function(exploredList){      
 	for(var i in exploredList){
-		console.log(exploredList[i].id,exploredList[i].parent.id)
-	} 
+		// console.log(exploredList[i].id,exploredList[i].status)
+	}
 	var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
-	console.log(startNode,endNode)
   function timeout(index) { 
     setTimeout(function () {
         if(index === exploredList.length){
@@ -368,8 +386,14 @@ Search.prototype.showAnimation = function(exploredList){
   }  
   function change(node){ 
     var elem = document.getElementById(node.id)
+		console.log(elem.className)
 		// console.log(node.status)
-		if(node.status === 'unexplored'){
+		if(elem.className === 'unexplored water'){
+			console.log("WATER!!!")
+			node.status = 'explored'
+			elem.className = 'explored water'
+		}
+		else if(node.status === 'unexplored'){
 			node.status = 'explored'
 			elem.className = 'explored'
 		}
@@ -380,7 +404,6 @@ Search.prototype.showAnimation = function(exploredList){
 	function showPath(node,search){
 		var listPath = []
 		var endNode = Object.assign({},node)
-		console.log(endNode)
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
@@ -388,15 +411,14 @@ Search.prototype.showAnimation = function(exploredList){
 				// document.getElementById(node.id).className = 'shortestPath'
 				listPath.push(node)
 			}
-			console.log(node)
 			node = node.parent
 		}
-		console.log("AFTER WHILE")
 		if(endNode.status === 'finalNode'){
 			listPath.forEach(function(e){
 				e.status ='shortestPath' 
 				console.log(e.status + e.direction)
-				document.getElementById(e.id).className = 'shortestPath' + e.direction
+				document.getElementById(e.id).className = 'shortestPath'
+				//shortestPath fui-arrow-left
 			})
 		}
 	}
@@ -522,8 +544,8 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	return neigbourList
 }  
 
-Search.prototype.getNeighboursAStar = function(arr,node,exploredList){    
-	var neigbourList = []
+Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo){     
+	var neigbourList = [] 
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
@@ -536,6 +558,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -557,6 +581,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -578,6 +604,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -599,6 +627,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -701,7 +731,6 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 } 
 
 Search.prototype.searchDijkstra = function(){
-	var count = 0
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -786,5 +815,63 @@ Search.prototype.manhattanDistance = function(node1,node2){
 	return (xDiff + yDiff)
 }
 
+Search.prototype.realAStar = function(){
+	this.startNode.distance = 0
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	} 
+	whileLoop:
+	while(listToExplore.length !== 0){
+		//Sort listToExplore by distance 
+		listToExplore = listToExplore.sort(function(nodeA,nodeB){return (nodeA.totalDistance + nodeA.heuristicDistance) - (nodeB.totalDistance + nodeB.heuristicDistance)})
+		//Get currentNode 
+		var currentNode = listToExplore[0];
+
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+			listToExplore = listToExplore.slice(1)
+		}
+		else if(!isPresent(currentNode)){
+			//If currentNode is finalNode break 
+			if(currentNode === this.finalNode){break whileLoop}
+			//Get currentNode's neighbours 
+			var neighbours = this.getNeighboursRealAStar(this.board,currentNode,exploredList)
+			//Add neighbours to listToExplore
+			listToExplore = listToExplore.concat(neighbours)
+			//Remove currentNode from listToExplore
+			listToExplore = listToExplore.slice(1)
+			//Add currentNode to exploredList 
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+	}
+	this.boardA.currentAlgo = 'RealAStar'
+	return exploredList
+}
+
+Search.prototype.getNeighboursRealAStar = function(arr,node,exploredList){
+	var self = this
+	var list = this.getNeighboursDijkstra(arr,node,exploredList)
+	list.forEach((neighbour) =>{
+		neighbour.heuristicDistance = self.manhattanDistance(neighbour,self.finalNode) 
+		neighbour.totalDistance = neighbour.distance + neighbour.heuristicDistance
+	})
+	return list;
+}
 
 module.exports = Search
+ 

@@ -12,7 +12,7 @@ function runFunction(board){
   }
 }
 
-function Board(height,width){
+function Board(height,width){ 
   this.height = height
   this.width = width 
   this.boardArr = []
@@ -28,6 +28,7 @@ function Board(height,width){
   this.currentAlgo = null
   this.lastWall = false
   this.algoToRun = null
+  this.canPress = true
 }  
 
 Board.prototype.initialise = function(){
@@ -69,7 +70,7 @@ Board.prototype.createGrid = function(){
 
 }  
 
-Board.prototype.addEventListeners = function(){     
+Board.prototype.addEventListeners = function(){      
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -186,60 +187,92 @@ Board.prototype.addEventListeners = function(){
   }    
   //Add Listeners for Button Panel
   //BFS
-  document.getElementById('startButtonBFS').addEventListener('click',function(){
-      document.getElementById('visualise').innerHTML = 'Visualise BFS'
-      board.algoToRun = 'BFS'
-      // search.startSearch()
+  document.getElementById('startButtonBFS').addEventListener('click',function(){ 
+      if(board.canPress){
+        document.getElementById('visualise').innerHTML = 'Visualise BFS'
+        board.algoToRun = 'BFS'
+        // search.startSearch()
+      }
   })  
   //DFS
-  document.getElementById('startButtonDFS').addEventListener('click',function(){
-      document.getElementById('visualise').innerHTML = 'Visualise DFS'
-      board.algoToRun = 'DFS'
-      // search.startSearch()
+  document.getElementById('startButtonDFS').addEventListener('click',function(){ 
+      if(board.canPress){
+        document.getElementById('visualise').innerHTML = 'Visualise DFS'
+        board.algoToRun = 'DFS'
+        // search.startSearch()
+      }
   })
   //Dijkstra 
-  document.getElementById('startButtonDijkstra').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Dijkstra'
-    board.algoToRun = 'Dijkstra'
-    // search.startSearch()
+  document.getElementById('startButtonDijkstra').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Dijkstra'
+      board.algoToRun = 'Dijkstra'
+      // search.startSearch()
+    }
   })
-  //AStar 
-  document.getElementById('startButtonAStar').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise A*'
-    board.algoToRun = 'AStar'
-    // search.startSearch()
+  //Fake AStar 1
+  document.getElementById('startButtonAStar').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Test A*'
+      board.algoToRun = 'AStar'
+      // search.startSearch()
+    }
+  })
+  //Fake AStar 2
+  document.getElementById('startButtonAStar2').addEventListener('click',function(){ 
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
+      board.algoToRun = 'AStar2'
+      // search.startSearch()
+    }
   })
   //Greedy
-  document.getElementById('startButtonGreedy').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Best First Search'
-    board.algoToRun = 'Greedy'
-    // search.startSearch()
+  document.getElementById('startButtonGreedy').addEventListener('click',function(){ 
+     if(board.canPress){ 
+      document.getElementById('visualise').innerHTML = 'Visualise Best First Search'
+      board.algoToRun = 'Greedy'
+      // search.startSearch()
+     }
+  })
+  document.getElementById('startButtonRealAStar').addEventListener('click',function(){
+    if(board.canPress){
+      document.getElementById('visualise').innerHTML = "Visualise Real A*"
+      board.algoToRun = 'RealAStar'
+    }
   })
   //Bi Directional
-  document.getElementById('startButtonBidirectional').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
-    board.algoToRun = 'Bidirectional'
-    // search.startSearch()
-  })
+  // document.getElementById('startButtonBidirectional').addEventListener('click',function(){
+  //   document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
+  //   board.algoToRun = 'Bidirectional'
+  //   // search.startSearch()
+  // })
   //Basic Maze 1
   document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
+      maze.startMaze()
+    }
   })
   //Recursive Division 1
   document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
+      maze.startMaze()
+    }
   })
   //Recursive Division 2
   document.getElementById('startButtonBossMaze2').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
+      maze.startMaze()
+    }
   })
   //Recursive Division 3
   document.getElementById('startButtonBossMaze3').addEventListener('click',function(){
-    var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
-    maze.startMaze()
+    if(board.canPress){
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
+      maze.startMaze()
+    }
   })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
@@ -248,10 +281,13 @@ Board.prototype.addEventListeners = function(){
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     // board.algoDone = false
-    board.clearPath()
-    var algoName = board.algoToRun
-    var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
-    search.startSearch()
+    if(board.canPress){
+      board.clearPath()
+      var algoName = board.algoToRun
+      board.canPress = false
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      search.startSearch()
+    }
 
   })
   //Path
@@ -259,13 +295,17 @@ Board.prototype.addEventListeners = function(){
     location.reload()
   })
   //Clear Path
-  document.getElementById('startButtonClearPath').addEventListener('click',function(){
-    board.algoDone = false
-    board.clearPath()
+  document.getElementById('startButtonClearPath').addEventListener('click',function(){ 
+     if(board.canPress){ 
+      board.algoDone = false
+      board.clearPath()
+     }
   }) 
   //Clear Walls
    document.getElementById('startButtonClearWalls').addEventListener('click',function(){
-    board.clearWalls()
+    if(board.canPress){
+      board.clearWalls()
+    }
   }) 
 }   
 
@@ -301,16 +341,16 @@ Board.prototype.changeCellDrag = function(id){
   
 }
 
-Board.prototype.toggle = function(cell){
-  if(cell.status === 'unexplored' && this.keyDown|| cell.status === 'explored' && this.keyDown){
-      cell.status = 'unexplored water'
+Board.prototype.toggle = function(cell){ 
+  if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown){
+      // cell.status = 'unexplored water'
       if(this.keyDown === 16){  
         cell.weight = 2
         return cell.status +' mud'
       }
       else{
         cell.weight = 15
-        return cell.status
+        return cell.status + ' water'
       }
       
 
@@ -327,6 +367,9 @@ Board.prototype.toggle = function(cell){
     return false;
   }
   
+}
+
+Board.prototype.clearBoard = function(){
 }
 
 Board.prototype.clearPath = function(){   
@@ -368,8 +411,8 @@ var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
 var finalWidth = width/20
-// var board = new Board(finalHeight,finalWidth-1)
-var board = new Board(10,10)
+var board = new Board(finalHeight,finalWidth-1)
+// var board = new Board(5,5)
 board.initialise() 
 
 
@@ -385,6 +428,8 @@ function Cell(xPos,yPos){
   this.parent = null
   this.direction = 'UP'
   this.distance = Infinity
+  this.heuristicDistance = 0
+  this.totalDistance = this.distance + this.heuristicDistance
   this.previousStatus = 'unexplored'
 } 
 
@@ -664,32 +709,50 @@ Search.prototype.startSearch = function(){
 		var exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
-		console.log('TIME TAKEN BFS: ',new Date() - date+' ms')
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		var exploredList = this.searchDFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
 		var exploredList = this.searchDijkstra()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 		var exploredList = this.searchAStar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
+		this.boardA.canPress = true
+	} 
+	else if(this.currentAlgorithm === 'AStar2'){
+		var exploredList = this.searchAStar('2')
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.algoDone = true
+		this.boardA.canPress = true
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		var exploredList = this.searchGreedy()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.canPress = true
 		this.boardA.algoDone = true
-	}    
+
+	}   
+	else if(this.currentAlgorithm === 'RealAStar'){
+		var exploredList = this.realAStar()
+   	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		this.boardA.canPress = true
+		this.boardA.algoDone = true
+
+	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		var date = new Date()
 		var exploredList = this.searchBidirectional()
-		// this.showAnimationDrag(exploredList)
+		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.algoDone = true
 	}    
 }  
@@ -766,10 +829,11 @@ Search.prototype.searchDFS = function(){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
+	this.boardA.currentAlgo = 'DFS'
 	return exploredList 
 } 
 
-Search.prototype.searchBFS = function(){   
+Search.prototype.searchBFS = function(){    
   var exploredList = []
 	var count = 0
 	var numOnes = 0
@@ -900,7 +964,7 @@ Search.prototype.searchBidirectional = function(){
 	return exploredList
 }
 
-Search.prototype.searchAStar = function(){  
+Search.prototype.searchAStar = function(algo){  
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -932,7 +996,7 @@ Search.prototype.searchAStar = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -996,16 +1060,15 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){     
+Search.prototype.showAnimation = function(exploredList){      
 	for(var i in exploredList){
-		console.log(exploredList[i].id,exploredList[i].parent.id)
-	} 
+		// console.log(exploredList[i].id,exploredList[i].status)
+	}
 	var self = this
 	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
   this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	var endNode = exploredList[exploredList.length-1]
-	console.log(startNode,endNode)
   function timeout(index) { 
     setTimeout(function () {
         if(index === exploredList.length){
@@ -1018,8 +1081,14 @@ Search.prototype.showAnimation = function(exploredList){
   }  
   function change(node){ 
     var elem = document.getElementById(node.id)
+		console.log(elem.className)
 		// console.log(node.status)
-		if(node.status === 'unexplored'){
+		if(elem.className === 'unexplored water'){
+			console.log("WATER!!!")
+			node.status = 'explored'
+			elem.className = 'explored water'
+		}
+		else if(node.status === 'unexplored'){
 			node.status = 'explored'
 			elem.className = 'explored'
 		}
@@ -1030,7 +1099,6 @@ Search.prototype.showAnimation = function(exploredList){
 	function showPath(node,search){
 		var listPath = []
 		var endNode = Object.assign({},node)
-		console.log(endNode)
 		while(node !== search.startNode){
 			// console.log(node)
 			if(node.status !== 'finalNode'){
@@ -1038,15 +1106,14 @@ Search.prototype.showAnimation = function(exploredList){
 				// document.getElementById(node.id).className = 'shortestPath'
 				listPath.push(node)
 			}
-			console.log(node)
 			node = node.parent
 		}
-		console.log("AFTER WHILE")
 		if(endNode.status === 'finalNode'){
 			listPath.forEach(function(e){
 				e.status ='shortestPath' 
 				console.log(e.status + e.direction)
-				document.getElementById(e.id).className = 'shortestPath' + e.direction
+				document.getElementById(e.id).className = 'shortestPath'
+				//shortestPath fui-arrow-left
 			})
 		}
 	}
@@ -1172,8 +1239,8 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	return neigbourList
 }  
 
-Search.prototype.getNeighboursAStar = function(arr,node,exploredList){    
-	var neigbourList = []
+Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo){     
+	var neigbourList = [] 
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
@@ -1186,6 +1253,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -1207,6 +1276,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -1228,6 +1299,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -1249,6 +1322,8 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList){
 		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
 		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,this.finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,this.finalNode),6) + neighbour.weight
+		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -1351,7 +1426,6 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 } 
 
 Search.prototype.searchDijkstra = function(){
-	var count = 0
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -1436,6 +1510,64 @@ Search.prototype.manhattanDistance = function(node1,node2){
 	return (xDiff + yDiff)
 }
 
+Search.prototype.realAStar = function(){
+	this.startNode.distance = 0
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	} 
+	whileLoop:
+	while(listToExplore.length !== 0){
+		//Sort listToExplore by distance 
+		listToExplore = listToExplore.sort(function(nodeA,nodeB){return (nodeA.totalDistance + nodeA.heuristicDistance) - (nodeB.totalDistance + nodeB.heuristicDistance)})
+		//Get currentNode 
+		var currentNode = listToExplore[0];
+
+		if(currentNode === this.finalNode){
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+			listToExplore = listToExplore.slice(1)
+		}
+		else if(!isPresent(currentNode)){
+			//If currentNode is finalNode break 
+			if(currentNode === this.finalNode){break whileLoop}
+			//Get currentNode's neighbours 
+			var neighbours = this.getNeighboursRealAStar(this.board,currentNode,exploredList)
+			//Add neighbours to listToExplore
+			listToExplore = listToExplore.concat(neighbours)
+			//Remove currentNode from listToExplore
+			listToExplore = listToExplore.slice(1)
+			//Add currentNode to exploredList 
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+	}
+	this.boardA.currentAlgo = 'RealAStar'
+	return exploredList
+}
+
+Search.prototype.getNeighboursRealAStar = function(arr,node,exploredList){
+	var self = this
+	var list = this.getNeighboursDijkstra(arr,node,exploredList)
+	list.forEach((neighbour) =>{
+		neighbour.heuristicDistance = self.manhattanDistance(neighbour,self.finalNode) 
+		neighbour.totalDistance = neighbour.distance + neighbour.heuristicDistance
+	})
+	return list;
+}
 
 module.exports = Search
+ 
 },{}]},{},[1]);
