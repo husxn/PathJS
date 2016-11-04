@@ -235,7 +235,7 @@ Board.prototype.addEventListeners = function(){
   })
   document.getElementById('startButtonRealAStar').addEventListener('click',function(){
     if(board.canPress){
-      document.getElementById('visualise').innerHTML = "Visualise Real A*"
+      document.getElementById('visualise').innerHTML = "Visualise A*"
       board.algoToRun = 'RealAStar'
     }
   })
