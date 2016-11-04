@@ -8,6 +8,6 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, './index.html'));
 });
 
-app.listen(1337, function () {
+app.listen(process.env.PORT || 1337, function () {
     console.log('The server is listening on port 1337!');
 });
