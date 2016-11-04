@@ -280,7 +280,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
-    // board.algoDone = false
+    board.algoDone = false
     if(board.canPress){
       board.clearPath()
       var algoName = board.algoToRun
