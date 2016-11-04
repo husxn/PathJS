@@ -313,7 +313,7 @@ Search.prototype.searchAStar = function(algo){
 			listToExplore = listToExplore.slice(1)
 		}
 	}
-	this.boardA.currentAlgo = 'AStar'
+	algo === '2' ? this.boardA.currentAlgo = 'AStar2': this.boardA.currentAlgo = 'AStar'
 	return exploredList
 }
 
