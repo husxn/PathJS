@@ -9,5 +9,5 @@ app.get('/', function (req, res) {
 });
 
 app.listen(process.env.PORT, function () {
-    console.log('The server is listening on port 1337!');
+    console.log('listening on',process.env.PORT);
 });
