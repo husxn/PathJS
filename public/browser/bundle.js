@@ -70,7 +70,7 @@ Board.prototype.createGrid = function(){
 
 }  
 
-Board.prototype.addEventListeners = function(){      
+Board.prototype.addEventListeners = function(){       
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
