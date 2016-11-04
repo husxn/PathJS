@@ -411,7 +411,7 @@ var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
 var finalWidth = width/20
 var board = new Board(finalHeight,finalWidth-1)
-// var board = new Board(5,5)
+// var board = new Board(10,10)
 board.initialise() 
 
 

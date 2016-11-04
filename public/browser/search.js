@@ -269,7 +269,7 @@ Search.prototype.searchBidirectional = function(){
 	return exploredList
 }
 
-Search.prototype.searchAStar = function(algo){  
+Search.prototype.searchAStar = function(algo){   
 	this.startNode.distance = 0
 	var listToExplore = [this.startNode]
 	var exploredList = []
@@ -367,7 +367,7 @@ Search.prototype.searchGreedy = function(){
 
 Search.prototype.showAnimation = function(exploredList){      
 	for(var i in exploredList){
-		// console.log(exploredList[i].id,exploredList[i].status)
+		console.log(exploredList[i].id,exploredList[i].totalDistance,exploredList[i].distance)
 	}
 	var self = this
 	var startNode = exploredList[0]
@@ -773,10 +773,10 @@ Search.prototype.searchDijkstra = function(){
 		else{
 			listToExplore = listToExplore.slice(1)
 		}
-		count++
+
 	}
 	this.boardA.currentAlgo = 'Dijkstra'
-	console.log(count)
+
 	return exploredList
 }   
 
