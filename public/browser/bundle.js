@@ -219,7 +219,7 @@ Board.prototype.addEventListeners = function(){
     }
   })
   //Fake AStar 2
-  document.getElementById('startButtonAStar2').addEventListener('click',function(){ 
+  document.getElementById('startButtonAStar2').addEventListener('click',function(){  
     if(board.canPress){
       document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
       board.algoToRun = 'AStar2'
