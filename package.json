@@ -21,6 +21,6 @@
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "requirejs": "^2.3.2",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0" 
   }
 }
