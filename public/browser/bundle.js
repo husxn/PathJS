@@ -2,7 +2,7 @@
 var Cell = require('./cell')
 var Search = require('./search')
 var Maze = require('./maze')
-
+//Back to here
 function runFunction(board){
   for(var i=0;i<board.boardArr.length;i++){
     for(var j=0;j<board.boardArr[i].length;j++){
@@ -20,6 +20,7 @@ function Board(height,width){
   this.keyDown = false 
   this.startNode;
   this.finalNode;
+  this.objectNode;
   this.currentCellStatus = null
   this.mode = 0
   this.currentPlace = null
@@ -37,7 +38,7 @@ Board.prototype.initialise = function(){
   this.addEventListeners()
 }
 
-Board.prototype.createGrid = function(){  
+Board.prototype.createGrid = function(){   
   let initialHTML = ''
   for(var i=0;i<this.height;i++){
     //Add row HTML
@@ -100,7 +101,7 @@ Board.prototype.addEventListeners = function(){
       var elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
-          if(this.className !== 'startingCell' && this.className !== 'finalCell'){
+          if(this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell'){
             board.changeCellClick(this.id)
             board.mouseDown = true
           }
@@ -121,7 +122,7 @@ Board.prototype.addEventListeners = function(){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell'){  
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell'){  
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
@@ -146,19 +147,32 @@ Board.prototype.addEventListeners = function(){
                 search.startSearch()
                 }
             }
+            else if(this.className === 'objectCell'){
+              if(cell.status === 'wall'){board.lastWall = true}
+                cell.status = 'objectNode'
+                board.objectNode = cell
+                if(board.algoDone){
+                  board.clearPath()
+                var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+                search.startSearch()
+                }
+            }
           }
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell')){
+          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell' || this.className === 'objectCell')){
             if(this.className === 'startingCell'){
               board.shouldBe = 'startingCell'
             }
             else if(this.className === 'finalCell'){
               board.shouldBe = 'finalCell'
             }
+            else if(this.className === 'objectCell'){
+              board.shouldBe = 'objectCell'
+            }
           }
       })
       elem.addEventListener('mouseout',function(e){
          e.preventDefault()  
-        if(this.className === 'startingCell' || this.className === 'finalCell'){
+        if(this.className === 'startingCell' || this.className === 'finalCell' || this.className === 'objectCell'){
           if(board.mouseDown && board.currentCellStatus !== null){
               if(board.shouldBe){
                 this.className = board.shouldBe
@@ -235,6 +249,7 @@ Board.prototype.addEventListeners = function(){
       // search.startSearch()
      }
   })
+
   document.getElementById('startButtonRealAStar').addEventListener('click',function(){
     if(board.canPress){
       document.getElementById('visualise').innerHTML = "Visualise A*"
@@ -285,9 +300,11 @@ Board.prototype.addEventListeners = function(){
       if(board.canAddObject){
         var height = board.height
         var width = board.width
-        board.finalNode = board.boardArr[Math.floor(height/2)][Math.floor(width/2)]
-        board.boardArr[Math.floor(height/2)][Math.floor(width/2)].status = 'objectNode'
-        document.getElementById(board.finalNode.id).className = 'objectCell'
+        board.objectNode = board.boardArr[Math.floor(height/2)][Math.floor(width/2)]
+        board.objectNode.status = 'objectNode'
+        document.getElementById(board.objectNode.id).className = 'objectCell'
+        console.log(document.getElementById(board.objectNode.id))
+        console.log(board.objectNode)
         board.canAddObject = false
         document.getElementById('addObjectHREF').innerHTML = 'Remove Object'
 
@@ -295,6 +312,13 @@ Board.prototype.addEventListeners = function(){
       else{
         board.canAddObject = true 
         document.getElementById('addObjectHREF').innerHTML = 'Add an Object'
+        var elem = document.getElementById(board.objectNode.id)
+        var splitId = elem.id.split(',')
+        var x = parseInt(splitId[0])
+        var y = parseInt(splitId[1])
+        var cell = board.getCell(x,y)
+        cell.status = 'unexplored'
+        elem.className = 'unexplored'
       }
      }
   }) 
