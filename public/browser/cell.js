@@ -9,7 +9,7 @@ function Cell(xPos,yPos){
   this.direction = 'UP'
   this.distance = Infinity
   this.heuristicDistance = 0
-  this.totalDistance = this.distance + this.heuristicDistance
+  this.totalDistance = Infinity
   this.previousStatus = 'unexplored'
 } 
 

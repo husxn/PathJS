@@ -73,7 +73,8 @@
   border: 1px solid #3498DB
 }
 .unexplored{
- border: 1px solid #ECF0F1;
+ border: 1px solid black;
+
 }
 .unexplored.water{
   background: yellow;

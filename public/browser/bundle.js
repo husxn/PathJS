@@ -429,7 +429,7 @@ function Cell(xPos,yPos){
   this.direction = 'UP'
   this.distance = Infinity
   this.heuristicDistance = 0
-  this.totalDistance = this.distance + this.heuristicDistance
+  this.totalDistance = Infinity
   this.previousStatus = 'unexplored'
 } 
 
@@ -743,7 +743,7 @@ Search.prototype.startSearch = function(){
 
 	}   
 	else if(this.currentAlgorithm === 'RealAStar'){
-		var exploredList = this.realAStar()
+		var exploredList = this.searchRealAStaar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 		this.boardA.canPress = true
 		this.boardA.algoDone = true
@@ -1062,7 +1062,7 @@ Search.prototype.searchGreedy = function(){
 
 Search.prototype.showAnimation = function(exploredList){      
 	for(var i in exploredList){
-		console.log(exploredList[i].id,exploredList[i].totalDistance,exploredList[i].distance)
+		// console.log(exploredList[i].id,exploredList[i].totalDistance,exploredList[i].distance,exploredList[i].heuristicDistance)
 	}
 	var self = this
 	var startNode = exploredList[0]
@@ -1507,11 +1507,17 @@ Search.prototype.manhattanDistance = function(node1,node2){
 	var xDiff = Math.abs(node1.x - node2.x)
 	var yDiff = Math.abs(node1.y - node2.y)
 	var distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
-	return (xDiff + yDiff)
+	var sum = xDiff + yDiff
+	if((node1.y !== node2.y) && (node1.x !== node2.x)){
+		sum += 1
+	}
+	return sum
 }
 
 Search.prototype.realAStar = function(){
 	this.startNode.distance = 0
+	this.startNode.heuristicDistance = this.manhattanDistance(this.startNode,this.finalNode)
+	this.startNode.totalDistance = this.startNode.distance + this.startNode.heuristicDistance
 	var listToExplore = [this.startNode]
 	var exploredList = []
 	var isPresent = function(node){
@@ -1559,14 +1565,172 @@ Search.prototype.realAStar = function(){
 }
 
 Search.prototype.getNeighboursRealAStar = function(arr,node,exploredList){
-	var self = this
+	var self = this 
 	var list = this.getNeighboursDijkstra(arr,node,exploredList)
 	list.forEach((neighbour) =>{
 		neighbour.heuristicDistance = self.manhattanDistance(neighbour,self.finalNode) 
 		neighbour.totalDistance = neighbour.distance + neighbour.heuristicDistance
+		console.log(neighbour)
 	})
 	return list;
 }
+
+Search.prototype.searchRealAStaar = function(){   
+	this.startNode.distance = 0
+	this.startNode.heuristicDistance = this.manhattanDistance(this.startNode,this.finalNode)
+	this.startNode.totalDistance = this.startNode.distance + this.startNode.heuristicDistance
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){ 
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
+			if(exploredList[i].id === node.id){
+				returnVal = true
+			}
+		}
+		return returnVal
+	} 
+	whileLoop:
+	while(listToExplore.length !== 0){
+		//Sort listToExplore by distance 
+		listToExplore = listToExplore.sort(function(nodeA,nodeB){
+			if(nodeA.totalDistance === nodeB.totalDistance){
+				return nodeA.heuristicDistance - nodeB.heuristicDistance
+			}
+			return (nodeA.totalDistance) - (nodeB.totalDistance)
+		})
+		//Get currentNode 
+		var currentNode = listToExplore[0];
+
+		if(currentNode === this.finalNode){ 
+			currentNode.status = 'finalNode'
+			exploredList.push(currentNode)
+			break whileLoop
+		}
+		if(currentNode.status === 'wall'){
+			listToExplore = listToExplore.slice(1)
+		}
+		else if(!isPresent(currentNode)){
+			//If currentNode is finalNode break 
+			if(currentNode === this.finalNode){break whileLoop}
+			//Get currentNode's neighbours 
+			var neighbours = this.getNeighboursRealAStaar(this.board,currentNode,exploredList)
+			//Add neighbours to listToExplore
+			listToExplore = listToExplore.concat(neighbours)
+			//Remove currentNode from listToExplore
+			listToExplore = listToExplore.slice(1)
+			//Add currentNode to exploredList 
+			exploredList.push(currentNode)
+		}
+		else{
+			listToExplore = listToExplore.slice(1)
+		}
+
+	}
+	this.boardA.currentAlgo = 'RealAStar'
+
+	return exploredList
+}
+
+Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){ 
+		var neigbourList = []
+		//Up 
+		if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
+			//Get Up neighbour 
+			var neighbour = arr[node.y-1][node.x] 
+			//Get current distance 
+			var currentDistance = node.distance 
+			//Get My Direction 
+			var myDirection = node.direction
+			//Calculate number of moves to get to Get to Up Direction 
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+			//Calculate new neighbour distance	
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
+			//If this is lower than the currentDistance on the neighbour change
+			if(newNeighbourDistance < neighbour.distance){
+				neighbour.distance = newNeighbourDistance
+				neighbour.direction = 'UP'
+				neighbour.totalDistance = neighbour.heuristicDistance + neighbour.distance 
+				//Add neighbour to neigbourList
+				neigbourList.push(neighbour)
+				neighbour.parent = node
+			} 
+		} 
+		//Right 
+		if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
+			//Get Up neighbour 
+			var neighbour = arr[node.y][node.x+1]
+			//Get current distance 
+			var currentDistance = node.distance 
+			//Get My Direction 
+			var myDirection = node.direction
+			//Calculate number of moves to get to Get to Up Direction 
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+			//Calculate new neighbour distance	
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
+			//If this is lower than the currentDistance on the neighbour change
+			if(newNeighbourDistance < neighbour.distance){
+				neighbour.distance = newNeighbourDistance
+				neighbour.direction = 'RIGHT'
+				neighbour.totalDistance = neighbour.heuristicDistance + neighbour.distance 
+				//Add neighbour to neigbourList
+				neigbourList.push(neighbour)
+				neighbour.parent = node
+			} 
+		} 
+		//Down 
+		if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
+			//Get Up neighbour 
+			var neighbour = arr[node.y+1][node.x]
+			//Get current distance 
+			var currentDistance = node.distance 
+			//Get My Direction 
+			var myDirection = node.direction
+			//Calculate number of moves to get to Get to Up Direction 
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+			//Calculate new neighbour distance	
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
+			//If this is lower than the currentDistance on the neighbour change
+			if(newNeighbourDistance < neighbour.distance){
+				neighbour.distance = newNeighbourDistance
+				neighbour.direction = 'DOWN'
+				neighbour.totalDistance = neighbour.heuristicDistance + neighbour.distance 
+				//Add neighbour to neigbourList
+				neigbourList.push(neighbour)
+				neighbour.parent = node
+			} 
+		} 
+		//Left
+		if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
+			//Get Up neighbour 
+			var neighbour = arr[node.y][node.x-1]
+			//Get current distance 
+			var currentDistance = node.distance 
+			//Get My Direction 
+			var myDirection = node.direction
+			//Calculate number of moves to get to Get to Up Direction 
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+			//Calculate new neighbour distance	
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
+			//If this is lower than the currentDistance on the neighbour change
+			if(newNeighbourDistance < neighbour.distance){
+				neighbour.distance = newNeighbourDistance
+				neighbour.direction = 'LEFT'
+				neighbour.totalDistance = neighbour.heuristicDistance + neighbour.distance 
+				//Add neighbour to neigbourList
+				neigbourList.push(neighbour)
+				neighbour.parent = node
+			} 
+		}
+		return neigbourList
+}
+
+
+
 
 module.exports = Search
  
