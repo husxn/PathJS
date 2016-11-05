@@ -60,13 +60,38 @@
 #board{
   border-collapse:collapse
 }
+#mainText ul{
+  display:inline-block;
+  list-style:none
+}
+#mainText li{
+  display:inline-block;
+  list-style:none;
+  position:relative
+}
+#mainText li > div{
+  display:inline-block;
+  height:20px;
+  width:20px;
+  margin:0 5px;
+  position:relative;
+  top: 3px;
+}
 .finalCell{
+  background:#C0392B;
+  border: 1px solid #C0392B
+}
+.objectCell{
   background:#C0392B;
   border: 1px solid #C0392B
 }
 #board td{
   width: 20px;
   height: 20px;
+  animation-name:board;
+  animation-duration:0.5s
+}
+@keyframes board{
 }
 .explored{
   background:#2980B9;
@@ -87,7 +112,6 @@
   background:#2C3E50;
   border: 1px solid #2C3E50;
 }
-
 
 .startingCell{
   background:#3498DB;

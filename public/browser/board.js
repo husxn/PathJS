@@ -405,7 +405,7 @@ Board.prototype.clearWalls = function(){
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
-var bar = document.getElementById('navbarDiv').clientHeight
+var bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
 var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/22
