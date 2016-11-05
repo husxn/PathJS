@@ -295,7 +295,7 @@ Board.prototype.addEventListeners = function(){
 
   })
   //Add an object
-  document.getElementById('startButtonAddObject').addEventListener('click',function(){  
+  document.getElementById('startButtonAddObject').addEventListener('click',function(){   
      if(board.canPress){ 
       if(board.canAddObject){
         var height = board.height
@@ -329,7 +329,7 @@ Board.prototype.addEventListeners = function(){
       board.clearPath()
       var algoName = board.algoToRun
       board.canPress = false
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board,board.objectNode)
       search.startSearch()
     }
 
@@ -746,7 +746,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePres
 	this.middleNodePresent = middleNodePresent
 } 
 
-Search.prototype.startSearch = function(){   
+Search.prototype.startSearch = function(){    
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
 		var date = new Date()
@@ -1689,7 +1689,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 			//Calculate new neighbour distance	
-			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1712,7 +1712,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 			//Calculate new neighbour distance	
-			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1735,7 +1735,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 			//Calculate new neighbour distance	
-			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1758,7 +1758,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 			//Calculate new neighbour distance	
-			var newNeighbourDistance = node.distance  + 1 + numberOfMoves
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){

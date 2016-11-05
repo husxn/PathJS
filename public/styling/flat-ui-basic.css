@@ -67,7 +67,8 @@
 #mainText li{
   display:inline-block;
   list-style:none;
-  position:relative
+  position:relative;
+  margin-right:25px
 }
 #mainText li > div{
   display:inline-block;
@@ -88,17 +89,19 @@
 #board td{
   width: 20px;
   height: 20px;
-  animation-name:board;
-  animation-duration:0.5s
 }
-@keyframes board{
-}
+/*@keyframes boardA{
+  50%{
+    transform:scale(0.5,0.5)
+  }
+}*/
 .explored{
   background:#2980B9;
-  border: 1px solid #3498DB
+  border: 1px solid #3498DB;
+ 
 }
 .unexplored{
- border: 1px solid black;
+border: 1px solid #ECF0F1
 
 }
 .unexplored.water{
@@ -115,7 +118,9 @@
 
 .startingCell{
   background:#3498DB;
-  border: 1px solid #3498DB
+  border: 1px solid #3498DB;
+  animation-name:boardA;
+  animation-duration:1s;
 }
 .shortestPath{
   background:#E74C3C;

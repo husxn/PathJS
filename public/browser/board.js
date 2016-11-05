@@ -294,7 +294,7 @@ Board.prototype.addEventListeners = function(){
 
   })
   //Add an object
-  document.getElementById('startButtonAddObject').addEventListener('click',function(){  
+  document.getElementById('startButtonAddObject').addEventListener('click',function(){   
      if(board.canPress){ 
       if(board.canAddObject){
         var height = board.height
@@ -328,7 +328,7 @@ Board.prototype.addEventListeners = function(){
       board.clearPath()
       var algoName = board.algoToRun
       board.canPress = false
-      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board,board.objectNode)
       search.startSearch()
     }
 
