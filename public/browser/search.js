@@ -7,7 +7,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePres
 	this.middleNodePresent = middleNodePresent
 } 
 
-Search.prototype.startSearch = function(){  
+Search.prototype.startSearch = function(){   
   var startNode = this.startNode
 	if(this.currentAlgorithm === 'BFS'){
 		var date = new Date()
@@ -819,7 +819,7 @@ Search.prototype.manhattanDistance = function(node1,node2){
 	return sum
 }
 
-Search.prototype.realAStar = function(){
+Search.prototype.realAStar = function(){ 
 	this.startNode.distance = 0
 	this.startNode.heuristicDistance = this.manhattanDistance(this.startNode,this.finalNode)
 	this.startNode.totalDistance = this.startNode.distance + this.startNode.heuristicDistance
@@ -915,7 +915,7 @@ Search.prototype.searchRealAStaar = function(){
 		if(currentNode.status === 'wall'){
 			listToExplore = listToExplore.slice(1)
 		}
-		else if(!isPresent(currentNode)){
+		else if(!isPresent(currentNode)){ 
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
