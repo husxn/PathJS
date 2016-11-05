@@ -29,6 +29,7 @@ function Board(height,width){
   this.lastWall = false
   this.algoToRun = null
   this.canPress = true
+  this.canAddObject = true
 }  
 
 Board.prototype.initialise = function(){
@@ -278,6 +279,25 @@ Board.prototype.addEventListeners = function(){
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
 
   })
+  //Add an object
+  document.getElementById('startButtonAddObject').addEventListener('click',function(){  
+     if(board.canPress){ 
+      if(board.canAddObject){
+        var height = board.height
+        var width = board.width
+        board.finalNode = board.boardArr[Math.floor(height/2)][Math.floor(width/2)]
+        board.boardArr[Math.floor(height/2)][Math.floor(width/2)].status = 'objectNode'
+        document.getElementById(board.finalNode.id).className = 'objectCell'
+        board.canAddObject = false
+        document.getElementById('addObjectHREF').innerHTML = 'Remove Object'
+
+      }
+      else{
+        board.canAddObject = true 
+        document.getElementById('addObjectHREF').innerHTML = 'Add an Object'
+      }
+     }
+  }) 
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
