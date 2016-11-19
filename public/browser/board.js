@@ -180,7 +180,7 @@ Board.prototype.addEventListeners = function(){
   }    
   //Add Listeners for Button Panel
   //BFS
-  document.getElementById('startButtonBFS').addEventListener('click',function(){   
+  document.getElementById('startButtonBFS').addEventListener('click',function(){    
       if(!board.shouldDisable){
         document.getElementById('visualise').innerHTML = 'Visualise BFS'
         board.algoToRun = 'BFS'
@@ -275,6 +275,7 @@ Board.prototype.addEventListeners = function(){
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
+    // console.log(board.shouldDisable)
     if((!board.shouldDisable) && board.algoToRun){
       board.clearPath()
       let algoName = board.algoToRun

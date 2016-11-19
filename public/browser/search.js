@@ -11,51 +11,34 @@ Search.prototype.startSearch = function(){
 	if(this.currentAlgorithm === 'BFS'){
 		let exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
-		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'DFS'){
 		let exploredList = this.searchDFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
-		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
 		let exploredList = this.searchDijkstra()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
-		this.boardA.canPress = true
 	}
 	else if(this.currentAlgorithm === 'AStar'){
 		let exploredList = this.searchAStar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
-		this.boardA.canPress = true
 	} 
 	else if(this.currentAlgorithm === 'AStar2'){
 		let exploredList = this.searchAStar('2')
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
-		this.boardA.canPress = true
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
 		let exploredList = this.searchGreedy()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.canPress = true
-		this.boardA.algoDone = true
-
 	}   
 	else if(this.currentAlgorithm === 'RealAStar'){
 		let exploredList = this.searchRealAStaar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.canPress = true
-		this.boardA.algoDone = true
-
 	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		let exploredList = this.searchBidirectional()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		this.boardA.algoDone = true
 	}    
 }  
 
@@ -174,7 +157,7 @@ Search.prototype.searchBFS = function(){
 	return exploredList 
 }  
 
-Search.prototype.searchBidirectional = function(){    
+Search.prototype.searchBidirectional2 = function(){    
 	this.startNode.distance = 0
 	this.finalNode.distance = 0
 	let exploredList = []
@@ -260,6 +243,11 @@ Search.prototype.searchBidirectional = function(){
 		// ++count
 	}
 	return exploredList
+}
+
+
+Search.prototype.searchBidirectional = function(){
+
 }
 
 Search.prototype.searchAStar = function(algo){   
@@ -357,23 +345,29 @@ Search.prototype.searchGreedy = function(){
 	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
-
-Search.prototype.showAnimation = function(exploredList){ 
+//Back here
+Search.prototype.showAnimation = function(exploredList){  
+	let count = 0
 	let self = this
 	let startNode = exploredList[0]
   exploredList = exploredList.slice(1)
 	let endNode = exploredList[exploredList.length-1]
-  function timeout(index) { 
-    setTimeout(function () {
+  function timeout(index,exploredList,timeLength) {  
+		setTimeout(function () {
         if(index === exploredList.length){
-					showPath(endNode,self)
+					if(count === 0) showPath(endNode,self)
+					else{ 
+						self.boardA.shouldDisable = false
+						self.algoDone()
+
+					}
 					return
         }
         change(exploredList[index])
-        timeout(index+1);
-    }, 0.0001);
+        timeout(index+1,exploredList,timeLength);
+    }, timeLength);
   }  
-  function change(node){ 
+  function change(node){  
 		let elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(elem.className === 'unexplored water'){
@@ -384,9 +378,13 @@ Search.prototype.showAnimation = function(exploredList){
 			node.status = 'explored'
 				elem.className = 'explored'
 		}
+		else if(node.status === 'shortestPath'){
+			document.getElementById(node.id).className = 'shortestPath'
+		}
   } 
 	function showPath(node,search){
 		// console.log(startNode,node)
+		count++
 		let listPath = []
 		let endNode = Object.assign({},node)
 		while(node !== startNode){
@@ -399,14 +397,22 @@ Search.prototype.showAnimation = function(exploredList){
 			listPath.forEach(function(e){
 				// console.log(e)
 				e.status ='shortestPath' 
-				document.getElementById(e.id).className = 'shortestPath'
+				// document.getElementById(e.id).className = 'shortestPath'
 				//shortestPath fui-arrow-left
 			})
+			timeout(0,listPath.reverse(),16)
+			// self.boardA.shouldDisable = false
+		}
+		else{
 			self.boardA.shouldDisable = false
 		}
 	}
-  timeout(0)
+  timeout(0,exploredList,0.0001)
 	// showPath(endNode,this)
+}
+
+Search.prototype.algoDone = function(){
+	this.boardA.algoDone = true
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){
