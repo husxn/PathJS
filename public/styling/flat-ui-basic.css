@@ -83,7 +83,7 @@
   border: 1px solid #C0392B
 }
 .objectCell{
-  background:#C0392B;
+  background:yellow;
   border: 1px solid #C0392B
 }
 #board td{
@@ -98,7 +98,11 @@
 .explored{
   background:#2980B9;
   border: 1px solid #3498DB;
- 
+}
+.explored.object{
+  background:#2980B9;
+  border: 1px solid #3498DB;
+
 }
 .unexplored{
 border: 1px solid #ECF0F1
