@@ -290,14 +290,14 @@ Board.prototype.addEventListeners = function(){
   })
   //Clear Path
   document.getElementById('startButtonClearPath').addEventListener('click',function(){ 
-     if(board.canPress){ 
+     if(!board.shouldDisable){ 
       board.algoDone = false
       board.clearPath()
      }
   }) 
   //Clear Walls
    document.getElementById('startButtonClearWalls').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       board.clearWalls()
     }
   }) 
