@@ -191,7 +191,7 @@ Board.prototype.addEventListeners = function(){
   }    
   //Add Listeners for Button Panel
   //BFS
-  document.getElementById('startButtonBFS').addEventListener('click',function(){  
+  document.getElementById('startButtonBFS').addEventListener('click',function(){   
       if(true){
         document.getElementById('visualise').innerHTML = 'Visualise BFS'
         board.algoToRun = 'BFS'
@@ -286,13 +286,12 @@ Board.prototype.addEventListeners = function(){
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
+    console.log(board.shouldDisable)
     if(!board.shouldDisable){
-      console.log(board.shouldDisable)
       board.clearPath()
       let algoName = board.algoToRun
       let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
       search.startSearch()
-      console.log(board.shouldDisable)
     }
 
   })
@@ -427,6 +426,10 @@ Board.prototype.clearWalls = function(){
 } 
 
 Board.prototype.changeColourToRed = function(){
+
+}
+
+Board.prototype.changeColourBack = function(){
 
 }
 
@@ -1158,6 +1161,7 @@ Search.prototype.showAnimationDrag = function(exploredList){
 			}
 		}
 	}
+	this.boardA.shouldDisable = false
 	this.boardA.algoDone = true
 	 
 }  

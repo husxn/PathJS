@@ -434,6 +434,7 @@ Search.prototype.showAnimationDrag = function(exploredList){
 			}
 		}
 	}
+	this.boardA.shouldDisable = false
 	this.boardA.algoDone = true
 	 
 }  
