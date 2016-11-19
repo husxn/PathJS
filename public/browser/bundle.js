@@ -474,6 +474,7 @@ function Maze(board,startNode,finalNode,mazeToDo,animate){
 Maze.prototype.startMaze = function(){
 	this.board.shouldDisable = true
 	this.board.clearWalls()
+	this.board.clearPath()
 	this.maxX = this.boardArr[0].length 
 	this.maxY = this.boardArr.length
 	if(this.mazeToDo === 'basicMaze'){
