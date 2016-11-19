@@ -422,7 +422,15 @@ Board.prototype.changeColourBack = function(){
 
 }
 
-
+Board.prototype.removeBackgroundImage = function(){
+   for(let i=0;i<this.boardArr.length;i++){
+    for(let j=0;j<this.boardArr[i].length;j++){
+      let cell = this.boardArr[i][j] 
+      let htmlCell = document.getElementById(cell.id)
+      if(htmlCell.style.backgroundImage.length) htmlCell.style.backgroundImage = "none"
+    }
+  }
+}
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
@@ -430,8 +438,8 @@ Board.prototype.generateRandom = function(){
 let bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
 let height = Math.floor(document.documentElement.clientHeight) - bar
 let width = Math.floor(document.documentElement.clientWidth)
-let finalHeight = height/22
-let finalWidth = width/20
+let finalHeight = height/27
+let finalWidth = width/25
 let board = new Board(finalHeight,finalWidth-1)
 // letboard = new Board(7,7)
 board.initialise() 

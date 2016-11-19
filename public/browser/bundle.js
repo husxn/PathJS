@@ -423,7 +423,15 @@ Board.prototype.changeColourBack = function(){
 
 }
 
-
+Board.prototype.removeBackgroundImage = function(){
+   for(let i=0;i<this.boardArr.length;i++){
+    for(let j=0;j<this.boardArr[i].length;j++){
+      let cell = this.boardArr[i][j] 
+      let htmlCell = document.getElementById(cell.id)
+      if(htmlCell.style.backgroundImage.length) htmlCell.style.backgroundImage = "none"
+    }
+  }
+}
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
@@ -431,8 +439,8 @@ Board.prototype.generateRandom = function(){
 let bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
 let height = Math.floor(document.documentElement.clientHeight) - bar
 let width = Math.floor(document.documentElement.clientWidth)
-let finalHeight = height/22
-let finalWidth = width/20
+let finalHeight = height/27
+let finalWidth = width/25
 let board = new Board(finalHeight,finalWidth-1)
 // letboard = new Board(7,7)
 board.initialise() 
@@ -1068,7 +1076,7 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 //Back here
-Search.prototype.showAnimation = function(exploredList){   
+Search.prototype.showAnimation = function(exploredList){     
 	let count = 0
 	let self = this
 	let startNode = exploredList[0]
@@ -1091,7 +1099,6 @@ Search.prototype.showAnimation = function(exploredList){
   }  
   function change(node,index,length){  
 		let elem = document.getElementById(node.id)
-		// console.log(node.status)
 		if(elem.className === 'unexplored water'){
 			node.status = 'explored'
 			elem.className = 'explored water'
@@ -1104,8 +1111,16 @@ Search.prototype.showAnimation = function(exploredList){
 			if(node.parent.status !== 'startNode'){
 				document.getElementById(node.parent.id).className = 'shortestPath'
 				if(index !== length - 1){
-					document.getElementById(node.id).className = 'unexplored water'
-				}else {document.getElementById(node.id).className = 'shortestPath'}
+					let newClassName = 'shortestPath' + node.direction
+					document.getElementById(node.id).className = newClassName
+				}
+				else {
+					let thing = document.getElementsByClassName('finalCell')[1]
+					console.log(thing)
+					document.getElementById(node.id).className = 'shortestPath'
+					let nodeToChange = thing
+					nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + self.finalNode.direction.toLowerCase() + ".svg')"
+				}
 			}
 
 
@@ -1128,17 +1143,14 @@ Search.prototype.showAnimation = function(exploredList){
 				// console.log(e)
 				e.status ='shortestPath' 
 				// document.getElementById(e.id).className = 'shortestPath'
-				//shortestPath fui-arrow-left
 			})
-			timeout(0,listPath.reverse(),16)
-			// self.boardA.shouldDisable = false
+			timeout(0,listPath.reverse(),25)
 		}
 		else{
 			self.boardA.shouldDisable = false
 		}
 	}
   timeout(0,exploredList,0.0001)
-	// showPath(endNode,this)
 }
 
 Search.prototype.algoDone = function(){
@@ -1146,6 +1158,9 @@ Search.prototype.algoDone = function(){
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){
+	this.boardA.removeBackgroundImage()
+	let nodeToChange = document.getElementsByClassName('finalCell')[1]
+	nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + this.finalNode.direction.toLowerCase() + ".svg')"
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){

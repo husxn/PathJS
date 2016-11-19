@@ -80,17 +80,28 @@
 }
 .finalCell{
   background:#C0392B;
-  /*border: 1px solid #C0392B;*/
-  background-image:url("weight.svg");
-  background-position:center
+  border: 1px solid #C0392B;
+  background-image: none
 }
-.objectCell{
-  background:yellow;
-  border: 1px solid #C0392B
+.finalCellUP{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+}
+.finalCellRIGHT{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+}
+.finalCellDOWN{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+}
+.finalCellLEFT{
+  background:#C0392B;
+  border: 1px solid #C0392B;
 }
 #board td{
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
 }
 /*@keyframes boardA{
   50%{
@@ -125,8 +136,6 @@ border: 1px solid #ECF0F1
 .startingCell{
   background:#3498DB;
   border: 1px solid #3498DB;
-  animation-name:boardA;
-  animation-duration:1s;
 }
 .shortestPath{
   background:#E74C3C;
@@ -134,19 +143,29 @@ border: 1px solid #ECF0F1
 }
 .shortestPathUP{
   background:#E74C3C;
-  border: 1px solid #E74C3C
+  border: 1px solid #E74C3C;
+  background-image:url('triangletwo-up.svg')
+
 }
 .shortestPathRIGHT{
   background:#E74C3C;
-  border: 1px solid #E74C3C
+  border: 1px solid #E74C3C;
+  background-image:url('triangletwo-right.svg')
 }
 .shortestPathDOWN{
   background:#E74C3C;
-  border: 1px solid #E74C3C
+  border: 1px solid #E74C3C;
+  background-image:url('triangletwo-down.svg')
 }
 .shortestPathLEFT{
   background:#E74C3C;
-  border: 1px solid #E74C3C
+  border: 1px solid #E74C3C;
+  background-image:url('triangletwo-left.svg')
+}
+.shortestPathNoDirection{
+  background:#E74C3C;
+  border: 1px solid #E74C3C;
+  background-image:url('triangletwo-left.svg')
 }
 /*NEW CSS*/
 .fui-triangle-up:before {
