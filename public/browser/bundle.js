@@ -84,7 +84,7 @@ Board.prototype.addEventListeners = function(){
   })  
 
   //Add listeners for table elements  
-  for(let i=0;i<this.height;i++){  
+  for(let i=0;i<this.height;i++){
     for(let j=0;j<this.width;j++){
       let id = j.toString()+','+i.toString()
       let elem = document.getElementById(id)
@@ -276,8 +276,7 @@ Board.prototype.addEventListeners = function(){
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
-    console.log(board.shouldDisable)
-    if(!board.shouldDisable){
+    if((!board.shouldDisable) && board.algoToRun){
       board.clearPath()
       let algoName = board.algoToRun
       let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
