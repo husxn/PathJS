@@ -60,9 +60,6 @@
 #board{
   border-collapse:collapse
 }
-.abc{
-  background-color: yellow
-}
 #mainText ul{
   display:inline-block;
   list-style:none

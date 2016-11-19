@@ -242,28 +242,28 @@ Board.prototype.addEventListeners = function(){
   })
   //Basic Maze 1
   document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       let maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
       maze.startMaze()
     }
   })
   //Recursive Division 1
   document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
       maze.startMaze()
     }
   })
   //Recursive Division 2
   document.getElementById('startButtonBossMaze2').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
       maze.startMaze()
     }
   })
   //Recursive Division 3
   document.getElementById('startButtonBossMaze3').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
       maze.startMaze()
     }
