@@ -35,6 +35,7 @@ Search.prototype.startSearch = function(){
 	else if(this.currentAlgorithm === 'RealAStar'){
 		let exploredList = this.searchRealAStaar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
+		console.log(this.finalNode.direction)
 	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		let exploredList = this.searchBidirectional()
@@ -346,13 +347,13 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 //Back here
-Search.prototype.showAnimation = function(exploredList){  
+Search.prototype.showAnimation = function(exploredList){   
 	let count = 0
 	let self = this
 	let startNode = exploredList[0]
   exploredList = exploredList.slice(1)
 	let endNode = exploredList[exploredList.length-1]
-  function timeout(index,exploredList,timeLength) {  
+  function timeout(index,exploredList,timeLength) {   
 		setTimeout(function () {
         if(index === exploredList.length){
 					if(count === 0) showPath(endNode,self)
@@ -363,11 +364,11 @@ Search.prototype.showAnimation = function(exploredList){
 					}
 					return
         }
-        change(exploredList[index])
+        change(exploredList[index],index,exploredList.length)
         timeout(index+1,exploredList,timeLength);
     }, timeLength);
   }  
-  function change(node){  
+  function change(node,index,length){  
 		let elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(elem.className === 'unexplored water'){
@@ -379,10 +380,18 @@ Search.prototype.showAnimation = function(exploredList){
 				elem.className = 'explored'
 		}
 		else if(node.status === 'shortestPath'){
-			document.getElementById(node.id).className = 'shortestPath'
+			if(node.parent.status !== 'startNode'){
+				document.getElementById(node.parent.id).className = 'shortestPath'
+				if(index !== length - 1){
+					document.getElementById(node.id).className = 'unexplored water'
+				}else {document.getElementById(node.id).className = 'shortestPath'}
+			}
+
+
+
 		}
   } 
-	function showPath(node,search){
+	function showPath(node,search){ 
 		// console.log(startNode,node)
 		count++
 		let listPath = []

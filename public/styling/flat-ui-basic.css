@@ -80,7 +80,9 @@
 }
 .finalCell{
   background:#C0392B;
-  border: 1px solid #C0392B
+  /*border: 1px solid #C0392B;*/
+  background-image:url("weight.svg");
+  background-position:center
 }
 .objectCell{
   background:yellow;
