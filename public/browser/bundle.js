@@ -368,17 +368,21 @@ Board.prototype.clearBoard = function(){
 }
 
 Board.prototype.clearPath = function(){   
+  this.removeBackgroundImage()
   for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
       cell.parent = null
-      if(cell.status === 'explored' || cell.status === 'shortestPath'){
+      if((cell.status === 'explored' || cell.status === 'shortestPath') && !cell.weight){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
       }
       if(cell.status !== 'startNode'){
         cell.direction = 'UP'
         cell.distance = Infinity
+      }
+      if(cell.weight){
+        document.getElementById(cell.id).className = 'unexplored water'
       }
     }
   }
@@ -413,6 +417,7 @@ Board.prototype.clearWalls = function(){
       }
     }
   }
+  this.removeBackgroundImage(true)
 } 
 
 Board.prototype.changeColourToRed = function(){
@@ -423,12 +428,16 @@ Board.prototype.changeColourBack = function(){
 
 }
 
-Board.prototype.removeBackgroundImage = function(){
+Board.prototype.removeBackgroundImage = function(weights){
    for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
       let htmlCell = document.getElementById(cell.id)
       if(htmlCell.style.backgroundImage.length) htmlCell.style.backgroundImage = "none"
+      if(weights && cell.weight){
+        cell.weight = 0;
+        htmlCell.style.backgroundImage = "none"
+      } 
     }
   }
 }
