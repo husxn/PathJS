@@ -181,7 +181,7 @@ Board.prototype.addEventListeners = function(){
   //Add Listeners for Button Panel
   //BFS
   document.getElementById('startButtonBFS').addEventListener('click',function(){   
-      if(true){
+      if(!board.shouldDisable){
         document.getElementById('visualise').innerHTML = 'Visualise BFS'
         board.algoToRun = 'BFS'
         // search.startSearch()
@@ -189,7 +189,7 @@ Board.prototype.addEventListeners = function(){
   })  
   //DFS
   document.getElementById('startButtonDFS').addEventListener('click',function(){ 
-      if(board.canPress){
+      if(!board.shouldDisable){
         document.getElementById('visualise').innerHTML = 'Visualise DFS'
         board.algoToRun = 'DFS'
         // search.startSearch()
@@ -197,7 +197,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Dijkstra 
   document.getElementById('startButtonDijkstra').addEventListener('click',function(){ 
-    if(board.canPress){
+    if(!board.shouldDisable){
       document.getElementById('visualise').innerHTML = 'Visualise Dijkstra'
       board.algoToRun = 'Dijkstra'
       // search.startSearch()
@@ -205,7 +205,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Fake AStar 1
   document.getElementById('startButtonAStar').addEventListener('click',function(){ 
-    if(board.canPress){
+    if(!board.shouldDisable){
       document.getElementById('visualise').innerHTML = 'Visualise Test A*'
       board.algoToRun = 'AStar'
       // search.startSearch()
@@ -213,7 +213,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Fake AStar 2
   document.getElementById('startButtonAStar2').addEventListener('click',function(){  
-    if(board.canPress){
+    if(!board.shouldDisable){
       document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
       board.algoToRun = 'AStar2'
       // search.startSearch()
@@ -221,7 +221,7 @@ Board.prototype.addEventListeners = function(){
   })
   //Greedy
   document.getElementById('startButtonGreedy').addEventListener('click',function(){ 
-     if(board.canPress){ 
+     if(!board.shouldDisable){ 
       document.getElementById('visualise').innerHTML = 'Visualise Best First Search'
       board.algoToRun = 'Greedy'
       // search.startSearch()
@@ -229,7 +229,7 @@ Board.prototype.addEventListeners = function(){
   })
 
   document.getElementById('startButtonRealAStar').addEventListener('click',function(){
-    if(board.canPress){
+    if(!board.shouldDisable){
       document.getElementById('visualise').innerHTML = "Visualise A*"
       board.algoToRun = 'RealAStar'
     }
