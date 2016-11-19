@@ -89,7 +89,7 @@ Board.prototype.addEventListeners = function(){
       let elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
-          if(this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell'){
+          if(this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell' && !board.shouldDisable){
             board.changeCellClick(this.id)
             board.mouseDown = true
           }
@@ -106,11 +106,11 @@ Board.prototype.addEventListeners = function(){
       elem.addEventListener('mouseenter',function(e){
            e.preventDefault()
           //Normal Wall Creation Drag Event
-          if(board.mouseDown && board.currentCellStatus === null){
+          if(board.mouseDown && board.currentCellStatus === null && !board.shouldDisable){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell'){  
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell' && !board.shouldDisable){  
             this.className = board.currentCellStatus
             let idSplit = this.id.split(',')
             let cell = board.getCell(idSplit[0],idSplit[1])
@@ -135,18 +135,8 @@ Board.prototype.addEventListeners = function(){
                 search.startSearch()
                 }
             }
-            else if(this.className === 'objectCell'){
-              if(cell.status === 'wall'){board.lastWall = true}
-                cell.status = 'objectNode'
-                board.objectNode = cell
-                if(board.algoDone){
-                  board.clearPath()
-                let search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
-                search.startSearch()
-                }
-            }
           }
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell' || this.className === 'objectCell')){
+          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell') && !board.shouldDisable){
             if(this.className === 'startingCell'){
               board.shouldBe = 'startingCell'
             }
@@ -160,7 +150,7 @@ Board.prototype.addEventListeners = function(){
       })
       elem.addEventListener('mouseout',function(e){
          e.preventDefault()  
-        if(this.className === 'startingCell' || this.className === 'finalCell' || this.className === 'objectCell'){
+        if((this.className === 'startingCell' || this.className === 'finalCell') && !board.shouldDisable){
           if(board.mouseDown && board.currentCellStatus !== null){
               if(board.shouldBe){
                 this.className = board.shouldBe
