@@ -1,13 +1,13 @@
-function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePresent){ 
+function Search(board,startNode,finalNode,currentAlgorithm,boardA){ 
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 	this.finalNode = finalNode
 	this.boardA = boardA
-	this.middleNodePresent = middleNodePresent 
 } 
 
-Search.prototype.startSearch = function(){       
+Search.prototype.startSearch = function(){
+	this.boardA.shouldDisable = true
 	if(this.currentAlgorithm === 'BFS'){
 		let exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
@@ -358,11 +358,10 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){         
+Search.prototype.showAnimation = function(exploredList){ 
 	let self = this
 	let startNode = exploredList[0]
   exploredList = exploredList.slice(1)
-  // this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	let endNode = exploredList[exploredList.length-1]
   function timeout(index) { 
     setTimeout(function () {
@@ -375,7 +374,6 @@ Search.prototype.showAnimation = function(exploredList){
     }, 0.0001);
   }  
   function change(node){ 
-    console.log(node)
 		let elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(elem.className === 'unexplored water'){
@@ -404,6 +402,7 @@ Search.prototype.showAnimation = function(exploredList){
 				document.getElementById(e.id).className = 'shortestPath'
 				//shortestPath fui-arrow-left
 			})
+			self.boardA.shouldDisable = false
 		}
 	}
   timeout(0)

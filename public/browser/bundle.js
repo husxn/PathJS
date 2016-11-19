@@ -1,8 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+//asfionasofin
 let Cell = require('./cell')
 let Search = require('./search')
 let Maze = require('./maze')
-//Back to here
 function runFunction(board){
   for(let i=0;i<board.boardArr.length;i++){
     for(let j=0;j<board.boardArr[i].length;j++){
@@ -30,7 +30,7 @@ function Board(height,width){
   this.lastWall = false
   this.algoToRun = null
   this.canPress = true
-  this.canAddObject = true
+  this.shouldDisable = false
 }  
 
 Board.prototype.initialise = function(){
@@ -281,46 +281,18 @@ Board.prototype.addEventListeners = function(){
   })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
-
-  })
-  //Add an object
-  document.getElementById('startButtonAddObject').addEventListener('click',function(){    
-     if(board.canPress){ 
-      if(board.canAddObject){
-        let width = board.width
-        board.objectNode = board.boardArr[Math.floor(height/2)][Math.floor(width/2)]
-        board.objectNode.status = 'objectNode'
-        document.getElementById(board.objectNode.id).className = 'objectCell'
-        // console.log(document.getElementById(board.objectNode.id))
-        // console.log(board.objectNode)
-        board.canAddObject = false
-        document.getElementById('addObjectHREF').innerHTML = 'Remove Object'
-
-      }
-      else{
-        board.canAddObject = true 
-        document.getElementById('addObjectHREF').innerHTML = 'Add an Object'
-        let elem = document.getElementById(board.objectNode.id)
-        let splitId = elem.id.split(',')
-        let x = parseInt(splitId[0])
-        let y = parseInt(splitId[1])
-        let cell = board.getCell(x,y)
-        cell.status = 'unexplored'
-        elem.className = 'unexplored'
-      }
-     }
+    //
   }) 
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
-    if(board.canPress){
+    if(!board.shouldDisable){
+      console.log(board.shouldDisable)
       board.clearPath()
       let algoName = board.algoToRun
-      // board.canPress = false
-      let search;
-      board.canAddObject === true ? search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board) : search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board,true)
-      // let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
       search.startSearch()
+      console.log(board.shouldDisable)
     }
 
   })
@@ -453,6 +425,12 @@ Board.prototype.clearWalls = function(){
     }
   }
 } 
+
+Board.prototype.changeColourToRed = function(){
+
+}
+
+
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
@@ -744,16 +722,16 @@ Maze.prototype.instant = function(){
 
 module.exports = Maze
 },{}],4:[function(require,module,exports){
-function Search(board,startNode,finalNode,currentAlgorithm,boardA,middleNodePresent){ 
+function Search(board,startNode,finalNode,currentAlgorithm,boardA){ 
   this.currentAlgorithm = currentAlgorithm
   this.board = board
   this.startNode = startNode
 	this.finalNode = finalNode
 	this.boardA = boardA
-	this.middleNodePresent = middleNodePresent 
 } 
 
-Search.prototype.startSearch = function(){       
+Search.prototype.startSearch = function(){
+	this.boardA.shouldDisable = true
 	if(this.currentAlgorithm === 'BFS'){
 		let exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
@@ -1104,11 +1082,10 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){         
+Search.prototype.showAnimation = function(exploredList){ 
 	let self = this
 	let startNode = exploredList[0]
   exploredList = exploredList.slice(1)
-  // this.middleNodePresent === true ? startNode.status = 'middleObj' : startNode.status = 'startNode'
 	let endNode = exploredList[exploredList.length-1]
   function timeout(index) { 
     setTimeout(function () {
@@ -1121,7 +1098,6 @@ Search.prototype.showAnimation = function(exploredList){
     }, 0.0001);
   }  
   function change(node){ 
-    console.log(node)
 		let elem = document.getElementById(node.id)
 		// console.log(node.status)
 		if(elem.className === 'unexplored water'){
@@ -1150,6 +1126,7 @@ Search.prototype.showAnimation = function(exploredList){
 				document.getElementById(e.id).className = 'shortestPath'
 				//shortestPath fui-arrow-left
 			})
+			self.boardA.shouldDisable = false
 		}
 	}
   timeout(0)

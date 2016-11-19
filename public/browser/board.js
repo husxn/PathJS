@@ -1,7 +1,7 @@
+//asfionasofin
 let Cell = require('./cell')
 let Search = require('./search')
 let Maze = require('./maze')
-//Back to here
 function runFunction(board){
   for(let i=0;i<board.boardArr.length;i++){
     for(let j=0;j<board.boardArr[i].length;j++){
@@ -29,7 +29,7 @@ function Board(height,width){
   this.lastWall = false
   this.algoToRun = null
   this.canPress = true
-  this.canAddObject = true
+  this.shouldDisable = false
 }  
 
 Board.prototype.initialise = function(){
@@ -280,46 +280,18 @@ Board.prototype.addEventListeners = function(){
   })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
-
-  })
-  //Add an object
-  document.getElementById('startButtonAddObject').addEventListener('click',function(){    
-     if(board.canPress){ 
-      if(board.canAddObject){
-        let width = board.width
-        board.objectNode = board.boardArr[Math.floor(height/2)][Math.floor(width/2)]
-        board.objectNode.status = 'objectNode'
-        document.getElementById(board.objectNode.id).className = 'objectCell'
-        // console.log(document.getElementById(board.objectNode.id))
-        // console.log(board.objectNode)
-        board.canAddObject = false
-        document.getElementById('addObjectHREF').innerHTML = 'Remove Object'
-
-      }
-      else{
-        board.canAddObject = true 
-        document.getElementById('addObjectHREF').innerHTML = 'Add an Object'
-        let elem = document.getElementById(board.objectNode.id)
-        let splitId = elem.id.split(',')
-        let x = parseInt(splitId[0])
-        let y = parseInt(splitId[1])
-        let cell = board.getCell(x,y)
-        cell.status = 'unexplored'
-        elem.className = 'unexplored'
-      }
-     }
+    //
   }) 
   //Visualise Algorithm
   document.getElementById('startButtonVisualise').addEventListener('click',function(){
     board.algoDone = false
-    if(board.canPress){
+    if(!board.shouldDisable){
+      console.log(board.shouldDisable)
       board.clearPath()
       let algoName = board.algoToRun
-      // board.canPress = false
-      let search;
-      board.canAddObject === true ? search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board) : search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board,true)
-      // let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
       search.startSearch()
+      console.log(board.shouldDisable)
     }
 
   })
@@ -452,6 +424,12 @@ Board.prototype.clearWalls = function(){
     }
   }
 } 
+
+Board.prototype.changeColourToRed = function(){
+
+}
+
+
 
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
