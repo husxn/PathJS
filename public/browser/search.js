@@ -6,7 +6,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA){
 	this.boardA = boardA
 } 
 
-Search.prototype.startSearch = function(){
+Search.prototype.startSearch = function(){ 
 	this.boardA.shouldDisable = true
 	document.getElementById(this.finalNode.id).className = 'finalCell'
 	this.finalNode.className = 'finalCell'
@@ -37,7 +37,6 @@ Search.prototype.startSearch = function(){
 	else if(this.currentAlgorithm === 'RealAStar'){
 		let exploredList = this.searchRealAStaar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
-		console.log(this.finalNode.direction)
 	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
 		let exploredList = this.searchBidirectional()

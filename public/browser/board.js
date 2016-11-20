@@ -71,7 +71,7 @@ Board.prototype.createGrid = function(){
 
 }  
 
-Board.prototype.addEventListeners = function(){       
+Board.prototype.addEventListeners = function(){        
   let board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -367,6 +367,7 @@ Board.prototype.clearBoard = function(){
 }
 
 Board.prototype.clearPath = function(){    
+  document.getElementById(this.finalNode.id).className = 'finalCell'
   for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
@@ -401,7 +402,7 @@ Board.prototype.clearParents = function(show){
 }
 
 Board.prototype.clearWalls = function(){
-  for(let i=0;i<this.boardArr.length;i++){
+  for(let i=0;i<this.boardArr.length;i++){ 
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
       cell.parent = null
