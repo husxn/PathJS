@@ -396,9 +396,13 @@ Search.prototype.showAnimation = function(exploredList){
 					self.changeFinalClassName()
 				}
 			}
-
-
-
+			else{
+				node.status = 'shortestPath'
+				if(self.finalNode.parent === node){
+					document.getElementById(node.id).className = 'shortestPath' + node.direction
+					self.changeFinalClassName(node)
+				}
+			}
 		}
   } 
 	function showPath(node,search){ 
@@ -416,7 +420,7 @@ Search.prototype.showAnimation = function(exploredList){
 			listPath.forEach(function(e){
 				e.status === 'explored weight' ? e.status = 'shortestPath explored weight' : 	e.status ='shortestPath' 
 			})
-			timeout(0,listPath.reverse(),200)
+			timeout(0,listPath.reverse(),35)
 		}
 		else{
 			self.boardA.shouldDisable = false
@@ -429,7 +433,8 @@ Search.prototype.algoDone = function(){
 	this.boardA.algoDone = true
 }
 
-Search.prototype.changeFinalClassName = function(){
+Search.prototype.changeFinalClassName = function(node){
+	if(node) document.getElementById(node.id).className = 'shortestPath'
 	let finalCell;
 	finalCell = document.getElementsByClassName('finalCell')[1]
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellUP')[0]
@@ -440,7 +445,6 @@ Search.prototype.changeFinalClassName = function(){
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){ 
-	// this.changeFinalClassName()
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){
