@@ -380,6 +380,7 @@ Search.prototype.showAnimation = function(exploredList){
 			elem.className = 'explored'
 		}
 		else if(node.status === 'shortestPath explored weight'){
+			// console.log('in')
 			elem.className = 'shortestPath explored weight'
 			if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 			if(index === length -1 ) self.changeFinalClassName()
@@ -416,7 +417,7 @@ Search.prototype.showAnimation = function(exploredList){
 			listPath.forEach(function(e){
 				e.status === 'explored weight' ? e.status = 'shortestPath explored weight' : 	e.status ='shortestPath' 
 			})
-			timeout(0,listPath.reverse(),25)
+			timeout(0,listPath.reverse(),200)
 		}
 		else{
 			self.boardA.shouldDisable = false

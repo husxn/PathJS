@@ -106,6 +106,7 @@ Board.prototype.addEventListeners = function(){
         board.currentCellStatus = null
       })
       elem.addEventListener('mouseenter',function(e){
+          //  console.log(this.className)
            e.preventDefault()
           //Normal Wall Creation Drag Event
           if(board.mouseDown && board.currentCellStatus === null && !board.shouldDisable){
@@ -325,7 +326,6 @@ Board.prototype.changeCellClick = function(id){
   let x = parseInt(newId[0])
   let y = parseInt(newId[1])
   let cell = this.getCell(x,y)
-  console.log(cell.status)
   let toggledCell = this.toggle(cell)
   let elem = document.getElementById(id)
   if(toggledCell){
@@ -382,7 +382,7 @@ Board.prototype.clearBoard = function(){
 
 Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'
-  console.log('in clear path')
+  // console.log('in clear path')
   for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
@@ -390,9 +390,10 @@ Board.prototype.clearPath = function(){
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
-        if(document.getElementById(cell.id).className === 'explored water'){
-          document.getElementById(cell.id).className === 'unexplored water'
-        }
+      }
+      else if(cell.status === 'shortestPath explored weight' || cell.status === 'explored weight'){
+        cell.status = 'unexplored weight'
+        document.getElementById(cell.id).className = 'unexplored weight'
       }
       if(cell.status !== 'startNode'){
         cell.direction = 'UP'
@@ -425,8 +426,9 @@ Board.prototype.clearWalls = function(){
       let cell = this.boardArr[i][j] 
       cell.parent = null
       // console.log(j,i,cell)
-      if(cell.status === 'wall'){
+      if(cell.status === 'wall' || cell.status === 'unexplored weight'){
         cell.status = 'unexplored'
+        cell.weight = 0
         document.getElementById(cell.id).className = 'unexplored'
       }
     }
@@ -1110,6 +1112,7 @@ Search.prototype.showAnimation = function(exploredList){
 			elem.className = 'explored'
 		}
 		else if(node.status === 'shortestPath explored weight'){
+			// console.log('in')
 			elem.className = 'shortestPath explored weight'
 			if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 			if(index === length -1 ) self.changeFinalClassName()
@@ -1146,7 +1149,7 @@ Search.prototype.showAnimation = function(exploredList){
 			listPath.forEach(function(e){
 				e.status === 'explored weight' ? e.status = 'shortestPath explored weight' : 	e.status ='shortestPath' 
 			})
-			timeout(0,listPath.reverse(),25)
+			timeout(0,listPath.reverse(),200)
 		}
 		else{
 			self.boardA.shouldDisable = false
