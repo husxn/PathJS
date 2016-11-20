@@ -1171,13 +1171,17 @@ Search.prototype.changeFinalClassName = function(){
 	finalCell.className = 'finalCell' + this.finalNode.direction
 }
 
-Search.prototype.showAnimationDrag = function(exploredList){
+Search.prototype.showAnimationDrag = function(exploredList){ 
 	this.changeFinalClassName()
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){
 			cell.status = 'explored'
 			document.getElementById(cell.id).className = 'explored'
+		}
+		else if(cell.status === 'unexplored weight'){
+			cell.status = 'explored weight'
+			document.getElementById(cell.id).className = 'explored weight'
 		}
 	}
 	let endNode = exploredList[exploredList.length-1]
@@ -1191,7 +1195,12 @@ Search.prototype.showAnimationDrag = function(exploredList){
 	if(newEndNode.status === 'finalNode'){
 		for(let i in shortestPathList){
 			let cell = shortestPathList[i]
-			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
+			console.log(cell.status)
+			if(cell.status === 'explored weight'){
+				cell.status = 'shortestPath explored weight'
+				document.getElementById(cell.id).className = 'shortestPath explored weight'
+			}
+			else if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'explored'
 				document.getElementById(cell.id).className = 'shortestPath'
 			}
