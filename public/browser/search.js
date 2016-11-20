@@ -440,7 +440,7 @@ Search.prototype.changeFinalClassName = function(){
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){ 
-	this.changeFinalClassName()
+	// this.changeFinalClassName()
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){
@@ -461,6 +461,7 @@ Search.prototype.showAnimationDrag = function(exploredList){
 	}
 	shortestPathList = shortestPathList.reverse()
 	if(newEndNode.status === 'finalNode'){
+		this.changeFinalClassName()
 		for(let i in shortestPathList){
 			let cell = shortestPathList[i]
 			console.log(cell.status)
