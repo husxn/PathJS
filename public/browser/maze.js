@@ -1,4 +1,4 @@
-function Maze(board,startNode,finalNode,mazeToDo,animate){
+function Maze(board,startNode,finalNode,mazeToDo,animate){ 
   this.board = board
 	this.boardArr = board.boardArr
   this.startNode = startNode
@@ -30,6 +30,10 @@ Maze.prototype.startMaze = function(){
 		this.mazeGenerator()
 		this.toAnimate === true ? this.animate() : this.instant()
 	}
+	else if(this.mazeToDo === 'basicWeightMaze'){
+		this.basicWeightMaze()
+		this.toAnimate === true ? this.animate() : this.instant()
+	}
 
 }  
 
@@ -38,22 +42,24 @@ Maze.prototype.basicMaze = function(){
 		for(let j=0;j<this.boardArr[0].length;j++){
 			let elem = document.getElementById(j.toString()+','+i.toString())
 			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-				// elem.className = 'wall'
 				let cell = this.board.getCell(j,i)
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
 			}
-			if(Math.random() > 0.85 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-					if(Math.random() > 0.5){
-						// elem.className = 'unexplored mud'
-						// this.board.getCell(j,i).weight = 2
-					}
-					else{
-						// elem.className = 'unexplored water'
-						// this.board.getCell(j,i).weight = 5
-					}
-			}
+		}
+	}
+}
 
+Maze.prototype.basicWeightMaze = function(){
+	for(let i=0;i<this.boardArr.length;i++){
+		for(let j=0;j<this.boardArr[0].length;j++){
+			let elem = document.getElementById(j.toString()+','+i.toString())
+			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
+				let cell = this.board.getCell(j,i)
+				cell.status = 'unexplored weight'
+				cell.weight = 15
+				this.listToAnimate.push(cell)
+			}
 		}
 	}
 }

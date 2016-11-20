@@ -247,7 +247,6 @@ Search.prototype.searchBidirectional2 = function(){
 	return exploredList
 }
 
-
 Search.prototype.searchBidirectional = function(){
 
 }
@@ -347,8 +346,9 @@ Search.prototype.searchGreedy = function(){
 	this.boardA.currentAlgo = 'Greedy'
 	return exploredList
 }
-//Back here
-Search.prototype.showAnimation = function(exploredList){     
+
+Search.prototype.showAnimation = function(exploredList){  
+	// for(var i in exploredList){console.log(exploredList[i].status,exploredList[i].weight)}
 	let count = 0
 	let self = this
 	let startNode = exploredList[0]
@@ -426,7 +426,7 @@ Search.prototype.showAnimation = function(exploredList){
 			self.boardA.shouldDisable = false
 		}
 	}
-  timeout(0,exploredList,0.0001)
+  timeout(0,exploredList,1000)
 }
 
 Search.prototype.algoDone = function(){
@@ -455,7 +455,7 @@ Search.prototype.showAnimationDrag = function(exploredList){
 			cell.status = 'explored weight'
 			document.getElementById(cell.id).className = 'explored weight'
 		}
-	}
+	} 
 	let endNode = exploredList[exploredList.length-1]
 	let newEndNode = Object.assign({},endNode)
 	let shortestPathList = []
@@ -468,7 +468,6 @@ Search.prototype.showAnimationDrag = function(exploredList){
 		this.changeFinalClassName()
 		for(let i in shortestPathList){
 			let cell = shortestPathList[i]
-			console.log(cell.status)
 			if(cell.status === 'explored weight'){
 				cell.status = 'shortestPath explored weight'
 				document.getElementById(cell.id).className = 'shortestPath explored weight'
@@ -839,14 +838,11 @@ Search.prototype.checkNumberOfMoves = function(currentDirection,direction){
 	}
 }
 
-Search.prototype.manhattanDistance = function(node1,node2){
+Search.prototype.manhattanDistance = function(node1,node2){ 
 	let xDiff = Math.abs(node1.x - node2.x)
 	let yDiff = Math.abs(node1.y - node2.y)
 	let distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
 	let sum = xDiff + yDiff
-	if((node1.y !== node2.y) && (node1.x !== node2.x)){
-		sum += 1
-	}
 	return sum
 }
 
@@ -981,7 +977,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			let numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
+			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight 
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1004,7 +1000,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			let numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
+			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1027,7 +1023,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			let numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
+			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1050,7 +1046,7 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 			//Calculate number of moves to get to Get to Up Direction 
 			let numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + node.weight
+			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
