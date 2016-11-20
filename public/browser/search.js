@@ -347,7 +347,7 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){  
+Search.prototype.showAnimation = function(exploredList){   
 	// for(var i in exploredList){console.log(exploredList[i].status,exploredList[i].weight)}
 	let count = 0
 	let self = this

@@ -281,6 +281,14 @@ Board.prototype.addEventListeners = function(){
       maze.startMaze()
     }
   })
+  //Basic Weight Maze 
+  document.getElementById('startButtonBasicWeightMaze').addEventListener('click',function(){
+    console.log(board.shouldDisable)
+    if(!board.shouldDisable){
+      let maze = new Maze(board,board.startNode,board.finalNode,'basicWeightMaze',false)
+      maze.startMaze()
+    }
+  })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
     //

@@ -282,6 +282,14 @@ Board.prototype.addEventListeners = function(){
       maze.startMaze()
     }
   })
+  //Basic Weight Maze 
+  document.getElementById('startButtonBasicWeightMaze').addEventListener('click',function(){
+    console.log(board.shouldDisable)
+    if(!board.shouldDisable){
+      let maze = new Maze(board,board.startNode,board.finalNode,'basicWeightMaze',false)
+      maze.startMaze()
+    }
+  })
   //Pokemon Theme
   document.getElementById('startButtonPokemonTheme').addEventListener('click',function(){
     //
@@ -480,7 +488,7 @@ function Maze(board,startNode,finalNode,mazeToDo,animate){
 	this.finalNode = finalNode
 	this.listToAnimate = []
 	this.mazeToDo = mazeToDo
-	this.toAnimate = true
+	this.toAnimate = animate
 } 
 
 Maze.prototype.startMaze = function(){
@@ -709,7 +717,6 @@ Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 	return returnVal
 }
 
-
 Maze.prototype.animate = function(){ 
   let self = this
 	let list = this.listToAnimate
@@ -729,9 +736,10 @@ Maze.prototype.animate = function(){
 
 Maze.prototype.instant = function(){
 	for(let i in this.listToAnimate){
-		let cell = this.list[i]
+		let cell = this.listToAnimate[i]
 		document.getElementById(cell.id).className = cell.status
 	}
+	this.board.shouldDisable = false
 }
 
 module.exports = Maze
@@ -1085,7 +1093,7 @@ Search.prototype.searchGreedy = function(){
 	return exploredList
 }
 
-Search.prototype.showAnimation = function(exploredList){  
+Search.prototype.showAnimation = function(exploredList){   
 	// for(var i in exploredList){console.log(exploredList[i].status,exploredList[i].weight)}
 	let count = 0
 	let self = this

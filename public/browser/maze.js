@@ -5,7 +5,7 @@ function Maze(board,startNode,finalNode,mazeToDo,animate){
 	this.finalNode = finalNode
 	this.listToAnimate = []
 	this.mazeToDo = mazeToDo
-	this.toAnimate = true
+	this.toAnimate = animate
 } 
 
 Maze.prototype.startMaze = function(){
@@ -234,7 +234,6 @@ Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
 	return returnVal
 }
 
-
 Maze.prototype.animate = function(){ 
   let self = this
 	let list = this.listToAnimate
@@ -254,9 +253,10 @@ Maze.prototype.animate = function(){
 
 Maze.prototype.instant = function(){
 	for(let i in this.listToAnimate){
-		let cell = this.list[i]
+		let cell = this.listToAnimate[i]
 		document.getElementById(cell.id).className = cell.status
 	}
+	this.board.shouldDisable = false
 }
 
 module.exports = Maze

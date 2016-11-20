@@ -79,28 +79,39 @@
   top: 3px;
 }
 .finalCell{
-  background:#C0392B;
-  border: 1px solid #C0392B;
-  background-image: none
+  /*background:#C0392B;
+  border: 1px solid #C0392B;*/
+  background-image: url('circle.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+
 }
 .finalCellUP{
-  background:#C0392B;
-  border: 1px solid #C0392B;
+  /*background:#C0392B;
+  border: 1px solid #C0392B;*/
+  background-repeat: no-repeat;
+  background-position: center;
   background-image:url('triangletwo-up.svg')
 }
 .finalCellRIGHT{
   background:#C0392B;
   border: 1px solid #C0392B;
+  background-repeat: no-repeat;
+  background-position: center;
   background-image:url('triangletwo-right.svg')
 }
 .finalCellDOWN{
   background:#C0392B;
   border: 1px solid #C0392B;
+  background-repeat: no-repeat;
+  background-position: center;
   background-image:url('triangletwo-down.svg')
 }
 .finalCellLEFT{
   background:#C0392B;
   border: 1px solid #C0392B;
+  background-repeat: no-repeat;
+  background-position: center;
   background-image:url('triangletwo-left.svg')
 }
 #board td{
@@ -144,7 +155,7 @@ border: 1px solid #ECF0F1
 }
 .shortestPath{
   background:yellow;
-  border: 1px solid #E74C3C
+  /*border: 1px solid #E74C3C*/
 }
 .shortestPath.explored.weight{
   background:yellow;
