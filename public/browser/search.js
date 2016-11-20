@@ -380,14 +380,13 @@ Search.prototype.showAnimation = function(exploredList){
 			elem.className = 'explored'
 		}
 		else if(node.status === 'shortestPath explored weight'){
-			// console.log('in')
 			elem.className = 'shortestPath explored weight'
 			if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 			if(index === length -1 ) self.changeFinalClassName()
 		}
 		else if(node.status === 'shortestPath'){
 			if(node.parent.status !== 'startNode'){
-				document.getElementById(node.parent.id).className = 'shortestPath'
+				if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 				if(index !== length - 1){
 					let newClassName = 'shortestPath' + node.direction
 					document.getElementById(node.id).className = newClassName
