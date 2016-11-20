@@ -90,7 +90,7 @@ Board.prototype.addEventListeners = function(){
       let elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
-          if(this.className !== 'startingCell' && this.className !== 'finalCell' && this.className !== 'objectCell' && !board.shouldDisable){
+          if(this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && this.className !== 'objectCell' && !board.shouldDisable){
             board.changeCellClick(this.id)
             board.mouseDown = true
           }
@@ -111,7 +111,7 @@ Board.prototype.addEventListeners = function(){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'finalCell' && !board.shouldDisable){  
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && !board.shouldDisable){  
             this.className = board.currentCellStatus
             let idSplit = this.id.split(',')
             let cell = board.getCell(idSplit[0],idSplit[1])
@@ -126,7 +126,7 @@ Board.prototype.addEventListeners = function(){
                 }
 
             }
-            else if(this.className === 'finalCell'){
+            else if(this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT'){
               if(cell.status === 'wall'){board.lastWall = true}
                 cell.status = 'finalNode'
                 board.finalNode = cell
@@ -137,11 +137,11 @@ Board.prototype.addEventListeners = function(){
                 }
             }
           }
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || this.className === 'finalCell') && !board.shouldDisable){
+          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
             if(this.className === 'startingCell'){
               board.shouldBe = 'startingCell'
             }
-            else if(this.className === 'finalCell'){
+            else if(this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT'){
               board.shouldBe = 'finalCell'
             }
             else if(this.className === 'objectCell'){
@@ -151,7 +151,7 @@ Board.prototype.addEventListeners = function(){
       })
       elem.addEventListener('mouseout',function(e){
          e.preventDefault()  
-        if((this.className === 'startingCell' || this.className === 'finalCell') && !board.shouldDisable){
+        if((this.className === 'startingCell' || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
           if(board.mouseDown && board.currentCellStatus !== null){
               if(board.shouldBe){
                 this.className = board.shouldBe
@@ -367,8 +367,7 @@ Board.prototype.toggle = function(cell){
 Board.prototype.clearBoard = function(){
 }
 
-Board.prototype.clearPath = function(){   
-  this.removeBackgroundImage()
+Board.prototype.clearPath = function(){    
   for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
@@ -380,9 +379,6 @@ Board.prototype.clearPath = function(){
       if(cell.status !== 'startNode'){
         cell.direction = 'UP'
         cell.distance = Infinity
-      }
-      if(cell.weight){
-        document.getElementById(cell.id).className = 'unexplored water'
       }
     }
   }
@@ -417,7 +413,6 @@ Board.prototype.clearWalls = function(){
       }
     }
   }
-  this.removeBackgroundImage(true)
 } 
 
 Board.prototype.changeColourToRed = function(){
@@ -428,16 +423,13 @@ Board.prototype.changeColourBack = function(){
 
 }
 
-Board.prototype.removeBackgroundImage = function(weights){
-   for(let i=0;i<this.boardArr.length;i++){
-    for(let j=0;j<this.boardArr[i].length;j++){
-      let cell = this.boardArr[i][j] 
-      let htmlCell = document.getElementById(cell.id)
-      if(htmlCell.style.backgroundImage.length) htmlCell.style.backgroundImage = "none"
-      if(weights && cell.weight){
-        cell.weight = 0;
-        htmlCell.style.backgroundImage = "none"
-      } 
+Board.prototype.removeBackgroundImage = function(finalNode){
+  for(let i=finalNode.y-5;i<finalNode.y+6;i++){
+    for(let j=finalNode.x-6;j<finalNode.x+6;j++){
+      let id = j.toString()+','+i.toString()
+      let cell = document.getElementById(id)
+      // console.log(cell)
+      cell.style.backgroundImage = "none"
     }
   }
 }
@@ -746,6 +738,8 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA){
 
 Search.prototype.startSearch = function(){
 	this.boardA.shouldDisable = true
+	document.getElementById(this.finalNode.id).className = 'finalCell'
+	this.finalNode.className = 'finalCell'
 	if(this.currentAlgorithm === 'BFS'){
 		let exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
@@ -1124,11 +1118,8 @@ Search.prototype.showAnimation = function(exploredList){
 					document.getElementById(node.id).className = newClassName
 				}
 				else {
-					let thing = document.getElementsByClassName('finalCell')[1]
-					console.log(thing)
 					document.getElementById(node.id).className = 'shortestPath'
-					let nodeToChange = thing
-					nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + self.finalNode.direction.toLowerCase() + ".svg')"
+					self.changeFinalClassName()
 				}
 			}
 
@@ -1166,10 +1157,18 @@ Search.prototype.algoDone = function(){
 	this.boardA.algoDone = true
 }
 
+Search.prototype.changeFinalClassName = function(){
+	let finalCell;
+	finalCell = document.getElementsByClassName('finalCell')[1]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellUP')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellRIGHT')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellDOWN')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellLEFT')[0]
+	finalCell.className = 'finalCell' + this.finalNode.direction
+}
+
 Search.prototype.showAnimationDrag = function(exploredList){
-	this.boardA.removeBackgroundImage()
-	let nodeToChange = document.getElementsByClassName('finalCell')[1]
-	nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + this.finalNode.direction.toLowerCase() + ".svg')"
+	this.changeFinalClassName()
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){
@@ -1476,7 +1475,7 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 	return neigbourList
 } 
 
-Search.prototype.searchDijkstra = function(){
+Search.prototype.searchDijkstra = function(){ 
 	this.startNode.distance = 0
 	let listToExplore = [this.startNode]
 	let exploredList = []

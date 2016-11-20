@@ -8,6 +8,8 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA){
 
 Search.prototype.startSearch = function(){
 	this.boardA.shouldDisable = true
+	document.getElementById(this.finalNode.id).className = 'finalCell'
+	this.finalNode.className = 'finalCell'
 	if(this.currentAlgorithm === 'BFS'){
 		let exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
@@ -386,11 +388,8 @@ Search.prototype.showAnimation = function(exploredList){
 					document.getElementById(node.id).className = newClassName
 				}
 				else {
-					let thing = document.getElementsByClassName('finalCell')[1]
-					console.log(thing)
 					document.getElementById(node.id).className = 'shortestPath'
-					let nodeToChange = thing
-					nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + self.finalNode.direction.toLowerCase() + ".svg')"
+					self.changeFinalClassName()
 				}
 			}
 
@@ -428,10 +427,18 @@ Search.prototype.algoDone = function(){
 	this.boardA.algoDone = true
 }
 
+Search.prototype.changeFinalClassName = function(){
+	let finalCell;
+	finalCell = document.getElementsByClassName('finalCell')[1]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellUP')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellRIGHT')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellDOWN')[0]
+	if(!finalCell) finalCell = document.getElementsByClassName('finalCellLEFT')[0]
+	finalCell.className = 'finalCell' + this.finalNode.direction
+}
+
 Search.prototype.showAnimationDrag = function(exploredList){
-	this.boardA.removeBackgroundImage()
-	let nodeToChange = document.getElementsByClassName('finalCell')[1]
-	nodeToChange.style.backgroundImage = "url('public/styling/triangletwo-" + this.finalNode.direction.toLowerCase() + ".svg')"
+	this.changeFinalClassName()
 	for(let i in exploredList){
 		let cell = exploredList[i]
 		if(cell.status === 'unexplored'){
@@ -738,7 +745,7 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 	return neigbourList
 } 
 
-Search.prototype.searchDijkstra = function(){
+Search.prototype.searchDijkstra = function(){ 
 	this.startNode.distance = 0
 	let listToExplore = [this.startNode]
 	let exploredList = []

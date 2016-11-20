@@ -83,6 +83,26 @@
   border: 1px solid #C0392B;
   background-image: none
 }
+.finalCellUP{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+  background-image:url('triangletwo-up.svg')
+}
+.finalCellRIGHT{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+  background-image:url('triangletwo-right.svg')
+}
+.finalCellDOWN{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+  background-image:url('triangletwo-down.svg')
+}
+.finalCellLEFT{
+  background:#C0392B;
+  border: 1px solid #C0392B;
+  background-image:url('triangletwo-left.svg')
+}
 #board td{
   width: 25px;
   height: 25px;
