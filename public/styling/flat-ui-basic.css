@@ -79,37 +79,39 @@
   top: 3px;
 }
 .finalCell{
-  /*background:#C0392B;
-  border: 1px solid #C0392B;*/
+  /*background:#C0392B;*/
   background-image: url('circle.svg');
   background-repeat: no-repeat;
   background-position: center;
-
 }
 .finalCellUP{
   /*background:#C0392B;
   border: 1px solid #C0392B;*/
+  background:yellow;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-up.svg')
 }
 .finalCellRIGHT{
-  background:#C0392B;
-  border: 1px solid #C0392B;
+  /*background:#C0392B;
+  border: 1px solid #C0392B;*/
+  background:yellow;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-right.svg')
 }
 .finalCellDOWN{
-  background:#C0392B;
-  border: 1px solid #C0392B;
+  /*background:#C0392B;
+  border: 1px solid #C0392B;*/
+  background:yellow;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-down.svg')
 }
 .finalCellLEFT{
-  background:#C0392B;
-  border: 1px solid #C0392B;
+  /*background:#C0392B;
+  border: 1px solid #C0392B;*/
+  background:yellow;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-left.svg')
@@ -138,20 +140,33 @@ border: 1px solid #ECF0F1
 }
 .unexplored.weight{
   background-image:url('weight.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .explored.weight{
   background:#2980B9;
   border: 1px solid #3498DB;
   background-image:url('weight.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .wall{
   background:#2C3E50;
   border: 1px solid #2C3E50;
+  animation-name: wallAnimation;
+  animation-duration:0.25s;
+}
+@keyframes wallAnimation {
+    50% {transform:scale(1.3)}
+    100% {transform:scale(1)}
 }
 
 .startingCell{
-  background:#3498DB;
-  border: 1px solid #3498DB;
+  /*background:#3498DB;
+  border: 1px solid #3498DB;*/
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image:url('spaceship.svg')
 }
 .shortestPath{
   background:yellow;
@@ -163,18 +178,18 @@ border: 1px solid #ECF0F1
 }
 .shortestPathUP{
   background:yellow;
-  border: 1px solid #E74C3C;
+  /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-up.svg')
 
 }
 .shortestPathRIGHT{
   background:yellow;
-  border: 1px solid #E74C3C;
+  /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-right.svg')
 }
 .shortestPathDOWN{
   background:yellow;
-  border: 1px solid #E74C3C;
+  /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-down.svg')
 }
 .shortestPathLEFT{
@@ -184,7 +199,7 @@ border: 1px solid #ECF0F1
 }
 .shortestPathNoDirection{
   background:yellow;
-  border: 1px solid #E74C3C;
+  /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-left.svg')
 }
 /*NEW CSS*/
