@@ -371,13 +371,18 @@ Search.prototype.showAnimation = function(exploredList){
   }  
   function change(node,index,length){  
 		let elem = document.getElementById(node.id)
-		if(elem.className === 'unexplored water'){
-			node.status = 'explored'
-			elem.className = 'explored water'
+		if(node.status === 'unexplored weight'){
+			node.status = 'explored weight'
+			elem.className = 'explored weight'
 		}
 		else if(node.status === 'unexplored'){
 			node.status = 'explored'
-				elem.className = 'explored'
+			elem.className = 'explored'
+		}
+		else if(node.status === 'shortestPath explored weight'){
+			elem.className = 'shortestPath explored weight'
+			if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
+			if(index === length -1 ) self.changeFinalClassName()
 		}
 		else if(node.status === 'shortestPath'){
 			if(node.parent.status !== 'startNode'){
@@ -409,9 +414,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
 		if(endNode.status === self.finalNode.status){
 			listPath.forEach(function(e){
-				// console.log(e)
-				e.status ='shortestPath' 
-				// document.getElementById(e.id).className = 'shortestPath'
+				e.status === 'explored weight' ? e.status = 'shortestPath explored weight' : 	e.status ='shortestPath' 
 			})
 			timeout(0,listPath.reverse(),25)
 		}

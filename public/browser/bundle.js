@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-//asfionasofin
+//Come back to this..
 let Cell = require('./cell')
 let Search = require('./search')
 let Maze = require('./maze')
@@ -12,7 +12,7 @@ function runFunction(board){
   }
 }
 
-function Board(height,width){ 
+function Board(height,width){  
   this.height = height
   this.width = width 
   this.boardArr = []
@@ -28,6 +28,7 @@ function Board(height,width){
   this.algoDone = false
   this.currentAlgo = null
   this.lastWall = false
+  this.lastWeight = false
   this.algoToRun = null
   this.canPress = true
   this.shouldDisable = false
@@ -86,7 +87,7 @@ Board.prototype.addEventListeners = function(){
   //Add listeners for table elements  
   for(let i=0;i<this.height;i++){
     for(let j=0;j<this.width;j++){
-      let id = j.toString()+','+i.toString()
+     let id = j.toString()+','+i.toString()
       let elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
@@ -117,6 +118,7 @@ Board.prototype.addEventListeners = function(){
             let cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){ 
               if(cell.status === 'wall'){board.lastWall = true}
+              else if(cell.status === 'unexplored weight'){board.lastWeight = true}
                 cell.status = 'startNode'
                 board.startNode = cell
                 if(board.algoDone){
@@ -128,6 +130,7 @@ Board.prototype.addEventListeners = function(){
             }
             else if(this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT'){
               if(cell.status === 'wall'){board.lastWall = true}
+              else if(cell.status === 'unexplored weight'){board.lastWeight = true}
                 cell.status = 'finalNode'
                 board.finalNode = cell
                 if(board.algoDone){
@@ -165,6 +168,15 @@ Board.prototype.addEventListeners = function(){
                   this.className = 'wall'
                   cell.status = 'wall'
                   board.lastWall = false
+                }
+                else if(board.lastWeight){
+                  board.clearPath()
+                  let idSplit = this.id.split(',')
+                  let cell = board.getCell(idSplit[0],idSplit[1])
+                  this.className = 'unexplored weight'
+                  cell.status = 'unexplored weight'
+                  cell.weight = 15
+                  board.lastWeight = false
                 }
                 else{
                   board.clearPath()
@@ -313,6 +325,7 @@ Board.prototype.changeCellClick = function(id){
   let x = parseInt(newId[0])
   let y = parseInt(newId[1])
   let cell = this.getCell(x,y)
+  console.log(cell.status)
   let toggledCell = this.toggle(cell)
   let elem = document.getElementById(id)
   if(toggledCell){
@@ -339,20 +352,20 @@ Board.prototype.changeCellDrag = function(id){
 Board.prototype.toggle = function(cell){ 
   if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown){
       // cell.status = 'unexplored water'
-      if(this.keyDown === 16){  
-        cell.weight = 2
-        return cell.status +' mud'
-      }
-      else{
+      if(this.keyDown === 49){  
         cell.weight = 15
-        return cell.status + ' water'
+        cell.status = 'unexplored weight'
+        return cell.status
       }
-      
-
   }
   else if(cell.status === 'unexplored' || cell.status === 'explored'){
       cell.status = 'wall'
       return cell.status
+  }
+  else if(cell.status === 'explored weight' || cell.status === 'unexplored weight'){
+    cell.status = 'unexplored'
+    cell.weight = 0
+    return cell.status
   }
   else if(cell.status === 'wall'){
       cell.status = 'unexplored'
@@ -367,15 +380,19 @@ Board.prototype.toggle = function(cell){
 Board.prototype.clearBoard = function(){
 }
 
-Board.prototype.clearPath = function(){    
+Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'
+  console.log('in clear path')
   for(let i=0;i<this.boardArr.length;i++){
     for(let j=0;j<this.boardArr[i].length;j++){
       let cell = this.boardArr[i][j] 
       cell.parent = null
-      if((cell.status === 'explored' || cell.status === 'shortestPath') && !cell.weight){
+      if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
         document.getElementById(cell.id).className = 'unexplored'
+        if(document.getElementById(cell.id).className === 'explored water'){
+          document.getElementById(cell.id).className === 'unexplored water'
+        }
       }
       if(cell.status !== 'startNode'){
         cell.direction = 'UP'
@@ -416,35 +433,17 @@ Board.prototype.clearWalls = function(){
   }
 } 
 
-Board.prototype.changeColourToRed = function(){
-
-}
-
-Board.prototype.changeColourBack = function(){
-
-}
-
-Board.prototype.removeBackgroundImage = function(finalNode){
-  for(let i=finalNode.y-5;i<finalNode.y+6;i++){
-    for(let j=finalNode.x-6;j<finalNode.x+6;j++){
-      let id = j.toString()+','+i.toString()
-      let cell = document.getElementById(id)
-      // console.log(cell)
-      cell.style.backgroundImage = "none"
-    }
-  }
-}
-
 Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
+
 let bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
 let height = Math.floor(document.documentElement.clientHeight) - bar
 let width = Math.floor(document.documentElement.clientWidth)
 let finalHeight = height/27
 let finalWidth = width/25
-let board = new Board(finalHeight,finalWidth-1)
-// letboard = new Board(7,7)
+// let board = new Board(finalHeight,finalWidth-1)
+let board = new Board(10,10)
 board.initialise() 
 
 
@@ -1102,13 +1101,18 @@ Search.prototype.showAnimation = function(exploredList){
   }  
   function change(node,index,length){  
 		let elem = document.getElementById(node.id)
-		if(elem.className === 'unexplored water'){
-			node.status = 'explored'
-			elem.className = 'explored water'
+		if(node.status === 'unexplored weight'){
+			node.status = 'explored weight'
+			elem.className = 'explored weight'
 		}
 		else if(node.status === 'unexplored'){
 			node.status = 'explored'
-				elem.className = 'explored'
+			elem.className = 'explored'
+		}
+		else if(node.status === 'shortestPath explored weight'){
+			elem.className = 'shortestPath explored weight'
+			if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
+			if(index === length -1 ) self.changeFinalClassName()
 		}
 		else if(node.status === 'shortestPath'){
 			if(node.parent.status !== 'startNode'){
@@ -1140,9 +1144,7 @@ Search.prototype.showAnimation = function(exploredList){
 		}
 		if(endNode.status === self.finalNode.status){
 			listPath.forEach(function(e){
-				// console.log(e)
-				e.status ='shortestPath' 
-				// document.getElementById(e.id).className = 'shortestPath'
+				e.status === 'explored weight' ? e.status = 'shortestPath explored weight' : 	e.status ='shortestPath' 
 			})
 			timeout(0,listPath.reverse(),25)
 		}

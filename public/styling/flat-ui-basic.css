@@ -125,10 +125,10 @@
 border: 1px solid #ECF0F1
 
 }
-.unexplored.water{
+.unexplored.weight{
   background-image:url('weight.svg');
 }
-.explored.water{
+.explored.weight{
   background:#2980B9;
   border: 1px solid #3498DB;
   background-image:url('weight.svg');
@@ -145,6 +145,10 @@ border: 1px solid #ECF0F1
 .shortestPath{
   background:#E74C3C;
   border: 1px solid #E74C3C
+}
+.shortestPath.explored.weight{
+  background:yellow;
+  background-image:url('weight.svg');
 }
 .shortestPathUP{
   background:#E74C3C;
