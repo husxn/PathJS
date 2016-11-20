@@ -443,8 +443,8 @@ let height = Math.floor(document.documentElement.clientHeight) - bar
 let width = Math.floor(document.documentElement.clientWidth)
 let finalHeight = height/27
 let finalWidth = width/25
-// let board = new Board(finalHeight,finalWidth-1)
-let board = new Board(10/2,10/2)
+let board = new Board(finalHeight,finalWidth-1)
+// let board = new Board(10,10)
 board.initialise() 
 
 

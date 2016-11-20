@@ -426,7 +426,7 @@ Search.prototype.showAnimation = function(exploredList){
 			self.boardA.shouldDisable = false
 		}
 	}
-  timeout(0,exploredList,1000)
+  timeout(0,exploredList,0.001)
 }
 
 Search.prototype.algoDone = function(){
