@@ -251,7 +251,7 @@ Search.prototype.searchBidirectional = function(){
 
 }
 
-Search.prototype.searchAStar = function(algo){   
+Search.prototype.searchAStar = function(algo){    
 	this.startNode.distance = 0
 	let listToExplore = [this.startNode]
 	let exploredList = []
@@ -261,7 +261,7 @@ Search.prototype.searchAStar = function(algo){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
-		}
+		} 
 		return returnVal
 	} 
 	whileLoop:
@@ -283,7 +283,7 @@ Search.prototype.searchAStar = function(algo){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo)
+			let neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo,this.finalNode)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore

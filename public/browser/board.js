@@ -219,7 +219,7 @@ Board.prototype.addEventListeners = function(){
   //Fake AStar 1
   document.getElementById('startButtonAStar').addEventListener('click',function(){ 
     if(!board.shouldDisable){
-      document.getElementById('visualise').innerHTML = 'Visualise Test A*'
+      document.getElementById('visualise').innerHTML = 'Visualise Swarm'
       board.algoToRun = 'AStar'
       // search.startSearch()
     }
@@ -227,7 +227,7 @@ Board.prototype.addEventListeners = function(){
   //Fake AStar 2
   document.getElementById('startButtonAStar2').addEventListener('click',function(){  
     if(!board.shouldDisable){
-      document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
+      document.getElementById('visualise').innerHTML = 'Visualise Convergent Swarm'
       board.algoToRun = 'AStar2'
       // search.startSearch()
     }

@@ -220,7 +220,7 @@ Board.prototype.addEventListeners = function(){
   //Fake AStar 1
   document.getElementById('startButtonAStar').addEventListener('click',function(){ 
     if(!board.shouldDisable){
-      document.getElementById('visualise').innerHTML = 'Visualise Test A*'
+      document.getElementById('visualise').innerHTML = 'Visualise Swarm'
       board.algoToRun = 'AStar'
       // search.startSearch()
     }
@@ -228,7 +228,7 @@ Board.prototype.addEventListeners = function(){
   //Fake AStar 2
   document.getElementById('startButtonAStar2').addEventListener('click',function(){  
     if(!board.shouldDisable){
-      document.getElementById('visualise').innerHTML = 'Visualise Test 2 A*'
+      document.getElementById('visualise').innerHTML = 'Visualise Convergent Swarm'
       board.algoToRun = 'AStar2'
       // search.startSearch()
     }
@@ -997,7 +997,7 @@ Search.prototype.searchBidirectional = function(){
 
 }
 
-Search.prototype.searchAStar = function(algo){   
+Search.prototype.searchAStar = function(algo){    
 	this.startNode.distance = 0
 	let listToExplore = [this.startNode]
 	let exploredList = []
@@ -1007,7 +1007,7 @@ Search.prototype.searchAStar = function(algo){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
-		}
+		} 
 		return returnVal
 	} 
 	whileLoop:
@@ -1029,7 +1029,7 @@ Search.prototype.searchAStar = function(algo){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo)
+			let neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo,this.finalNode)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
