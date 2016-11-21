@@ -1,11 +1,11 @@
 //Come back to this..
-let Cell = require('./cell')
-let Search = require('./search')
-let Maze = require('./maze')
+var Cell = require('./cell')
+var Search = require('./search')
+var Maze = require('./maze')
 function runFunction(board){
-  for(let i=0;i<board.boardArr.length;i++){
-    for(let j=0;j<board.boardArr[i].length;j++){
-      let id = j.toString() + ',' + i.toString()
+  for(var i=0;i<board.boardArr.length;i++){
+    for(var j=0;j<board.boardArr[i].length;j++){
+      var id = j.toString() + ',' + i.toString()
       console.log(document.getElementById(id).className)
     }
   }
@@ -39,33 +39,33 @@ Board.prototype.initialise = function(){
 }
 
 Board.prototype.createGrid = function(){   
-  let  initialHTML = ''
-  for(let i=0;i<this.height;i++){
+  var  initialHTML = ''
+  for(var i=0;i<this.height;i++){
     //Add row HTML
     initialHTML += "<tr id='row"+i.toString()+"'>"
     //Add row boardArr 
     this.boardArr.push([])
-    for(let j=0;j<this.width;j++){
+    for(var j=0;j<this.width;j++){
         //Add individual table Elements HTML 
         initialHTML += "<td id='"+j.toString()+","+i.toString()+"' class='unexplored'>"+"</td>"
         //Add cell element to boardArr
-        let newCell = new Cell(j,i)
+        var newCell = new Cell(j,i)
         this.boardArr[this.boardArr.length-1].push(newCell)
 
     }
     //Finish row element HTML
     initialHTML += "</tr>"
   } 
-  let board = document.getElementById('board')
+  var board = document.getElementById('board')
   board.innerHTML = initialHTML
   //Set Initial start Node
-  let xStartNode =  Math.floor(this.boardArr.length/4)
-  let y =  Math.floor(this.boardArr.length/2)
+  var xStartNode =  Math.floor(this.boardArr.length/4)
+  var y =  Math.floor(this.boardArr.length/2)
   this.boardArr[y][xStartNode].status = 'startNode'
   this.startNode = this.boardArr[y][xStartNode]
   document.getElementById(this.startNode.id).className = 'startingCell'
   //Set Initial end Node
-  let xFinalNode = Math.floor(3*this.boardArr[0].length/4)
+  var xFinalNode = Math.floor(3*this.boardArr[0].length/4)
   this.finalNode = this.boardArr[y][xFinalNode]
   this.boardArr[y][xFinalNode].status = 'finalNode'
   document.getElementById(this.finalNode.id).className = 'finalCell'
@@ -73,7 +73,7 @@ Board.prototype.createGrid = function(){
 }  
 
 Board.prototype.addEventListeners = function(){        
-  let board = this
+  var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
     e.keyCode === 16 || e.keyCode === 49 ? board.keyDown = e.keyCode : board.keyDown;
@@ -84,10 +84,10 @@ Board.prototype.addEventListeners = function(){
   })  
 
   //Add listeners for table elements  
-  for(let i=0;i<this.height;i++){
-    for(let j=0;j<this.width;j++){
-     let id = j.toString()+','+i.toString()
-      let elem = document.getElementById(id)
+  for(var i=0;i<this.height;i++){
+    for(var j=0;j<this.width;j++){
+     var id = j.toString()+','+i.toString()
+      var elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
           if(this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && this.className !== 'objectCell' && !board.shouldDisable){
@@ -114,8 +114,8 @@ Board.prototype.addEventListeners = function(){
           //Dragging a start/end node 
           else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && !board.shouldDisable){  
             this.className = board.currentCellStatus
-            let idSplit = this.id.split(',')
-            let cell = board.getCell(idSplit[0],idSplit[1])
+            var idSplit = this.id.split(',')
+            var cell = board.getCell(idSplit[0],idSplit[1])
             if(this.className === 'startingCell'){ 
               if(cell.status === 'wall'){board.lastWall = true}
               else if(cell.status === 'unexplored weight'){board.lastWeight = true}
@@ -123,7 +123,7 @@ Board.prototype.addEventListeners = function(){
                 board.startNode = cell
                 if(board.algoDone){
                   board.clearPath()
-                let search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+                var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
                 search.startSearch()
                 }
 
@@ -135,7 +135,7 @@ Board.prototype.addEventListeners = function(){
                 board.finalNode = cell
                 if(board.algoDone){
                   board.clearPath()
-                let search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
+                var search = new Search(board.boardArr,board.startNode,board.finalNode,board.currentAlgo,board)
                 search.startSearch()
                 }
             }
@@ -163,16 +163,16 @@ Board.prototype.addEventListeners = function(){
               else{
                 if(board.lastWall){
                   board.clearPath()
-                  let idSplit = this.id.split(',')
-                  let cell = board.getCell(idSplit[0],idSplit[1])
+                  var idSplit = this.id.split(',')
+                  var cell = board.getCell(idSplit[0],idSplit[1])
                   this.className = 'wall'
                   cell.status = 'wall'
                   board.lastWall = false
                 }
                 else if(board.lastWeight){
                   board.clearPath()
-                  let idSplit = this.id.split(',')
-                  let cell = board.getCell(idSplit[0],idSplit[1])
+                  var idSplit = this.id.split(',')
+                  var cell = board.getCell(idSplit[0],idSplit[1])
                   this.className = 'unexplored weight'
                   cell.status = 'unexplored weight'
                   cell.weight = 15
@@ -180,8 +180,8 @@ Board.prototype.addEventListeners = function(){
                 }
                 else{
                   board.clearPath()
-                  let idSplit = this.id.split(',')
-                  let cell = board.getCell(idSplit[0],idSplit[1])
+                  var idSplit = this.id.split(',')
+                  var cell = board.getCell(idSplit[0],idSplit[1])
                   this.className = 'unexplored'
                   cell.status = 'unexplored'
                 }
@@ -256,28 +256,28 @@ Board.prototype.addEventListeners = function(){
   //Basic Maze 1
   document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
     if(!board.shouldDisable){
-      let maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
+      var maze = new Maze(board,board.startNode,board.finalNode,'basicMaze')
       maze.startMaze()
     }
   })
   //Recursive Division 1
   document.getElementById('startButtonBossMaze1').addEventListener('click',function(){
     if(!board.shouldDisable){
-      let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze1',true)
       maze.startMaze()
     }
   })
   //Recursive Division 2
   document.getElementById('startButtonBossMaze2').addEventListener('click',function(){
     if(!board.shouldDisable){
-      let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze2',true)
       maze.startMaze()
     }
   })
   //Recursive Division 3
   document.getElementById('startButtonBossMaze3').addEventListener('click',function(){
     if(!board.shouldDisable){
-      let maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
+      var maze = new Maze(board,board.startNode,board.finalNode,'bossMaze3',true)
       maze.startMaze()
     }
   })
@@ -285,7 +285,7 @@ Board.prototype.addEventListeners = function(){
   document.getElementById('startButtonBasicWeightMaze').addEventListener('click',function(){
     console.log(board.shouldDisable)
     if(!board.shouldDisable){
-      let maze = new Maze(board,board.startNode,board.finalNode,'basicWeightMaze',false)
+      var maze = new Maze(board,board.startNode,board.finalNode,'basicWeightMaze',false)
       maze.startMaze()
     }
   })
@@ -299,8 +299,8 @@ Board.prototype.addEventListeners = function(){
     // console.log(board.shouldDisable)
     if((!board.shouldDisable) && board.algoToRun){
       board.clearPath()
-      let algoName = board.algoToRun
-      let search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
+      var algoName = board.algoToRun
+      var search = new Search(board.boardArr,board.startNode,board.finalNode,algoName,board)
       search.startSearch()
     }
 
@@ -329,12 +329,12 @@ Board.prototype.getCell = function(x,y){
 } 
 
 Board.prototype.changeCellClick = function(id){
-  let newId = id.split(',')
-  let x = parseInt(newId[0])
-  let y = parseInt(newId[1])
-  let cell = this.getCell(x,y)
-  let toggledCell = this.toggle(cell)
-  let elem = document.getElementById(id)
+  var newId = id.split(',')
+  var x = parseInt(newId[0])
+  var y = parseInt(newId[1])
+  var cell = this.getCell(x,y)
+  var toggledCell = this.toggle(cell)
+  var elem = document.getElementById(id)
   if(toggledCell){
     elem.className = toggledCell
   }
@@ -342,13 +342,13 @@ Board.prototype.changeCellClick = function(id){
 } 
 
 Board.prototype.changeCellDrag = function(id){
-  let newId = id.split(',')
-  let x = parseInt(newId[0])
-  let y = parseInt(newId[1])
-  let cell = this.getCell(x,y)
+  var newId = id.split(',')
+  var x = parseInt(newId[0])
+  var y = parseInt(newId[1])
+  var cell = this.getCell(x,y)
   if(cell.status !== 'finalCell' && cell.status !== 'startingCell'){
-    let toggledCell = this.toggle(cell)
-    let elem = document.getElementById(id)
+    var toggledCell = this.toggle(cell)
+    var elem = document.getElementById(id)
     if(toggledCell){
       elem.className = toggledCell
     }
@@ -390,9 +390,9 @@ Board.prototype.clearBoard = function(){
 Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'
   // console.log('in clear path')
-  for(let i=0;i<this.boardArr.length;i++){
-    for(let j=0;j<this.boardArr[i].length;j++){
-      let cell = this.boardArr[i][j] 
+  for(var i=0;i<this.boardArr.length;i++){
+    for(var j=0;j<this.boardArr[i].length;j++){
+      var cell = this.boardArr[i][j] 
       cell.parent = null
       if(cell.status === 'explored' || cell.status === 'shortestPath'){
         cell.status = 'unexplored'
@@ -412,9 +412,9 @@ Board.prototype.clearPath = function(){
 
 Board.prototype.clearParents = function(show){
   console.log("clear Parents")
-  for(let i=0;i<this.boardArr.length;i++){
-    for(let j=0;j<this.boardArr[i].length;j++){
-      let cell = this.boardArr[i][j] 
+  for(var i=0;i<this.boardArr.length;i++){
+    for(var j=0;j<this.boardArr[i].length;j++){
+      var cell = this.boardArr[i][j] 
       if(!show && cell.status !== 'shortestPath' && cell.status !== 'objectNode' && cell.status !== 'startNode'){
         cell.parent = null
         cell.direction = 'UP'
@@ -428,9 +428,9 @@ Board.prototype.clearParents = function(show){
 }
 
 Board.prototype.clearWalls = function(){
-  for(let i=0;i<this.boardArr.length;i++){ 
-    for(let j=0;j<this.boardArr[i].length;j++){
-      let cell = this.boardArr[i][j] 
+  for(var i=0;i<this.boardArr.length;i++){ 
+    for(var j=0;j<this.boardArr[i].length;j++){
+      var cell = this.boardArr[i][j] 
       cell.parent = null
       // console.log(j,i,cell)
       if(cell.status === 'wall' || cell.status === 'unexplored weight'){
@@ -446,13 +446,13 @@ Board.prototype.generateRandom = function(){
    console.log("Generating random Maze")
 } 
 
-let bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
-let height = Math.floor(document.documentElement.clientHeight) - bar
-let width = Math.floor(document.documentElement.clientWidth)
-let finalHeight = height/27
-let finalWidth = width/25
-let board = new Board(finalHeight,finalWidth-1)
-// let board = new Board(10,10)
+var bar = document.getElementById('navbarDiv').clientHeight + document.getElementById('mainText').clientHeight
+var height = Math.floor(document.documentElement.clientHeight) - bar
+var width = Math.floor(document.documentElement.clientWidth)
+var finalHeight = height/27
+var finalWidth = width/25
+var board = new Board(finalHeight,finalWidth-1)
+// var board = new Board(10,10)
 board.initialise() 
 
 

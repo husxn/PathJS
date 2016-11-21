@@ -11,44 +11,44 @@ Search.prototype.startSearch = function(){
 	document.getElementById(this.finalNode.id).className = 'finalCell'
 	this.finalNode.className = 'finalCell'
 	if(this.currentAlgorithm === 'BFS'){
-		let exploredList = this.searchBFS()
+		var exploredList = this.searchBFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}
 	else if(this.currentAlgorithm === 'DFS'){
-		let exploredList = this.searchDFS()
+		var exploredList = this.searchDFS()
     this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}
 	else if(this.currentAlgorithm === 'Dijkstra'){
-		let exploredList = this.searchDijkstra()
+		var exploredList = this.searchDijkstra()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}
 	else if(this.currentAlgorithm === 'AStar'){
-		let exploredList = this.searchAStar()
+		var exploredList = this.searchAStar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	} 
 	else if(this.currentAlgorithm === 'AStar2'){
-		let exploredList = this.searchAStar('2')
+		var exploredList = this.searchAStar('2')
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	} 
 	else if(this.currentAlgorithm === 'Greedy'){
-		let exploredList = this.searchGreedy()
+		var exploredList = this.searchGreedy()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}   
 	else if(this.currentAlgorithm === 'RealAStar'){
-		let exploredList = this.searchRealAStaar()
+		var exploredList = this.searchRealAStaar()
    	this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}     
 	else if(this.currentAlgorithm === 'Bidirectional'){
-		let exploredList = this.searchBidirectional()
+		var exploredList = this.searchBidirectional()
 		this.boardA.algoDone === true ? this.showAnimationDrag(exploredList) : this.showAnimation(exploredList) 
 	}    
 }  
 
 Search.prototype.getNeighbours = function(arr,node,algo,exploredList){   
-  let neighbourList = []
+  var neighbourList = []
 	//Get Neighbour Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall'){
-		let neighbour = arr[node.y-1][node.x]
+		var neighbour = arr[node.y-1][node.x]
 		
 		if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode' && exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
@@ -57,7 +57,7 @@ Search.prototype.getNeighbours = function(arr,node,algo,exploredList){
 	}
 	//Get Neighbour Right 
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall'){
-		let neighbour = arr[node.y][node.x+1]
+		var neighbour = arr[node.y][node.x+1]
 		// console.log(neighbour.id,arr.finalNode)
 			if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
@@ -66,7 +66,7 @@ Search.prototype.getNeighbours = function(arr,node,algo,exploredList){
 	}
 	//Get Neighbour Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall'){
-		let neighbour = arr[node.y+1][node.x]
+		var neighbour = arr[node.y+1][node.x]
 	if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
@@ -74,7 +74,7 @@ Search.prototype.getNeighbours = function(arr,node,algo,exploredList){
 	}
 	//Get Neighbour Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall'){
-		let neighbour = arr[node.y][node.x-1]
+		var neighbour = arr[node.y][node.x-1]
 	if(neighbour.parent === null || (algo === 'DFS' && neighbour.status !== 'startNode'&& exploredList.indexOf(neighbour) === -1)){
 			neighbour.parent = node
 		}
@@ -84,11 +84,11 @@ Search.prototype.getNeighbours = function(arr,node,algo,exploredList){
 }       
 
 Search.prototype.searchDFS = function(){  
- let exploredList = [] 
-	let listToExplore = [this.startNode]
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+ var exploredList = [] 
+	var listToExplore = [this.startNode]
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -97,7 +97,7 @@ Search.prototype.searchDFS = function(){
 	} 
 	whileLoop:
 	while(listToExplore.length !==0){
-		let currentNode = listToExplore[0]
+		var currentNode = listToExplore[0]
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
 			exploredList.push(currentNode)
@@ -107,7 +107,7 @@ Search.prototype.searchDFS = function(){
       listToExplore = listToExplore.slice(1)
     }
     else if(!isPresent(currentNode)){
-			let neighbours = this.getNeighbours(this.board,currentNode,'DFS',exploredList)
+			var neighbours = this.getNeighbours(this.board,currentNode,'DFS',exploredList)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = neighbours.concat(listToExplore)
 			exploredList.push(currentNode)
@@ -121,12 +121,12 @@ Search.prototype.searchDFS = function(){
 } 
 
 Search.prototype.searchBFS = function(){      
-  let exploredList = []
-	let numOnes = 0
-	let listToExplore = [this.startNode]
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+  var exploredList = []
+	var numOnes = 0
+	var listToExplore = [this.startNode]
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -135,8 +135,8 @@ Search.prototype.searchBFS = function(){
 	} 
 	whileLoop:
 	while(listToExplore.length !==0){ 
-		let currentNode = listToExplore[0]
-		let inWhileLoop = new Date()
+		var currentNode = listToExplore[0]
+		var inWhileLoop = new Date()
 		if(currentNode === this.finalNode){
 			// currentNode.status = 'finalNode'
 			exploredList.push(currentNode)
@@ -146,7 +146,7 @@ Search.prototype.searchBFS = function(){
       listToExplore = listToExplore.slice(1)
     }
     else if(!isPresent(currentNode)){
-			let neighbours = this.getNeighbours(this.board,currentNode)
+			var neighbours = this.getNeighbours(this.board,currentNode)
 			listToExplore = listToExplore.slice(1)
 			listToExplore = listToExplore.concat(neighbours)
 			exploredList.push(currentNode)
@@ -162,16 +162,16 @@ Search.prototype.searchBFS = function(){
 Search.prototype.searchBidirectional = function(){    
 	this.startNode.distance = 0
 	this.finalNode.distance = 0
-	let exploredList = []
-	let listToExploreStart = [this.startNode]
-	let listToExploreFinal = [this.finalNode]
-	let numOnes = 0
-	let count = 2
-	let currentNode;
-	let status;
-	let pleaseWork = function(node,status){ 
-		let returnVal = false
-		for(let i in exploredList){
+	var exploredList = []
+	var listToExploreStart = [this.startNode]
+	var listToExploreFinal = [this.finalNode]
+	var numOnes = 0
+	var count = 2
+	var currentNode;
+	var status;
+	var pleaseWork = function(node,status){ 
+		var returnVal = false
+		for(var i in exploredList){
 			if(i < exploredList.length - 1 && exploredList[i].id === node.id && exploredList[i].exploredBy !== status){
 					// console.log(exploredList[i].id,node.id,status,exploredList[i].exploredBy)
 					returnVal = 'break'
@@ -194,7 +194,7 @@ Search.prototype.searchBidirectional = function(){
 		currentNode = count % 2 === 0 ? listToExploreStart[0] : listToExploreFinal[0]
 		// console.log(currentNode)
 		count % 2 === 0 ? status = 'start' : status = 'final'
-		let value = pleaseWork(currentNode,status)
+		var value = pleaseWork(currentNode,status)
 		// console.log(value)
 		if(value === 'break'){
 			console.log("breaking whileLoop")
@@ -206,9 +206,9 @@ Search.prototype.searchBidirectional = function(){
 		}
 		else if(value === false){ 
 			//Get neighbours 
-			let neighbours;
+			var neighbours;
 			count % 2 === 0 ? neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,'algo',this.finalNode) : neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,'algo',this.startNode) 
-			// let neighbours = this.getNeighbours(this.board,currentNode)
+			// var neighbours = this.getNeighbours(this.board,currentNode)
 			//Remove node from listToExplore 
 			if(count % 2 === 0){
 					listToExploreStart = listToExploreStart.slice(1)
@@ -218,8 +218,8 @@ Search.prototype.searchBidirectional = function(){
 			}
 
 			if(count % 2 === 0){
-				let newNeighboursList = []
-				for(let i in neighbours){
+				var newNeighboursList = []
+				for(var i in neighbours){
 					neighbours[i].exploredBy = 'start'
 					// console.log(neighbours[i])
 					newNeighboursList.push(neighbours[i])
@@ -227,8 +227,8 @@ Search.prototype.searchBidirectional = function(){
 				listToExploreStart = listToExploreStart.concat(newNeighboursList) 
 			}
 			else{
-				let newNeighboursList = []
-				for(let i in neighbours){
+				var newNeighboursList = []
+				for(var i in neighbours){
 					neighbours[i].exploredBy = 'final'
 					// console.log(neighbours[i])
 					newNeighboursList.push(neighbours[i])
@@ -253,11 +253,11 @@ Search.prototype.searchBidirectional2 = function(){
 
 Search.prototype.searchAStar = function(algo){  	
 	this.startNode.distance = 0
-	let listToExplore = [this.startNode]
-	let exploredList = []
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -269,7 +269,7 @@ Search.prototype.searchAStar = function(algo){
 		//Sort listToExplore by distance 
 		listToExplore = listToExplore.sort(function(nodeA,nodeB){return nodeA.distance - nodeB.distance})
 		//Get currentNode 
-		let currentNode = listToExplore[0];
+		var currentNode = listToExplore[0];
 
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
@@ -283,7 +283,7 @@ Search.prototype.searchAStar = function(algo){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo,this.finalNode)
+			var neighbours = this.getNeighboursAStar(this.board,currentNode,exploredList,algo,this.finalNode)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -301,11 +301,11 @@ Search.prototype.searchAStar = function(algo){
 
 Search.prototype.searchGreedy = function(){
 	this.startNode.distance = 0
-	let listToExplore = [this.startNode]
-	let exploredList = []
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -317,7 +317,7 @@ Search.prototype.searchGreedy = function(){
 		//Sort listToExplore by distance 
 		listToExplore = listToExplore.sort(function(nodeA,nodeB){return nodeA.distance - nodeB.distance})
 		//Get currentNode 
-		let currentNode = listToExplore[0];
+		var currentNode = listToExplore[0];
 
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
@@ -331,7 +331,7 @@ Search.prototype.searchGreedy = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursGreedy(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursGreedy(this.board,currentNode,exploredList)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -349,11 +349,11 @@ Search.prototype.searchGreedy = function(){
 
 Search.prototype.showAnimation = function(exploredList){   
 	// for(var i in exploredList){console.log(exploredList[i].status,exploredList[i].weight)}
-	let count = 0
-	let self = this
-	let startNode = exploredList[0]
+	var count = 0
+	var self = this
+	var startNode = exploredList[0]
   exploredList = exploredList.slice(1)
-	let endNode = exploredList[exploredList.length-1]
+	var endNode = exploredList[exploredList.length-1]
   function timeout(index,exploredList,timeLength) {   
 		setTimeout(function () {
         if(index === exploredList.length){
@@ -370,7 +370,7 @@ Search.prototype.showAnimation = function(exploredList){
     }, timeLength);
   }  
   function change(node,index,length){  
-		let elem = document.getElementById(node.id)
+		var elem = document.getElementById(node.id)
 		if(node.status === 'unexplored weight'){
 			node.status = 'explored weight'
 			elem.className = 'explored weight'
@@ -388,7 +388,7 @@ Search.prototype.showAnimation = function(exploredList){
 			if(node.parent.status !== 'startNode'){
 				if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 				if(index !== length - 1){
-					let newClassName = 'shortestPath' + node.direction
+					var newClassName = 'shortestPath' + node.direction
 					document.getElementById(node.id).className = newClassName
 				}
 				else {
@@ -408,8 +408,8 @@ Search.prototype.showAnimation = function(exploredList){
 	function showPath(node,search){ 
 		// console.log(startNode,node)
 		count++
-		let listPath = []
-		let endNode = Object.assign({},node)
+		var listPath = []
+		var endNode = Object.assign({},node)
 		while(node !== startNode){
 			if(node.status !== endNode.status){
 				listPath.push(node)
@@ -435,7 +435,7 @@ Search.prototype.algoDone = function(){
 
 Search.prototype.changeFinalClassName = function(node){
 	if(node) document.getElementById(node.id).className = 'shortestPath'
-	let finalCell;
+	var finalCell;
 	finalCell = document.getElementsByClassName('finalCell')[1]
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellUP')[0]
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellRIGHT')[0]
@@ -445,8 +445,8 @@ Search.prototype.changeFinalClassName = function(node){
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){ 
-	for(let i in exploredList){
-		let cell = exploredList[i]
+	for(var i in exploredList){
+		var cell = exploredList[i]
 		if(cell.status === 'unexplored'){
 			cell.status = 'explored'
 			document.getElementById(cell.id).className = 'explored'
@@ -456,9 +456,9 @@ Search.prototype.showAnimationDrag = function(exploredList){
 			document.getElementById(cell.id).className = 'explored weight'
 		}
 	} 
-	let endNode = exploredList[exploredList.length-1]
-	let newEndNode = Object.assign({},endNode)
-	let shortestPathList = []
+	var endNode = exploredList[exploredList.length-1]
+	var newEndNode = Object.assign({},endNode)
+	var shortestPathList = []
 	while(endNode !== this.startNode){
 		shortestPathList.push(endNode)
 		endNode = endNode.parent
@@ -466,8 +466,8 @@ Search.prototype.showAnimationDrag = function(exploredList){
 	shortestPathList = shortestPathList.reverse()
 	if(newEndNode.status === 'finalNode'){
 		this.changeFinalClassName()
-		for(let i in shortestPathList){
-			let cell = shortestPathList[i]
+		for(var i in shortestPathList){
+			var cell = shortestPathList[i]
 			if(cell.status === 'explored weight'){
 				cell.status = 'shortestPath explored weight'
 				document.getElementById(cell.id).className = 'shortestPath explored weight'
@@ -484,19 +484,19 @@ Search.prototype.showAnimationDrag = function(exploredList){
 }  
 
 Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){   
-	let neigbourList = []
+	var neigbourList = []
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y-1][node.x] 
+		var neighbour = arr[node.y-1][node.x] 
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -509,15 +509,15 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	//Right 
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x+1]
+		var neighbour = arr[node.y][node.x+1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -530,15 +530,15 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	//Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y+1][node.x]
+		var neighbour = arr[node.y+1][node.x]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -551,15 +551,15 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 	//Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x-1]
+		var neighbour = arr[node.y][node.x-1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + neighbour.weight
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -573,21 +573,21 @@ Search.prototype.getNeighboursDijkstra = function(arr,node,exploredList){
 }  
 
 Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo,finalNode){     
-	let neigbourList = [] 
+	var neigbourList = [] 
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y-1][node.x]
+		var neighbour = arr[node.y-1][node.x]
 		// console.log('neighbour',neighbour.distance)
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
-		let newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
 		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
@@ -602,16 +602,16 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo,finalN
 	//Right 
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x+1]
+		var neighbour = arr[node.y][node.x+1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
-		let newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
 		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
@@ -625,16 +625,16 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo,finalN
 	//Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y+1][node.x]
+		var neighbour = arr[node.y+1][node.x]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
-		let newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
 		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
@@ -648,16 +648,16 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo,finalN
 	//Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x-1]
+		var neighbour = arr[node.y][node.x-1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
-		let newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
+		var newNeighbourDistance = currentDistance + numberOfMoves + 1 + this.manhattanDistance(neighbour,finalNode) + neighbour.weight
+		var newNeighbourDistance2 = currentDistance + numberOfMoves + 1 + Math.pow(this.manhattanDistance(neighbour,finalNode),6) + neighbour.weight
 		algo === '2' ? newNeighbourDistance = newNeighbourDistance2 : newNeighbourDistance;
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
@@ -672,19 +672,19 @@ Search.prototype.getNeighboursAStar = function(arr,node,exploredList,algo,finalN
 } 
 
 Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){   
-	let neigbourList = []
+	var neigbourList = []
 	//Up 
 	if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y-1][node.x] 
+		var neighbour = arr[node.y-1][node.x] 
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -697,15 +697,15 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 	//Right 
 	if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x+1]
+		var neighbour = arr[node.y][node.x+1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -718,15 +718,15 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 	//Down 
 	if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y+1][node.x]
+		var neighbour = arr[node.y+1][node.x]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -739,15 +739,15 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 	//Left
 	if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
 		//Get Up neighbour 
-		let neighbour = arr[node.y][node.x-1]
+		var neighbour = arr[node.y][node.x-1]
 		//Get current distance 
-		let currentDistance = node.distance 
+		var currentDistance = node.distance 
 		//Get My Direction 
-		let myDirection = node.direction
+		var myDirection = node.direction
 		//Calculate number of moves to get to Get to Up Direction 
-		let numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+		var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 		//Calculate new neighbour distance	
-		let newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
+		var newNeighbourDistance = this.manhattanDistance(neighbour,this.finalNode)
 		//If this is lower than the currentDistance on the neighbour change
 		if(newNeighbourDistance < neighbour.distance){
 			neighbour.distance = newNeighbourDistance
@@ -762,11 +762,11 @@ Search.prototype.getNeighboursGreedy = function(arr,node,exploredList){
 
 Search.prototype.searchDijkstra = function(){ 
 	this.startNode.distance = 0
-	let listToExplore = [this.startNode]
-	let exploredList = []
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -778,7 +778,7 @@ Search.prototype.searchDijkstra = function(){
 		//Sort listToExplore by distance 
 		listToExplore = listToExplore.sort(function(nodeA,nodeB){return nodeA.distance - nodeB.distance})
 		//Get currentNode 
-		let currentNode = listToExplore[0];
+		var currentNode = listToExplore[0];
 
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
@@ -792,7 +792,7 @@ Search.prototype.searchDijkstra = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursDijkstra(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursDijkstra(this.board,currentNode,exploredList)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -811,8 +811,8 @@ Search.prototype.searchDijkstra = function(){
 }   
 
 Search.prototype.hasBeenExplored = function(node,exploredList){
-	let returnVal = false
-	for(let i in exploredList.length){
+	var returnVal = false
+	for(var i in exploredList.length){
 		if(exploredList[i].id === node.id){
 			returnVal = true
 		}
@@ -839,10 +839,10 @@ Search.prototype.checkNumberOfMoves = function(currentDirection,direction){
 }
 
 Search.prototype.manhattanDistance = function(node1,node2){ 
-	let xDiff = Math.abs(node1.x - node2.x)
-	let yDiff = Math.abs(node1.y - node2.y)
-	let distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
-	let sum = xDiff + yDiff
+	var xDiff = Math.abs(node1.x - node2.x)
+	var yDiff = Math.abs(node1.y - node2.y)
+	var distance = Math.sqrt(Math.pow(xDiff,2)+Math.pow(yDiff,2))
+	var sum = xDiff + yDiff
 	return sum
 }
 
@@ -850,11 +850,11 @@ Search.prototype.realAStar = function(){
 	this.startNode.distance = 0
 	this.startNode.heuristicDistance = this.manhattanDistance(this.startNode,this.finalNode)
 	this.startNode.totalDistance = this.startNode.distance + this.startNode.heuristicDistance
-	let listToExplore = [this.startNode]
-	let exploredList = []
-	let isPresent = function(node){
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -866,7 +866,7 @@ Search.prototype.realAStar = function(){
 		//Sort listToExplore by distance 
 		listToExplore = listToExplore.sort(function(nodeA,nodeB){return (nodeA.totalDistance + nodeA.heuristicDistance) - (nodeB.totalDistance + nodeB.heuristicDistance)})
 		//Get currentNode 
-		let currentNode = listToExplore[0];
+		var currentNode = listToExplore[0];
 
 		if(currentNode === this.finalNode){
 			currentNode.status = 'finalNode'
@@ -880,7 +880,7 @@ Search.prototype.realAStar = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursRealAStar(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursRealAStar(this.board,currentNode,exploredList)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -897,8 +897,8 @@ Search.prototype.realAStar = function(){
 }
 
 Search.prototype.getNeighboursRealAStar = function(arr,node,exploredList){
-	let self = this 
-	let list = this.getNeighboursDijkstra(arr,node,exploredList)
+	var self = this 
+	var list = this.getNeighboursDijkstra(arr,node,exploredList)
 	list.forEach((neighbour) =>{
 		neighbour.heuristicDistance = self.manhattanDistance(neighbour,self.finalNode) 
 		neighbour.totalDistance = neighbour.distance + neighbour.heuristicDistance
@@ -911,11 +911,11 @@ Search.prototype.searchRealAStaar = function(){
 	this.startNode.distance = 0
 	this.startNode.heuristicDistance = this.manhattanDistance(this.startNode,this.finalNode)
 	this.startNode.totalDistance = this.startNode.distance + this.startNode.heuristicDistance
-	let listToExplore = [this.startNode]
-	let exploredList = []
-	let isPresent = function(node){ 
-		let returnVal = false
-		for(let i=0;i<exploredList.length;i++){
+	var listToExplore = [this.startNode]
+	var exploredList = []
+	var isPresent = function(node){ 
+		var returnVal = false
+		for(var i=0;i<exploredList.length;i++){
 			if(exploredList[i].id === node.id){
 				returnVal = true
 			}
@@ -932,7 +932,7 @@ Search.prototype.searchRealAStaar = function(){
 			return (nodeA.totalDistance) - (nodeB.totalDistance)
 		})
 		//Get currentNode 
-		let currentNode = listToExplore[0];
+		var currentNode = listToExplore[0];
 
 		if(currentNode === this.finalNode){ 
 			currentNode.status = 'finalNode'
@@ -946,7 +946,7 @@ Search.prototype.searchRealAStaar = function(){
 			//If currentNode is finalNode break 
 			if(currentNode === this.finalNode){break whileLoop}
 			//Get currentNode's neighbours 
-			let neighbours = this.getNeighboursRealAStaar(this.board,currentNode,exploredList)
+			var neighbours = this.getNeighboursRealAStaar(this.board,currentNode,exploredList)
 			//Add neighbours to listToExplore
 			listToExplore = listToExplore.concat(neighbours)
 			//Remove currentNode from listToExplore
@@ -965,19 +965,19 @@ Search.prototype.searchRealAStaar = function(){
 }
 
 Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){ 
-		let neigbourList = []
+		var neigbourList = []
 		//Up 
 		if(node.y>0 && arr[node.y-1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y-1][node.x],exploredList) === false){
 			//Get Up neighbour 
-			let neighbour = arr[node.y-1][node.x] 
+			var neighbour = arr[node.y-1][node.x] 
 			//Get current distance 
-			let currentDistance = node.distance 
+			var currentDistance = node.distance 
 			//Get My Direction 
-			let myDirection = node.direction
+			var myDirection = node.direction
 			//Calculate number of moves to get to Get to Up Direction 
-			let numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'UP')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight 
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight 
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -992,15 +992,15 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 		//Right 
 		if(node.x<arr[0].length-1 && arr[node.y][node.x+1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x+1],exploredList) === false){ 
 			//Get Up neighbour 
-			let neighbour = arr[node.y][node.x+1]
+			var neighbour = arr[node.y][node.x+1]
 			//Get current distance 
-			let currentDistance = node.distance 
+			var currentDistance = node.distance 
 			//Get My Direction 
-			let myDirection = node.direction
+			var myDirection = node.direction
 			//Calculate number of moves to get to Get to Up Direction 
-			let numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'RIGHT')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1015,15 +1015,15 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 		//Down 
 		if((node.y<arr.length-1) && arr[node.y+1][node.x].status !== 'wall' && this.hasBeenExplored(arr[node.y+1][node.x],exploredList) === false){
 			//Get Up neighbour 
-			let neighbour = arr[node.y+1][node.x]
+			var neighbour = arr[node.y+1][node.x]
 			//Get current distance 
-			let currentDistance = node.distance 
+			var currentDistance = node.distance 
 			//Get My Direction 
-			let myDirection = node.direction
+			var myDirection = node.direction
 			//Calculate number of moves to get to Get to Up Direction 
-			let numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'DOWN')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){
@@ -1038,15 +1038,15 @@ Search.prototype.getNeighboursRealAStaar = function(arr,node,exploredList){
 		//Left
 		if(node.x>0 && arr[node.y][node.x-1].status !== 'wall' && this.hasBeenExplored(arr[node.y][node.x-1],exploredList) === false){
 			//Get Up neighbour 
-			let neighbour = arr[node.y][node.x-1]
+			var neighbour = arr[node.y][node.x-1]
 			//Get current distance 
-			let currentDistance = node.distance 
+			var currentDistance = node.distance 
 			//Get My Direction 
-			let myDirection = node.direction
+			var myDirection = node.direction
 			//Calculate number of moves to get to Get to Up Direction 
-			let numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
+			var numberOfMoves = this.checkNumberOfMoves(myDirection,'LEFT')
 			//Calculate new neighbour distance	
-			let newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
+			var newNeighbourDistance = node.distance  + 1 + numberOfMoves + neighbour.weight
 			neighbour.heuristicDistance = this.manhattanDistance(neighbour,this.finalNode)
 			//If this is lower than the currentDistance on the neighbour change
 			if(newNeighbourDistance < neighbour.distance){

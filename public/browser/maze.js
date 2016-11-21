@@ -38,11 +38,11 @@ Maze.prototype.startMaze = function(){
 }  
 
 Maze.prototype.basicMaze = function(){
-	for(let i=0;i<this.boardArr.length;i++){
-		for(let j=0;j<this.boardArr[0].length;j++){
-			let elem = document.getElementById(j.toString()+','+i.toString())
+	for(var i=0;i<this.boardArr.length;i++){
+		for(var j=0;j<this.boardArr[0].length;j++){
+			var elem = document.getElementById(j.toString()+','+i.toString())
 			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-				let cell = this.board.getCell(j,i)
+				var cell = this.board.getCell(j,i)
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
 			}
@@ -51,11 +51,11 @@ Maze.prototype.basicMaze = function(){
 }
 
 Maze.prototype.basicWeightMaze = function(){
-	for(let i=0;i<this.boardArr.length;i++){
-		for(let j=0;j<this.boardArr[0].length;j++){
-			let elem = document.getElementById(j.toString()+','+i.toString())
+	for(var i=0;i<this.boardArr.length;i++){
+		for(var j=0;j<this.boardArr[0].length;j++){
+			var elem = document.getElementById(j.toString()+','+i.toString())
 			if(Math.random() > 0.75 && elem.className !== 'startingCell' && elem.className !== 'finalCell'){
-				let cell = this.board.getCell(j,i)
+				var cell = this.board.getCell(j,i)
 				cell.status = 'unexplored weight'
 				cell.weight = 15
 				this.listToAnimate.push(cell)
@@ -65,10 +65,10 @@ Maze.prototype.basicWeightMaze = function(){
 }
 
 Maze.prototype.mazeGenerator = function(){
-	for(let i=0;i<this.maxY;i++){
-		for(let j=0;j<this.maxX;j++){
+	for(var i=0;i<this.maxY;i++){
+		for(var j=0;j<this.maxX;j++){
 			if(i === 0 || i === this.maxY-1 || j === 0 || j === this.maxX - 1){
-				let cell = this.board.getCell(j,i)
+				var cell = this.board.getCell(j,i)
 				if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 					cell.status = 'wall'
 					this.listToAnimate.push(cell)
@@ -85,32 +85,32 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 		//Get Wall
 		if(startX % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
 			//Get Valid Walls 
-			let validWall = []
-			for(let i=startX;i<endX+1;i+=2){
+			var validWall = []
+			for(var i=startX;i<endX+1;i+=2){
 				validWall.push(i)
 			}
-			let randomX = validWall[Math.floor(Math.random()*validWall.length)]
+			var randomX = validWall[Math.floor(Math.random()*validWall.length)]
 			//Draw Wall 
 			this.drawWall(randomX,randomX,startY,endY,'vertical')
 			//Get possible split points  
-			let splitArr = []
-			for(let i=startY-1;i<endY+2;i+=2){
+			var splitArr = []
+			for(var i=startY-1;i<endY+2;i+=2){
 				splitArr.push(randomX.toString()+','+i.toString())
 			}
 			//Choose where to split by 
-			let randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
+			var randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
 			//Make hole 
-			let elem = document.getElementById(randomPlaceToSplitID)
-			let idArr = randomPlaceToSplitID.split(',')
-			let cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
+			var elem = document.getElementById(randomPlaceToSplitID)
+			var idArr = randomPlaceToSplitID.split(',')
+			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
 			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'unexplored'
 				this.listToAnimate.push(cell)
 			}
 
-			let lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
-			let lengthLargerThanHeightRight; 
+			var lengthLargerThanHeightLeft = !this.lengthLargerThanHeight(startX,randomX-2,startY,endY);
+			var lengthLargerThanHeightRight; 
 			if(this.mazeToDo === 'bossMaze 1' || this.mazeToDo === 'bossMaze2'){
  				lengthLargerThanHeightRight = !this.lengthLargerThanHeight(randomX+2,endX,startY,endY);
 				 
@@ -146,32 +146,32 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 		//Get Wall
 		if(startY % 2 === 0 && (endY - startY) > -1 && (endX-startX) > -1){
 			//Get Valid Walls 
-			let validWall = []
-			for(let i=startY;i<endY+1;i+=2){
+			var validWall = []
+			for(var i=startY;i<endY+1;i+=2){
 					validWall.push(i)
 			}
-			let randomY = validWall[Math.floor(Math.random()*validWall.length)]
+			var randomY = validWall[Math.floor(Math.random()*validWall.length)]
 			//Draw Wall 
 			this.drawWall(startX,endX,randomY,randomY,'horizontal')
 			//Get possible split points 
-			let splitArr = []
-			for(let i=startX-1;i<endX+2;i+=2){
+			var splitArr = []
+			for(var i=startX-1;i<endX+2;i+=2){
 				 splitArr.push(i.toString()+','+randomY.toString())
 			}
 			//Choose where to split by 
-			let randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
+			var randomPlaceToSplitID = splitArr[Math.floor(Math.random() * splitArr.length)]
 			//Make hole 
-			let elem = document.getElementById(randomPlaceToSplitID)
-			let idArr = randomPlaceToSplitID.split(',')
-			let cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
+			var elem = document.getElementById(randomPlaceToSplitID)
+			var idArr = randomPlaceToSplitID.split(',')
+			var cell = this.board.getCell(parseInt(idArr[0]),parseInt(idArr[1]))
 			// elem.className = 'unexplored'
 			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'unexplored'
 				this.listToAnimate.push(cell)
 			}
 
-			let lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
-			let lengthLargerThanHeightBottom; 
+			var lengthLargerThanHeightTop = !this.lengthLargerThanHeight(startX,endX,startY,randomY-2);
+			var lengthLargerThanHeightBottom; 
 			if(this.mazeToDo === 'bossMaze1' || this.mazeToDo === 'bossMaze3'){
 				lengthLargerThanHeightBottom = !this.lengthLargerThanHeight(startX,endX,randomY+2,endY);
 			}
@@ -205,10 +205,10 @@ Maze.prototype.bossMaze = function(startX,endX,startY,endY,orientation){
 
 Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){ 
 	if(orientation === 'vertical'){
-		for(let i=startY-1;i<endY+2;i++){
-			let elem = document.getElementById(startX.toString()+','+i.toString())
+		for(var i=startY-1;i<endY+2;i++){
+			var elem = document.getElementById(startX.toString()+','+i.toString())
 			// elem.className = 'wall'
-			let cell = this.board.getCell(startX,i)
+			var cell = this.board.getCell(startX,i)
 			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
@@ -216,10 +216,10 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 		}
 	}
 	else if(orientation === 'horizontal'){
-		for(let j=startX-1;j<endX+2;j++){
-			let elem = document.getElementById(j.toString()+','+startY.toString())
+		for(var j=startX-1;j<endX+2;j++){
+			var elem = document.getElementById(j.toString()+','+startY.toString())
 			// elem.className = 'wall'
-			let cell = this.board.getCell(j,startY)
+			var cell = this.board.getCell(j,startY)
 			if(cell.status !== 'startNode' && cell.status !== 'finalNode'){
 				cell.status = 'wall'
 				this.listToAnimate.push(cell)
@@ -230,20 +230,20 @@ Maze.prototype.drawWall = function(startX,endX,startY,endY,orientation){
 }
 
 Maze.prototype.lengthLargerThanHeight = function(startX,endX,startY,endY){
-	let returnVal = (endX-startX) - (endY-startY) > 0
+	var returnVal = (endX-startX) - (endY-startY) > 0
 	return returnVal
 }
 
 Maze.prototype.animate = function(){ 
-  let self = this
-	let list = this.listToAnimate
+  var self = this
+	var list = this.listToAnimate
 	function timeout(index) {
     setTimeout(function () {
         if(index === list.length){
 					self.board.shouldDisable = false
 					return
         }
-        let cell = list[index]
+        var cell = list[index]
 				document.getElementById(cell.id).className = cell.status
         timeout(index+1);
     }, 0.0001);
@@ -252,8 +252,8 @@ Maze.prototype.animate = function(){
 }
 
 Maze.prototype.instant = function(){
-	for(let i in this.listToAnimate){
-		let cell = this.listToAnimate[i]
+	for(var i in this.listToAnimate){
+		var cell = this.listToAnimate[i]
 		document.getElementById(cell.id).className = cell.status
 	}
 	this.board.shouldDisable = false
