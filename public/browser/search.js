@@ -159,7 +159,7 @@ Search.prototype.searchBFS = function(){
 	return exploredList 
 }  
 
-Search.prototype.searchBidirectional2 = function(){    
+Search.prototype.searchBidirectional = function(){    
 	this.startNode.distance = 0
 	this.finalNode.distance = 0
 	let exploredList = []
@@ -247,11 +247,11 @@ Search.prototype.searchBidirectional2 = function(){
 	return exploredList
 }
 
-Search.prototype.searchBidirectional = function(){
+Search.prototype.searchBidirectional2 = function(){
 
 }
 
-Search.prototype.searchAStar = function(algo){    
+Search.prototype.searchAStar = function(algo){  	
 	this.startNode.distance = 0
 	let listToExplore = [this.startNode]
 	let exploredList = []

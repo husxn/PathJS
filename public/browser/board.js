@@ -248,11 +248,11 @@ Board.prototype.addEventListeners = function(){
     }
   })
   //Bi Directional
-  document.getElementById('startButtonBidirectional').addEventListener('click',function(){
-    document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
-    board.algoToRun = 'Bidirectional'
-    // search.startSearch()
-  })
+  // document.getElementById('startButtonBidirectional').addEventListener('click',function(){
+  //   document.getElementById('visualise').innerHTML = 'Visualise Bi-Directional'
+  //   board.algoToRun = 'Bidirectional'
+  //   // search.startSearch()
+  // })
   //Basic Maze 1
   document.getElementById('startButtonBasicMaze').addEventListener('click',function(){
     if(!board.shouldDisable){
