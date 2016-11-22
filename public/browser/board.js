@@ -357,7 +357,7 @@ Board.prototype.changeCellDrag = function(id){
 }
 
 Board.prototype.toggle = function(cell){ 
-  if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown){
+  if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown || cell.status === 'wall' && this.keyDown){
       // cell.status = 'unexplored water'
       if(this.keyDown === 49){  
         cell.weight = 15
