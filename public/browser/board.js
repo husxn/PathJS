@@ -85,12 +85,12 @@ Board.prototype.addEventListeners = function(){
 
   //Add listeners for table elements  
   for(var i=0;i<this.height;i++){
-    for(var j=0;j<this.width;j++){
+    for(var j=0;j<this.width;j++){ 
      var id = j.toString()+','+i.toString()
       var elem = document.getElementById(id)
       elem.addEventListener('mousedown',function(e){
          e.preventDefault()
-          if(this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && this.className !== 'objectCell' && !board.shouldDisable){
+          if(this.className !== 'startingCell' && this.className !== 'startingCell shortestPath' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && this.className !== 'objectCell' && !board.shouldDisable){
             board.changeCellClick(this.id)
             board.mouseDown = true
           }
@@ -112,11 +112,11 @@ Board.prototype.addEventListeners = function(){
             board.changeCellDrag(this.id)
           }
           //Dragging a start/end node 
-          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && !board.shouldDisable){  
+          else if(board.mouseDown && board.currentCellStatus !== null && this.className !== 'startingCell' && this.className !== 'startingCell shortestPath' && (this.className !== 'finalCell' && this.className !== 'finalCellUP' && this.className !== 'finalCellRIGHT' && this.className !== 'finalCellDOWN' && this.className !== 'finalCellLEFT') && !board.shouldDisable){  
             this.className = board.currentCellStatus
             var idSplit = this.id.split(',')
             var cell = board.getCell(idSplit[0],idSplit[1])
-            if(this.className === 'startingCell'){ 
+            if(this.className === 'startingCell' || this.className === 'startingCell shortestPath'){ 
               if(cell.status === 'wall'){board.lastWall = true}
               else if(cell.status === 'unexplored weight'){board.lastWeight = true}
                 cell.status = 'startNode'
@@ -140,8 +140,8 @@ Board.prototype.addEventListeners = function(){
                 }
             }
           }
-          else if(board.mouseDown && board.currentCellStatus !== null && (this.className === 'startingCell' || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
-            if(this.className === 'startingCell'){
+          else if(board.mouseDown && board.currentCellStatus !== null && ((this.className === 'startingCell' || this.className === 'startingCell shortestPath') || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
+            if(this.className === 'startingCell' || this.className === 'startingCell shortestPath'){
               board.shouldBe = 'startingCell'
             }
             else if(this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT'){
@@ -154,7 +154,7 @@ Board.prototype.addEventListeners = function(){
       })
       elem.addEventListener('mouseout',function(e){
          e.preventDefault()  
-        if((this.className === 'startingCell' || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
+        if(((this.className === 'startingCell' || this.className === 'startingCell shortestPath') || (this.className === 'finalCell' || this.className === 'finalCellUP' || this.className === 'finalCellRIGHT' || this.className === 'finalCellDOWN' || this.className === 'finalCellLEFT')) && !board.shouldDisable){
           if(board.mouseDown && board.currentCellStatus !== null){
               if(board.shouldBe){
                 this.className = board.shouldBe
@@ -387,8 +387,9 @@ Board.prototype.toggle = function(cell){
 Board.prototype.clearBoard = function(){
 }
 
-Board.prototype.clearPath = function(){      
+Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'
+  document.getElementById(this.startNode.id).className = 'startingCell'
   // console.log('in clear path')
   for(var i=0;i<this.boardArr.length;i++){
     for(var j=0;j<this.boardArr[i].length;j++){

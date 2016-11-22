@@ -168,6 +168,14 @@ border: 1px solid #ECF0F1
   background-position: center;
   background-image:url('spaceship.svg')
 }
+.startingCell.shortestPath{
+  /*background:#3498DB;
+  border: 1px solid #3498DB;*/
+  background:#3CE78B;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image:url('spaceship.svg');
+}
 .shortestPath{
   background:#3CE78B;
   /*border: 1px solid #E74C3C*/
