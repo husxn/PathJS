@@ -178,10 +178,11 @@ border: 1px solid #ECF0F1
 }
 .shortestPath{
   background:#3CE78B;
-  /*border: 1px solid #E74C3C*/
+  border: 1px solid #3CE78B;
 }
 .shortestPath.explored.weight{
   background:#3CE78B;
+  border: 1px solid #3CE78B;
   background-image:url('weight.svg');
 }
 .shortestPathUP{
@@ -192,21 +193,22 @@ border: 1px solid #ECF0F1
 }
 .shortestPathRIGHT{
   background:#3CE78B;
-  /*border: 1px solid #E74C3C;*/
+  border: 1px solid #3CE78B;
   background-image:url('triangletwo-right.svg')
 }
 .shortestPathDOWN{
   background:#3CE78B;
-  /*border: 1px solid #E74C3C;*/
+  border: 1px solid #3CE78B;
   background-image:url('triangletwo-down.svg')
 }
 .shortestPathLEFT{
   background:#3CE78B;
+  border: 1px solid #3CE78B;
   background-image:url('triangletwo-left.svg')
 }
 .shortestPathNoDirection{
   background:#3CE78B;
-  /*border: 1px solid #E74C3C;*/
+  border: 1px solid #3CE78B;
   background-image:url('triangletwo-left.svg')
 }
 /*NEW CSS*/

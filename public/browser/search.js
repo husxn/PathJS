@@ -445,7 +445,7 @@ Search.prototype.changeFinalClassName = function(node){
 }
 
 Search.prototype.changeFirstClassName = function(){
-document.getElementById(this.startNode.id).className = 'startingCell shortestPath'
+	document.getElementById(this.startNode.id).className = 'startingCell shortestPath'
 }
 
 Search.prototype.showAnimationDrag = function(exploredList){ 
