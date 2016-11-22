@@ -87,7 +87,7 @@
 .finalCellUP{
   /*background:#C0392B;
   border: 1px solid #C0392B;*/
-  background:yellow;
+  background:#3CE78B;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-up.svg')
@@ -95,7 +95,7 @@
 .finalCellRIGHT{
   /*background:#C0392B;
   border: 1px solid #C0392B;*/
-  background:yellow;
+  background:#3CE78B;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-right.svg')
@@ -103,7 +103,7 @@
 .finalCellDOWN{
   /*background:#C0392B;
   border: 1px solid #C0392B;*/
-  background:yellow;
+  background:#3CE78B;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-down.svg')
@@ -111,7 +111,7 @@
 .finalCellLEFT{
   /*background:#C0392B;
   border: 1px solid #C0392B;*/
-  background:yellow;
+  background:#3CE78B;
   background-repeat: no-repeat;
   background-position: center;
   background-image:url('triangletwo-left.svg')
@@ -169,36 +169,35 @@ border: 1px solid #ECF0F1
   background-image:url('spaceship.svg')
 }
 .shortestPath{
-  background:yellow;
+  background:#3CE78B;
   /*border: 1px solid #E74C3C*/
 }
 .shortestPath.explored.weight{
-  background:yellow;
+  background:#3CE78B;
   background-image:url('weight.svg');
 }
 .shortestPathUP{
-  background:yellow;
+  background:#3CE78B;
   /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-up.svg')
 
 }
 .shortestPathRIGHT{
-  background:yellow;
+  background:#3CE78B;
   /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-right.svg')
 }
 .shortestPathDOWN{
-  background:yellow;
+  background:#3CE78B;
   /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-down.svg')
 }
 .shortestPathLEFT{
-  background:yellow;
-  border: 1px solid #E74C3C;
+  background:#3CE78B;
   background-image:url('triangletwo-left.svg')
 }
 .shortestPathNoDirection{
-  background:yellow;
+  background:#3CE78B;
   /*border: 1px solid #E74C3C;*/
   background-image:url('triangletwo-left.svg')
 }

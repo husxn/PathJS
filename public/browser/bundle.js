@@ -388,7 +388,7 @@ Board.prototype.toggle = function(cell){
 Board.prototype.clearBoard = function(){
 }
 
-Board.prototype.clearPath = function(){     
+Board.prototype.clearPath = function(){      
   document.getElementById(this.finalNode.id).className = 'finalCell'
   // console.log('in clear path')
   for(var i=0;i<this.boardArr.length;i++){
