@@ -32,6 +32,12 @@ function Board(height,width){
   this.algoToRun = null
   this.canPress = true
   this.shouldDisable = false
+  this.modalIndex = 0
+  this.modalArr = [
+    '<p>Page 0</p>',
+    '<p>Page 1</p>',
+    '<p>Page 2</p>',
+  ]
 }  
 
 Board.prototype.initialise = function(){
@@ -83,7 +89,8 @@ Board.prototype.addEventListeners = function(){
   window.addEventListener('keyup',function(){
     board.keyDown = false
   })  
-
+  //Create Modal
+  board.createModal()
   //Add listeners for table elements  
   for(var i=0;i<this.height;i++){
     for(var j=0;j<this.width;j++){ 
@@ -322,6 +329,15 @@ Board.prototype.addEventListeners = function(){
     if(!board.shouldDisable){
       board.clearWalls()
     }
+  })
+  //Modal Buttons 
+  //Increment Page
+  document.getElementById('nextButton').addEventListener('click',function(){
+    board.incrementModal()
+  })
+  //Decrement Page 
+  document.getElementById('previousButton').addEventListener('click',function(){
+    board.decrementModal()
   }) 
 }   
 
@@ -385,8 +401,43 @@ Board.prototype.toggle = function(cell){
   
 }
 
-Board.prototype.clearBoard = function(){
+Board.prototype.createModal = function(){
+  // Get the modal
+  var modal = document.getElementById('myModal');
+  modal.style.display = "block";
+
+  document.getElementById('innerDisplay').innerHTML = this.modalArr[this.modalIndex]
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
 }
+
+Board.prototype.incrementModal = function(){
+  if(this.modalIndex < this.modalArr.length - 1){
+    this.modalIndex += 1
+    document.getElementById('innerDisplay').innerHTML = this.modalArr[this.modalIndex]
+  }
+}
+
+Board.prototype.decrementModal = function(){
+  if(this.modalIndex > 0){
+    this.modalIndex -= 1
+    document.getElementById('innerDisplay').innerHTML = this.modalArr[this.modalIndex]
+  }
+}
+
 
 Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'

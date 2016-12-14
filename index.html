@@ -17,14 +17,14 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Choose an Algorithm
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li id='startButtonDFS'><a href="#">Depth First Search</a></li>
-                  <li id='startButtonBFS'><a href="#">Breadth First Search</a></li>
                   <li id='startButtonDijkstra'><a href="#">Dijkstra</a></li> 
                   <li id='startButtonRealAStar'><a href="#">A* Search</a></li>
+                  <li id='startButtonBFS'><a href="#">Breadth First Search</a></li>
                   <li id='startButtonGreedy'><a href="#">Best First Search</a></li>
                   <!--<li id='startButtonBidirectional'><a href="#">Bi-directional Search</a></li>-->
                   <li id='startButtonAStar'><a href="#">Swarm</a></li>
                   <li id='startButtonAStar2'><a href="#">Convergent Swarm</a></li>
+                  <li id='startButtonDFS'><a href="#">Depth First Search</a></li>
                 </ul>
               </li>
               <li class="dropdown">
@@ -75,6 +75,18 @@
         <!--<p>Click and drag to add walls - Click and drag while holding the "a" key down to add weights</p> -->
      </div>
       <div id='Maze'>
+       <!-- Trigger/Open The Modal -->
+       <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id='innerDisplay'>
+              <p>Some text in the Modal..</p>
+            </div>
+            <button id='previousButton'>Previous</button>
+            <button id='nextButton'>Next</button>
+          </div>
+        </div>
         <table id='board'/>
       </div>
   </body>
