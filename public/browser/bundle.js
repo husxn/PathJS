@@ -34,9 +34,68 @@ function Board(height,width){
   this.shouldDisable = false
   this.modalIndex = 0
   this.modalArr = [
-    '<p>Page 0</p>',
-    '<p>Page 1</p>',
-    '<p>Page 2</p>',
+    `<div>
+      <h1>Welcome to Path.JS</h1>
+      <p>Path.JS is an educational tool used for visualisation pathfinding algorithms</p>
+      <p>If you're here to learn, play, or kill some time ENJOY</p>
+      <p> This short tutorial will walk you through all of the features of this application.</p>
+      <p> If you want to dive straight in you can click the "X", if not click next and ENJOY!</p>
+     </div>`,
+    //  `<div>
+    //     <h1> What is a Pathfinding Algorithm? </h1>
+    //     <p> Pathfinding algorithms aim to find distances, primarily the shortest distance between any 2 points </p>
+    //     <p> To learn more about pathfinding algorithms click this link </p>
+    //  </div>`,
+    // `<div>
+    //   <h1> Basic Controls of Grid and Walls</h1>
+    //   <div class='monica'>
+    //     <p> You can drag the start and target pieces as follows:</p>
+    //     <img src='https://i.gyazo.com/503258d633d9b1fb10391752dcdbcb18.gif'/>
+    //   </div>
+    //   <div class='monica'>
+    //     <p> By holding down the mouse + dragging you can create walls. Mouse + holding w will create weights</p>
+    //     <img src='https://i.gyazo.com/a0ae47879957037311e95ac4cf10b28d.gif'/>
+    //     <p> Walls are inpenetrable, weights are not. However they add considerable resistance. </p>
+    //   </div>
+    // </div>`,
+    // `<div>
+    //   <h1> Picking an Algorithm </h1>
+    //   <p> Select an algorithm from the drop down menu </p>
+    //   <img src='https://i.gyazo.com/9bfab6c619cbe04176bd69cc4d109f87.gif'/>
+    // </div>`,
+    // `<div>
+    //   <h1> Algorithm information</h1>
+    //   <p> Dijkstra's Algorithm </p>
+    //   <p> A* Search </p>
+    //   <p> Breadth First Search </p>
+    //   <p> Depth First Search </p>
+    //   <p> Swarm Search </p>
+    //   <p> Convergent Swarm Search </p>
+    // </div>`,
+    // `<div>
+    //   <h1>Picking a maze</h1>
+    //   <p>This step is optional.</p>
+    //   <p>Either you can create walls+weights by dragging or you can select a maze from the drop down menu</p>
+    //   <img src='https://i.gyazo.com/9c3439aff58611894d5c82da9c2b8a89.gif'/>
+    // </div>`,
+    // `<div>
+    //   <h1> Final Step: Visualise </h1>
+    //   <p> Click the Visualise Algorithm Button. </p>
+    //   <img src='https://i.gyazo.com/a9ba0ae7b014f86549e64a784c13a3c0.gif' id='big'>
+    // </div>`,
+    // `
+    // <div>
+    //   <h1> Post Visualisation </h1> 
+    //   <p> After your visualisation is complete, you can drag both the start node and end node to see an instant exploration map </p>
+    //   <p> You can also clear the Path, Walls and Weights to start a new visualisation </p>
+    //   <img src=''/>
+    // </div>`,
+    // `<div>
+    //   <h1> Got any ideas? </h1>
+    //   <p> If you've found a bug/want a new feature please email me at 
+    //   myemaildawgs@troll.com</p>
+    //   <h3>ENJOY!!</h3>
+    // </div>`
   ]
 }  
 
@@ -80,6 +139,7 @@ Board.prototype.createGrid = function(){
 }  
 
 Board.prototype.addEventListeners = function(){        
+  $( "#instructions_panel" ).draggable();
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -405,7 +465,7 @@ Board.prototype.createModal = function(){
   // Get the modal
   var modal = document.getElementById('myModal');
   modal.style.display = "block";
-
+  modal.height = "500px" 
   document.getElementById('innerDisplay').innerHTML = this.modalArr[this.modalIndex]
 
   // Get the <span> element that closes the modal
@@ -417,17 +477,22 @@ Board.prototype.createModal = function(){
   }
 
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-      if (event.target == modal) {
-          modal.style.display = "none";
-      }
-  }
+  // window.onclick = function(event) {
+  //     if (event.target == modal) {
+  //         modal.style.display = "none";
+  //     }
+  // }
 }
 
 Board.prototype.incrementModal = function(){
+  console.log('JQUERY',$( "#myModal" ))
   if(this.modalIndex < this.modalArr.length - 1){
     this.modalIndex += 1
     document.getElementById('innerDisplay').innerHTML = this.modalArr[this.modalIndex]
+  }
+  else if(this.modalIndex === this.modalArr.length - 1){
+    var modal = document.getElementById('myModal');
+    modal.style.display = "none";
   }
 }
 
@@ -507,6 +572,11 @@ var finalWidth = width/25
 var board = new Board(finalHeight,finalWidth-1)
 // var board = new Board(10,10)
 board.initialise() 
+
+
+
+
+
 
 
 

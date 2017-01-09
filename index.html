@@ -77,20 +77,39 @@
       <div id='Maze'>
        <!-- Trigger/Open The Modal -->
        <div id="myModal" class="modal">
-          <!-- Modal content -->
+           <!--Modal content -->
           <div class="modal-content">
             <span class="close">&times;</span>
             <div id='innerDisplay'>
-              <p>Some text in the Modal..</p>
             </div>
-            <button id='previousButton'>Previous</button>
-            <button id='nextButton'>Next</button>
+            <!--<div id='buttonGroup'>
+              <button id='previousButton'>Previous</button>
+              <button id='nextButton'>Next</button>
+            </div>-->
           </div>
         </div>
         <table id='board'/>
       </div>
+    <div id="instructions_panel" class="panel">
+      <div id='headerm8'>
+        <h6 class="header_title" >Instructions </h6> 
+        <span id='x' class='close'>X</span>
+      </div>
+        <p id='info'>Click within the grid and drag your mouse to draw obstacles. <br>
+        Drag the start node to set the start position. <br>
+        Drag the final node to set the end position. <br>
+        Choose an algorithm from the right-hand panel. <br>
+        Click Start Search in the lower-right corner to start the animation.</p>
+      </div>
+      </div> 
+    </div>
   </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/public/browser/bundle.js"></script>
-</html>
+
+<!--/*
+
+
+*/-->
