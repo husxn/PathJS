@@ -144,7 +144,7 @@ Board.prototype.addEventListeners = function(){
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
-    e.keyCode === 16 || e.keyCode === 49 ? board.keyDown = e.keyCode : board.keyDown;
+    e.keyCode === 16 || e.keyCode === 87 ? board.keyDown = e.keyCode : board.keyDown;
   })
   //Add window keyUp event 
   window.addEventListener('keyup',function(){
@@ -443,7 +443,7 @@ Board.prototype.changeCellDrag = function(id){
 Board.prototype.toggle = function(cell){ 
   if(cell.status === 'unexplored' && this.keyDown || cell.status === 'explored' && this.keyDown || cell.status === 'wall' && this.keyDown){
       // cell.status = 'unexplored water'
-      if(this.keyDown === 49){  
+      if(this.keyDown === 87){  
         cell.weight = 15
         cell.status = 'unexplored weight'
         return cell.status
