@@ -149,7 +149,7 @@ Board.prototype.addEventListeners = function(){
     board.keyDown = false
   })  
   //Create Modal
-  board.createModal()
+  // board.createModal()
   //Add listeners for table elements  
   for(var i=0;i<this.height;i++){
     for(var j=0;j<this.width;j++){ 

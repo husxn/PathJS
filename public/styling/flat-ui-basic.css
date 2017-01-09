@@ -62,28 +62,35 @@
 }
 .panel {
     position: fixed;
-    padding: 20px;
     background-color: #34495e;
+    fill-opacity: 50%;
     color: #fff;
     border-radius: 8px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     cursor: default;
+    height:auto;
+    padding:10px
 }
 .header_title {
+  color: #3CE78B;
   width: 75%;
   float: left;
-  margin-top: 0;
+  margin-top: 5px;
   /*height: 100%;*/
   margin-bottom: 0;
 }
-.headerm8 {
+.bullet {
+  font-size: 100%;
+  color: #3CE78B;
+  padding-right: 5px
 }
 #info {
-  font-size: 60%;
+  font-size: 70%;
   display: inline-block;
+  margin-bottom:0
 }
 #x {
-  float: right
+  float: right;
 }
 #instructions_panel {
     top: 20px;
@@ -115,14 +122,14 @@
 
 /* The Close Button */
 .close {
-    color: #aaa;
+    color: #3CE78B;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 .close:hover,
 .close:focus {
-    color: black;
+    color: #3CE78B;
     text-decoration: none;
     cursor: pointer;
 }
