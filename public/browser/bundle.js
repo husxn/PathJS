@@ -392,14 +392,18 @@ Board.prototype.addEventListeners = function(){
     }
   })
   //Modal Buttons 
-  //Increment Page
-  document.getElementById('nextButton').addEventListener('click',function(){
-    board.incrementModal()
+  // //Increment Page
+  // document.getElementById('nextButton').addEventListener('click',function(){
+  //   board.incrementModal()
+  // })
+  // //Decrement Page 
+  // document.getElementById('previousButton').addEventListener('click',function(){
+  //   board.decrementModal()
+  // }) 
+  //Close instructions 
+  document.getElementById('x').addEventListener('click',function(){
+     document.getElementById('panelParent').innerHTML = ''
   })
-  //Decrement Page 
-  document.getElementById('previousButton').addEventListener('click',function(){
-    board.decrementModal()
-  }) 
 }   
 
 Board.prototype.getCell = function(x,y){
