@@ -8,6 +8,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA){
 
 Search.prototype.startSearch = function(){ 
 	this.boardA.shouldDisable = true
+	this.boardA.changeToRed()
 	document.getElementById(this.finalNode.id).className = 'finalCell'
 	this.finalNode.className = 'finalCell'
 	if(this.currentAlgorithm === 'BFS'){
@@ -360,6 +361,7 @@ Search.prototype.showAnimation = function(exploredList){
 					if(count === 0) showPath(endNode,self)
 					else{ 
 						self.boardA.shouldDisable = false
+						self.boardA.changeFromRed()
 						self.algoDone()
 
 					}

@@ -403,6 +403,8 @@ Board.prototype.addEventListeners = function(){
   //Close instructions 
   document.getElementById('x').addEventListener('click',function(){
      document.getElementById('panelParent').innerHTML = ''
+    //  console.log("ASF")
+    //  board.changeToRed()
   })
 }   
 
@@ -508,6 +510,21 @@ Board.prototype.decrementModal = function(){
   }
 }
 
+Board.prototype.changeToRed = function(){
+  let list = document.getElementsByClassName('toggleColour')
+  document.getElementById('visualise').style.color = 'red'
+  for(var i=0;i<list.length;i++){
+    list[i].style.color = 'red'
+  }
+}
+
+Board.prototype.changeFromRed = function(){
+  let list = document.getElementsByClassName('toggleColour')
+  document.getElementById('visualise').style.color = 'e1e4e7'
+  for(var i=0;i<list.length;i++){
+    list[i].style.color = 'e1e4e7'
+  }
+}
 
 Board.prototype.clearPath = function(){     
   document.getElementById(this.finalNode.id).className = 'finalCell'
@@ -883,6 +900,7 @@ function Search(board,startNode,finalNode,currentAlgorithm,boardA){
 
 Search.prototype.startSearch = function(){ 
 	this.boardA.shouldDisable = true
+	this.boardA.changeToRed()
 	document.getElementById(this.finalNode.id).className = 'finalCell'
 	this.finalNode.className = 'finalCell'
 	if(this.currentAlgorithm === 'BFS'){
@@ -1235,6 +1253,7 @@ Search.prototype.showAnimation = function(exploredList){
 					if(count === 0) showPath(endNode,self)
 					else{ 
 						self.boardA.shouldDisable = false
+						self.boardA.changeFromRed()
 						self.algoDone()
 
 					}
