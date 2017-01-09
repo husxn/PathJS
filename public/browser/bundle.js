@@ -140,6 +140,7 @@ Board.prototype.createGrid = function(){
 
 Board.prototype.addEventListeners = function(){        
   $( "#instructions_panel" ).draggable();
+  // $("#instructions_panel").css({ top: '200px' });
   var board = this
   //Add window keyDown event 
   window.addEventListener('keydown',function(e){
@@ -569,6 +570,8 @@ var height = Math.floor(document.documentElement.clientHeight) - bar
 var width = Math.floor(document.documentElement.clientWidth)
 var finalHeight = height/27
 var finalWidth = width/25
+$("#instructions_panel").css({ top: `${finalHeight * 27/4}px`});
+$("#instructions_panel").css({ left: `${finalWidth * 25/3.5}px`});
 var board = new Board(finalHeight,finalWidth-1)
 // var board = new Board(10,10)
 board.initialise() 
