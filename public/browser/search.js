@@ -390,7 +390,14 @@ Search.prototype.showAnimation = function(exploredList){
 			if(node.parent.status !== 'startNode'){
 				if(node.parent.status === 'shortestPath') document.getElementById(node.parent.id).className = 'shortestPath'
 				if(index !== length - 1){
-					var newClassName = 'shortestPath' + node.direction
+					var newClassName = 'shortestPath'
+					if(self.currentAlgorithm !== 'BFS' && self.currentAlgorithm !== 'DFS'){
+						 newClassName += node.direction
+						}
+					else{
+						newClassName += 'NODIRECTION'
+					}
+					console.log(newClassName)
 					document.getElementById(node.id).className = newClassName
 				}
 				else {
@@ -443,7 +450,13 @@ Search.prototype.changeFinalClassName = function(node){
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellRIGHT')[0]
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellDOWN')[0]
 	if(!finalCell) finalCell = document.getElementsByClassName('finalCellLEFT')[0]
-	finalCell.className = 'finalCell' + this.finalNode.direction
+	if(this.currentAlgorithm !== 'BFS' && this.currentAlgorithm !== 'DFS'){
+		finalCell.className = 'finalCell' + this.finalNode.direction
+	}
+	else{
+		finalCell.className = 'finalCell' + 'NODIRECTION'
+	}
+	console.log(finalCell.className)
 }
 
 Search.prototype.changeFirstClassName = function(){

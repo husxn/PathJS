@@ -96,6 +96,18 @@
     left: 320px;*/
     width: 550px;
 }
+.shortestPathNODIRECTION{
+  background:#3CE78B;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image:url('circle.svg');
+}
+.finalCellNODIRECTION{
+  background:#3CE78B;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image:url('circle.svg');
+}
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
