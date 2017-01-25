@@ -1348,7 +1348,6 @@ Search.prototype.changeFinalClassName = function(node){
 	else{
 		finalCell.className = 'finalCell' + 'NODIRECTION'
 	}
-	console.log(finalCell.className)
 }
 
 Search.prototype.changeFirstClassName = function(){
@@ -1391,6 +1390,7 @@ Search.prototype.showAnimationDrag = function(exploredList){
 		}
 	}
 	this.boardA.shouldDisable = false
+	this.boardA.changeFromRed()
 	this.boardA.algoDone = true
 	 
 }  
