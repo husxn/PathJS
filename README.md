@@ -5,9 +5,9 @@ A lot of the times algorithms are hard to internalise and understand so PathJS m
 ## How it works
 
 1. Users can drag around a start and end node and set them in place.
-2. Users then can choose an algorithm from the navigation bar 
-3. Users can optionally choose a maze or draw walls by dragging the mouse
-4. Lastly users can press visualise and either visualise the full exploration map or a partial real time exploration map
+2. Users can then choose an algorithm from the navigation bar. 
+3. Users can optionally choose a maze or draw walls by dragging the mouse.
+4. Lastly users can press visualise and either visualise the full exploration map or a partial real time exploration map.
 
 ## Demo
 #### Maze Demonstration:
