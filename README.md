@@ -2,7 +2,7 @@
 PathJS is a web application to help visualise pathfinding and maze generation algorithms. Seeing is believeing but it's also learning. 
 A lot of the times algorithms are hard to internalise and understand so PathJS makes it easier to understand how common algorithms behave.
 
-Visit the demo here: [Demo](https://pathjs.herokuapp.com/#)
+Visit the demo here: [Demo](https://pathjs.herokuapp.com/#) (Currently only supported on chrome.) 
 
 ## How it works
 
